@@ -1,0 +1,46 @@
+v2ray订阅
+vmess://eyJ2IjoiMiIsInBzIjoiaXB2Nu+9nOWxseS4nOeUteS/oe+9nCIsImFkZCI6InNkLmFuZG91LmV1Lm9yZyIsInBvcnQiOiI2NjY2IiwiaWQiOiI5ZDI4MGI1My1lZDQ0LTM4ZjUtODkwMC1hNmQzNWYzYmE5YjciLCJhaWQiOiIwIiwibmV0Ijoid3MiLCJ0eXBlIjoibm9uZSIsImhvc3QiOiJ0bXMuZGluZ3RhbGsuY29tIiwicGF0aCI6Ii8iLCJ0bHMiOiIiLCJzbmkiOiIifQ==
+vmess://eyJ2IjoiMiIsInBzIjoiaXB2Nu+9nOaxn+iLj+enu+WKqO+9nDEwMG0iLCJhZGQiOiJtbC53dXhpbmdxdWVxaWFuLnRvcCIsInBvcnQiOiIxNTU2NiIsImlkIjoiOWQyODBiNTMtZWQ0NC0zOGY1LTg5MDAtYTZkMzVmM2JhOWI3IiwiYWlkIjoiMCIsIm5ldCI6IndzIiwidHlwZSI6Im5vbmUiLCJob3N0IjoidG1zLmRpbmd0YWxrLmNvbSIsInBhdGgiOiIvIiwidGxzIjoiIiwic25pIjoiIn0=
+vmess://eyJ2IjoiMiIsInBzIjoiaXB2Nu+9nOaxn+ilv+enu+WKqO+9nCIsImFkZCI6Im1sLnNhbGppZGFvLmNuIiwicG9ydCI6IjU1NjYiLCJpZCI6IjlkMjgwYjUzLWVkNDQtMzhmNS04OTAwLWE2ZDM1ZjNiYTliNyIsImFpZCI6IjAiLCJuZXQiOiJ3cyIsInR5cGUiOiJub25lIiwiaG9zdCI6InRtcy5kaW5ndGFsay5jb20iLCJwYXRoIjoiLyIsInRscyI6IiIsInNuaSI6IiJ9
+
+vmess
+{"v":"2","ps":"ipv6｜江苏移动｜100m","add":"ml.wuxingqueqian.top","port":"15566","id":"9d280b53-ed44-38f5-8900-a6d35f3ba9b7","aid":"0","net":"ws","type":"none","host":"tms.dingtalk.com","path":"/","tls":"","sni":""}
+{"add":"172.67.190.164","aid":"0","alpn":"","fp":"","host":"koyebray-oheiheihei.koyeb.app","id":"24b4b1e1-7a89-45f6-858c-242cf53b5bdb","net":"ws","path":"/24b4b1e1-7a89-45f6-858c-242cf53b5bdb-vmess","port":"443","ps":"koyeb","scy":"auto","sni":"koyebray-oheiheihei.koyeb.app","tls":"tls","type":"","v":"2"}
+
+trojan://fc7d74ae-b32d-4f42-be31-3c95a3c0a867@1.xn--yet6ep24d25g.co:443?security=tls&headerType=none&type=tcp#%E5%A5%97%E9%A4%90%E5%88%B0%E6%9C%9F%EF%BC%9A2023-07-06
+
+vless://8e058c76-4066-4e6b-beed-4e21f7943c3d@qqq1blank.qqq1qqq1.repl.co:443?path=%2F8e058c76-4066-4e6b-beed-4e21f7943c3d-vl&security=tls&encryption=none&host=qqq1blank.qqq1qqq1.repl.co&type=ws&sni=qqq1blank.qqq1qqq1.repl.co#replit-vless
+vless://48246112-f1e7-4779-a64c-9a5eb6cc1731@20.187.80.209:5566?path=%2Fpath&security=&encryption=none&host=tms.dingtalk.com&type=ws#az
+
+
+
+
+clash订阅
+
+- name: 测试1
+  type: vmess
+  server: 101.200.137.37
+  port: "5566"
+  uuid: 48246112-f1e7-4779-a64c-9a5eb6cc1731
+  alterId: "0"
+  cipher: auto
+  udp: true
+  network: ws
+  ws-path: /path
+  ws-headers:
+    Host: tms.dingtalk.com
+  ws-opts:
+    path: /path
+    headers:
+      Host: tms.dingtalk.com
+
+trojan
+    name: 测试
+    type: trojan
+    server: 101.200.137.37
+    port: 443
+    password: 9d280b53-ed44-38f5-8900-a6d35f3ba9b7
+    sni: 101.200.137.37
+
+
+shadowrocket订阅

@@ -1,0 +1,5 @@
+web/node_modules
+.DS_Store
+server/config_dev.yaml
+server/test.db
+.idea/

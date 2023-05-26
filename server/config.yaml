@@ -1,0 +1,19 @@
+mysql:
+  path: 
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name:
+  username: gin
+  password: 817
+  prefix: ""
+  singular: false
+  engine: ""
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: error
+  log-zap: false
+system:
+  port: 5566
+  db-type: sqlite
+sqlite:
+  path: ./test.db
