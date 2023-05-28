@@ -1,22 +1,28 @@
-name: auto-build-release
+name: build-go-binary
 on:
   release:
-     types: [created,published]
+    types: [created,published]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goos: [linux, darwin] # 需要打包的系统
-        goarch: [amd64, arm64, arm32] # 需要打包的架构
-        exclude: # 排除某些平台和架构
-          - goarch: arm64
-            goos: darwin
-          - goarch: arm32
-            goos: darwin
+        goos: [ linux ] # 需要打包的系统
+        goarch: [ amd64 ] # 需要打包的架构
+#        goos: [linux, darwin] # 需要打包的系统
+#        goarch: [amd64, arm64, arm32] # 需要打包的架构
+#        exclude: # 排除某些平台和架构
+#          - goarch: arm64
+#            goos: darwin
+#          - goarch: arm32
+#            goos: darwin
     steps:
+      - name: dependence
+        run: |
+          sudo apt update -y
+          sudo apt install gcc-aarch64-linux-gnu -y 
+          sudo apt-get install gcc-arm-linux-gnueabihf -y
       - uses: actions/checkout@v3
       - uses: wangyoucao577/go-release-action@v1.30
         with:
@@ -27,6 +33,6 @@ jobs:
           binary_name: "AirGo" # 可以指定二进制文件的名称
           extra_files: README.md config.yml # 需要包含的额外文件
           project_path: "./server/"
-          pre_command: "sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && apt update -y && apt install gcc-aarch64-linux-gnu -y && apt-get install gcc-arm-linux-gnueabihf -y"
+#          pre_command: "sudo apt-get update -y && sudo apt install gcc-aarch64-linux-gnu -y && apt-get install gcc-arm-linux-gnueabihf -y"
 #  build-windows
 #     runs-on: ubuntu-latest
