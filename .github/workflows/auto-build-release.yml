@@ -19,3 +19,4 @@ jobs:
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
           goversion: 1.19 # 可以指定编译使用的 Golang 版本
+          project_path: "./server"
