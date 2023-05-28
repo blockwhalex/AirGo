@@ -2,6 +2,7 @@ name: auto-build-release
 on:
   release:
      types: [created,published]
+  workflow_dispatch:
 
 jobs:
   build:
