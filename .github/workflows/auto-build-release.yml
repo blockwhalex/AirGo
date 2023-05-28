@@ -33,6 +33,6 @@ jobs:
         if: github.event_name == 'release'
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./AirGo-$GOOS-$GOARCH
+          file: ./server/AirGo-$GOOS-$GOARCH
           tag: ${{ github.ref }}
           file_glob: true
