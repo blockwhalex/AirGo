@@ -13,8 +13,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+#           tag_name: ${{ github.ref }}
+#           release_name: ${{ github.ref }}
+          tag_name: v1
+          release_name: v1
           draft: true
           prerelease: true
   linuxamd64build:
