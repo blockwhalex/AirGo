@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GAYHUB_TOKEN }}
     strategy:
       matrix:
         goos: [ linux ] # 需要打包的系统
