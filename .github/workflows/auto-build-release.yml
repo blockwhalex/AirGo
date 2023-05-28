@@ -34,4 +34,4 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./AirGo-${{matrix.goos}}-${{matrix.goarch}}
           tag: ${{ github.ref }}
-          file_glob: true
+#           file_glob: true
