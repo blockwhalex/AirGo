@@ -25,13 +25,13 @@ jobs:
         run: |
           cd server
           go build -o AirGo-${{matrix.goos}}-${{matrix.goarch}} main.go
-          ls
+          
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         if: github.event_name == 'release'
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./AirGo-${{matrix.goos}}-${{matrix.goarch}}
+          file: AirGo-${{matrix.goos}}-${{matrix.goarch}}
           tag: ${{ github.ref }}
 #           file_glob: true
