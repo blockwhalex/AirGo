@@ -10,15 +10,13 @@ jobs:
         goos: [ linux ]
         goarch: [ amd64 ]
       fail-fast: false
-
     runs-on: ubuntu-latest
-    env:
-      GOOS: ${{ matrix.goos }}
-      GOARCH: ${{ matrix.goarch }}
-      CGO_ENABLED: 0
+#    env:
+#      GOOS: ${{ matrix.goos }}
+#      GOARCH: ${{ matrix.goarch }}
+#      CGO_ENABLED: 0
     steps:
-      - name: Checkout codebase
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
@@ -26,13 +24,13 @@ jobs:
       - name: Build
         run: |
           cd server
-          go build -o AirGo-$GOOS-$GOARCH main.go
+          go build -o AirGo-${{matrix.goos}}-${{matrix.goarch}} main.go
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         if: github.event_name == 'release'
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./server/AirGo-$GOOS-$GOARCH
+          file: ./AirGo-${{matrix.goos}}-${{matrix.goarch}}
           tag: ${{ github.ref }}
           file_glob: true
