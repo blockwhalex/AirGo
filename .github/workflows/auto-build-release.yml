@@ -2,7 +2,7 @@ name: auto-build-release
 on:
   release:
 #     types: [created,published]
-    types: [created]
+    types: [published]
 jobs:
   build:
     runs-on: ubuntu-latest
