@@ -32,6 +32,6 @@ jobs:
         if: github.event_name == 'release'
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AirGo-${{matrix.goos}}-${{matrix.goarch}}
+          file: /server/AirGo-${{matrix.goos}}-${{matrix.goarch}}
           tag: ${{ github.ref }}
 #           file_glob: true
