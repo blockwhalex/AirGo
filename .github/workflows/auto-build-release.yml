@@ -1,7 +1,8 @@
 name: auto-build-release
 on:
   release:
-    types: [created,published]
+#     types: [created,published]
+    types: [created]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,6 +26,6 @@ jobs:
           binary_name: "AirGo" # 可以指定二进制文件的名称
           extra_files: README.md config.yml # 需要包含的额外文件
           project_path: "./server/"
-          pre_command: "sudo apt-get update -y && sudo apt install gcc-aarch64-linux-gnu -y && apt-get install gcc-arm-linux-gnueabihf -y"
+          pre_command: "apt-get update -y && apt install gcc-aarch64-linux-gnu -y && apt-get install gcc-arm-linux-gnueabihf -y"
 #  build-windows
 #     runs-on: ubuntu-latest
