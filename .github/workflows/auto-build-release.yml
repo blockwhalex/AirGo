@@ -1,7 +1,7 @@
 name: build-go-binary
 on:
   release:
-    types: [created,published]
+    types: [created]
   workflow_dispatch:
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
           sudo apt install gcc-aarch64-linux-gnu -y 
           sudo apt-get install gcc-arm-linux-gnueabihf -y
       - uses: actions/checkout@v3
-      - uses: wangyoucao577/go-release-action@v1.30
+      - uses: wangyoucao577/go-release-action@v1.38
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
@@ -33,4 +33,4 @@ jobs:
           binary_name: "AirGo" # 可以指定二进制文件的名称
           extra_files: ./server/config.yaml # 需要包含的额外文件
           project_path: "./server"
-          pre_command: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} "
+          build_flags: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}}"
