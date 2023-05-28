@@ -25,6 +25,7 @@ jobs:
         run: |
           cd server
           go build -o AirGo-${{matrix.goos}}-${{matrix.goarch}} main.go
+          ls
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
