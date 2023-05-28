@@ -1,22 +1,41 @@
-name: build
-
+name: Build and Release
 on:
+  workflow_dispatch:
   release:
-    types: [created] # 表示在创建新的 Release 时触发
-
+    types: [ published ]
 jobs:
-  build-go-binary:
-    runs-on: ubuntu-latest
+  build:
     strategy:
       matrix:
-        goos: [linux] # 需要打包的系统
-        goarch: [amd64] # 需要打包的架构
+        goos: [ linux ]
+        goarch: [ amd64 ]
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+    env:
+      GOOS: ${{ matrix.goos }}
+      GOARCH: ${{ matrix.goarch }}
+      CGO_ENABLED: 0
     steps:
-      - uses: actions/checkout@v3
-      - uses: wangyoucao577/go-release-action@v1.30
+      - name: Checkout codebase
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} # 一个默认的变量，用来实现往 Release 中添加文件
-          goos: ${{ matrix.goos }}
-          goarch: ${{ matrix.goarch }}
-          goversion: 1.19 # 可以指定编译使用的 Golang 版本
-          project_path: "./server"
+          go-version: ^1.20
+      - name: Get project dependencies
+        run: go mod download
+
+      - name: Build
+        run: |
+          cd server
+          go build -o AirGo-$GOOS-$GOARCH main.go
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        if: github.event_name == 'release'
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./AirGo-$GOOS-$GOARCH
+          tag: ${{ github.ref }}
+          file_glob: true
