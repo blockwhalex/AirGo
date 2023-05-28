@@ -34,6 +34,5 @@ jobs:
           extra_files: config.yaml # 需要包含的额外文件
           project_path: "./server"
           pre_command: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} "
-          build_command: "go build main.go"
 #  build-windows
 #     runs-on: ubuntu-latest
