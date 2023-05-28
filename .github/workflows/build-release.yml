@@ -1,0 +1,43 @@
+name: build-release
+on:
+  workflow_dispatch:
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
+          prerelease: true
+  linuxamd64build:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.19
+      - name: build linux amd64 version
+        run: |
+          cd server
+          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build main.go
+      - name: package
+        run: tar -zcvf AirGo-linux-amd64.tar.gz main
+      - name: upload
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: AirGo-linux-amd64.tar.gz
+          asset_name: AirGo-linux-amd64.tar.gz
+          asset_content_type: application/gzip
