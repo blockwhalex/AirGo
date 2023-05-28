@@ -1,37 +1,56 @@
-name: Build and Release
+name: Publish Go Binary
 on:
-  workflow_dispatch:
   release:
-    types: [ published ]
+    types:
+      - created
 jobs:
-  build:
+  buildAndDeploy:
+    runs-on:  ubuntu-latest
+    # 交叉构建,多平台交叉编译
     strategy:
       matrix:
-        goos: [ linux ]
-        goarch: [ amd64 ]
-      fail-fast: false
-    runs-on: ubuntu-latest
-#    env:
-#      GOOS: ${{ matrix.goos }}
-#      GOARCH: ${{ matrix.goarch }}
-#      CGO_ENABLED: 0
+        include:
+          - goarch: amd64
+            goos: linux
+    # 使用checkout
     steps:
       - uses: actions/checkout@v3
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: ^1.20
-      - name: Build
+#          go-version: '>=1.16.0'
+          go-version: 1.19
+      - run: go version
+
+      - name: build
         run: |
           cd server
           go build -o AirGo-${{matrix.goos}}-${{matrix.goarch}} main.go
-          
 
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        if: github.event_name == 'release'
+#      - name: Packaging...
+#        run: tar czf AirGo-${{matrix.goos}}-${{matrix.goarch}}.tgz AirGo-${{matrix.goos}}-${{matrix.goarch}}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GOACTION }} # This token is provided by Actions, you do not need to create your own token
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: /server/AirGo-${{matrix.goos}}-${{matrix.goarch}}
-          tag: ${{ github.ref }}
-#           file_glob: true
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+      - name: Uploading assets...
+        # if: ${{ !env.ACT }}
+        # id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GOACTION }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./AirGo-${{matrix.goos}}-${{matrix.goarch}}.tgz
+          asset_name: AirGo-${{matrix.goos}}-${{matrix.goarch}}.tgz
+          asset_content_type: application/gzip
