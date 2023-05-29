@@ -24,6 +24,7 @@ jobs:
 
     - name: Build
       run: |
+        cd web
         npm install
         npm run build
     - name: package
