@@ -17,25 +17,26 @@ jobs:
       matrix:
         node-version: [18.16.0]
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-    - uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@v3
 
-    - name: build
-      run: |
-        cd web
-        npm i
-        npm run build
-    - name: package
-        zip -r web.zip dist
-    - name: upload web to release
-      if: github.event_name == 'release'
-      with:
-        repo_token: ${{ secrets.Action_Token }}
-        file: ./web.zip
-        tag: ${{ github.ref }}
-        file_glob: true
+      - name: Use Node.js ${{ matrix.node-version }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: build
+        run: |
+          cd web
+          npm i
+          npm run build
+      - name: package
+        run: |
+          zip -r web.zip dist
+      - name: upload web to release
+        if: github.event_name == 'release'
+        with:
+          repo_token: ${{ secrets.Action_Token }}
+          file: ./web.zip
+          tag: ${{ github.ref }}
+          file_glob: true
 
