@@ -21,11 +21,19 @@ jobs:
       - name: dependence
         run: |
           sudo apt update -y
-          sudo apt install gcc-aarch64-linux-gnu -y 
-          sudo apt-get install gcc-arm-linux-gnueabihf -y
-          export CGO_ENABLED=1
-          export GOOS=${{matrix.goos}} 
-          export GOARCH=${{matrix.goarch}}
+          go env -w CGO_ENABLED=1
+          go env -w GOOS=${{matrix.goos}} 
+          go env -w GOARCH=${{matrix.goarch}}
+          case ${{matrix.goarch}} in
+          arm64)
+            sudo apt install gcc-aarch64-linux-gnu -y
+            go env -w CC=aarch64-linux-gnu-gcc
+            ;;
+          arm}
+            sudo apt-get install gcc-arm-linux-gnueabihf -y
+            go env -w CC=arm-linux-gnueabihf-gcc
+            ;;
+          esac
       - uses: actions/checkout@v3
       - uses: wangyoucao577/go-release-action@v1.38
         with:
@@ -36,4 +44,4 @@ jobs:
           binary_name: "AirGo"
           extra_files: ./server/config.yaml
           project_path: "./server"
-#          pre_command: export CGO_ENABLED=1 && export GOOS=${{matrix.goos}} && export GOARCH=${{matrix.goarch}}
+          ldflags: -s -w --extldflags "-static -fpic"
