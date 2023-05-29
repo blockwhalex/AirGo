@@ -1,56 +1,36 @@
-name: Publish Go Binary
+name: build-go-binary
 on:
   release:
-    types:
-      - created
+    types: [created]
+  workflow_dispatch:
 jobs:
-  buildAndDeploy:
-    runs-on:  ubuntu-latest
-    # 交叉构建,多平台交叉编译
+  build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
-          - goarch: amd64
-            goos: linux
-    # 使用checkout
+        goos: [ linux ] 
+        goarch: [ amd64 ]
+    #        goos: [linux, darwin]
+    #        goarch: [amd64, arm64, arm32] 
+    #        exclude: # 
+    #          - goarch: arm64
+    #            goos: darwin
+    #          - goarch: arm32
+    #            goos: darwin
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-#          go-version: '>=1.16.0'
-          go-version: 1.19
-      - run: go version
-
-      - name: build
+      - name: dependence
         run: |
-          cd server
-          go build -o AirGo-${{matrix.goos}}-${{matrix.goarch}} main.go
-
-#      - name: Packaging...
-#        run: tar czf AirGo-${{matrix.goos}}-${{matrix.goarch}}.tgz AirGo-${{matrix.goos}}-${{matrix.goarch}}
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          sudo apt update -y
+          sudo apt install gcc-aarch64-linux-gnu -y 
+          sudo apt-get install gcc-arm-linux-gnueabihf -y
+      - uses: actions/checkout@v3
+      - uses: wangyoucao577/go-release-action@v1.38
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
-      - name: Uploading assets...
-        # if: ${{ !env.ACT }}
-        # id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./AirGo-${{matrix.goos}}-${{matrix.goarch}}.tgz
-          asset_name: AirGo-${{matrix.goos}}-${{matrix.goarch}}.tgz
-          asset_content_type: application/gzip
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          goversion: 1.19 
+          binary_name: "AirGo"
+          extra_files: ./server/config.yaml
+          project_path: "./server"
+          pre_command: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}}"
