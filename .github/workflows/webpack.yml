@@ -32,14 +32,14 @@ jobs:
         ls
     - name: package
       run: |
-        ls
+        cd web
         zip -r web.zip dist
     - name: upload web to release
       uses: svenstaro/upload-release-action@v2
       if: github.event_name == 'release'
       with:
         repo_token: ${{ secrets.Action_Token }}
-        file: ./web.zip
+        file: web/web.zip
         tag: ${{ github.ref }}
         file_glob: true
 
