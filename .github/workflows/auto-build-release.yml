@@ -1,10 +1,10 @@
-name: build-go-binary
+name: auto build release
 on:
-#   release:
-#     types: [created]
+  release:
+    types: [created]
   workflow_dispatch:
 jobs:
-  build:
+  build-go-binary:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -45,3 +45,37 @@ jobs:
           extra_files: ./server/config.yaml
           project_path: "./server"
           ldflags: -s -w --extldflags "-static -fpic"
+
+  build-web:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.16.0]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build
+        run: |
+          cd web
+          npm install
+          npm run build
+      - name: package
+        run: |
+          zip -r web.zip dist
+      - name: upload web to release
+        uses: svenstaro/upload-release-action@v2
+        if: github.event_name == 'release'
+        with:
+          repo_token: ${{ secrets.Action_Token }}
+          file: ./web.zip
+          tag: ${{ github.ref }}
+          file_glob: true
+
+
