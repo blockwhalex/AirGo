@@ -32,6 +32,7 @@ jobs:
         ls
     - name: package
       run: |
+        ls
         zip -r web.zip dist
     - name: upload web to release
       uses: svenstaro/upload-release-action@v2
