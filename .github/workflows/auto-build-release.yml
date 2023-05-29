@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goos: [ linux ] 
-        goarch: [ amd64 ]
-    #        goos: [linux, darwin]
-    #        goarch: [amd64, arm64, arm32] 
-    #        exclude: # 
-    #          - goarch: arm64
-    #            goos: darwin
-    #          - goarch: arm32
-    #            goos: darwin
+#         goos: [ linux ] 
+#         goarch: [ amd64 ]
+         goos: [linux, darwin]
+         goarch: [amd64, arm64, arm32] 
+         exclude: # 
+           - goarch: arm64
+             goos: darwin
+           - goarch: arm32
+             goos: darwin
     steps:
       - name: dependence
         run: |
@@ -24,9 +24,9 @@ jobs:
           sudo apt install gcc-aarch64-linux-gnu -y 
           sudo apt-get install gcc-arm-linux-gnueabihf -y
       - uses: actions/checkout@v3
-      - uses: wangyoucao577/go-release-action@v1.38
+      - uses: wangyoucao577/go-release-action@v1.30
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.Action_Token }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
           goversion: 1.19 
