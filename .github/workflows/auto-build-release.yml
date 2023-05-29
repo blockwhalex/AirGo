@@ -29,7 +29,7 @@ jobs:
             sudo apt install gcc-aarch64-linux-gnu -y
             go env -w CC=aarch64-linux-gnu-gcc
             ;;
-          arm}
+          arm)
             sudo apt-get install gcc-arm-linux-gnueabihf -y
             go env -w CC=arm-linux-gnueabihf-gcc
             ;;
