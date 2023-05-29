@@ -15,7 +15,7 @@ jobs:
          exclude: # 
            - goarch: arm64
              goos: darwin
-           - goarch: arm32
+           - goarch: arm
              goos: darwin
     steps:
       - name: dependence
