@@ -33,4 +33,5 @@ jobs:
           binary_name: "AirGo"
           extra_files: ./server/config.yaml
           project_path: "./server"
-          pre_command: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}}"
+#           pre_command: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}}"
+          build_flags: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}}"
