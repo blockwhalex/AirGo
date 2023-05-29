@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-#         goos: [ linux ] 
-#         goarch: [ amd64 ]
-         goos: [linux, darwin]
-         goarch: [amd64, arm64, arm] 
-         exclude: # 
-           - goarch: arm64
-             goos: darwin
-           - goarch: arm
-             goos: darwin
+        #         goos: [ linux ]
+        #         goarch: [ amd64 ]
+        goos: [linux, darwin]
+        goarch: [amd64, arm64, arm]
+        exclude: #
+          - goarch: arm64
+            goos: darwin
+          - goarch: arm
+            goos: darwin
     steps:
       - name: dependence
         run: |
@@ -29,9 +29,10 @@ jobs:
           github_token: ${{ secrets.Action_Token }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
-          goversion: 1.19 
+          goversion: 1.19
           binary_name: "AirGo"
           extra_files: ./server/config.yaml
           project_path: "./server"
-#           pre_command: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}}"
-          build_flags: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}}"
+          build_command: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build"
+          #           pre_command: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}}"
+#          build_flags: "CGO_ENABLED=1 GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}}"
