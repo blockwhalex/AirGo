@@ -23,9 +23,9 @@ jobs:
           sudo apt update -y
           sudo apt install gcc-aarch64-linux-gnu -y 
           sudo apt-get install gcc-arm-linux-gnueabihf -y
-          go env -w CGO_ENABLED=1
-          go env -w GOOS=${{matrix.goos}} 
-          go env -w GOARCH=${{matrix.goarch}}
+          export CGO_ENABLED=1
+          export GOOS=${{matrix.goos}} 
+          export GOARCH=${{matrix.goarch}}
       - uses: actions/checkout@v3
       - uses: wangyoucao577/go-release-action@v1.38
         with:
@@ -36,3 +36,4 @@ jobs:
           binary_name: "AirGo"
           extra_files: ./server/config.yaml
           project_path: "./server"
+#          pre_command: export CGO_ENABLED=1 && export GOOS=${{matrix.goos}} && export GOARCH=${{matrix.goarch}}
