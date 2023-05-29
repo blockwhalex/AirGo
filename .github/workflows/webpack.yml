@@ -27,15 +27,16 @@ jobs:
         cd web
         npm install
         npm run build
-    - name: package
-      run: |
-        zip -r web.zip dist
-    - name: upload web to release
-      uses: svenstaro/upload-release-action@v2
-      if: github.event_name == 'release'
-      with:
-        repo_token: ${{ secrets.Action_Token }}
-        file: ./web.zip
-        tag: ${{ github.ref }}
-        file_glob: true
+        ls
+#     - name: package
+#       run: |
+#         zip -r web.zip dist
+#     - name: upload web to release
+#       uses: svenstaro/upload-release-action@v2
+#       if: github.event_name == 'release'
+#       with:
+#         repo_token: ${{ secrets.Action_Token }}
+#         file: ./web.zip
+#         tag: ${{ github.ref }}
+#         file_glob: true
 
