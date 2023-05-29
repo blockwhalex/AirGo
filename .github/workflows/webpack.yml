@@ -28,15 +28,15 @@ jobs:
         npm install
         npm run build
         ls
-#     - name: package
-#       run: |
-#         zip -r web.zip dist
-#     - name: upload web to release
-#       uses: svenstaro/upload-release-action@v2
-#       if: github.event_name == 'release'
-#       with:
-#         repo_token: ${{ secrets.Action_Token }}
-#         file: ./web.zip
-#         tag: ${{ github.ref }}
-#         file_glob: true
+    - name: package
+      run: |
+        zip -r web.zip ./dist
+    - name: upload web to release
+      uses: svenstaro/upload-release-action@v2
+      if: github.event_name == 'release'
+      with:
+        repo_token: ${{ secrets.Action_Token }}
+        file: ./web.zip
+        tag: ${{ github.ref }}
+        file_glob: true
 
