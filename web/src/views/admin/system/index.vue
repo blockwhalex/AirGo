@@ -104,6 +104,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ElMessage } from 'element-plus';
 //store
 import {useServerStore} from "/@/stores/serverStore";
 import {storeToRefs} from "pinia";
@@ -112,7 +113,13 @@ const serverStore = useServerStore()
 const {serverConfig} = storeToRefs(serverStore)
 //保存提交
 const onSubmit=()=>{
-  serverStore.updateServerConfig()
+  serverStore.updateServerConfig().then((res)=>{
+    if (res.code === 0) {
+      ElMessage.success(res.msg)
+    } else {
+      ElMessage.error(res.msg)
+    }
+  })
   setTimeout(()=>{
     serverStore.getServerConfig()
   },2000)

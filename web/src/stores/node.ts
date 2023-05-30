@@ -8,17 +8,20 @@ const nodeApi = useNodeApi()
 
 export const useNodeStore = defineStore("nodeStore", {
     state: () => ({
-        nodeList: [] as Node[],
-        //默认页数据
-        tableData: {
-            total: 0,
+        //节点管理页数据
+        nodeManageData:{
             loading: true,
+            nodes:{
+                total:0,
+                node_list:[] as NodeInfo[],
+            },
             params: {
                 search: '',
                 page_num: 1,
                 page_size: 10,
                 date: [],
             },
+
         },
         //弹窗页数据
         dialogData: {
@@ -26,6 +29,7 @@ export const useNodeStore = defineStore("nodeStore", {
             title: "",
             isShowDialog: false,
             nodeInfo: {
+                id:0,
                 name: '',
                 address: '',
                 port: '',
@@ -43,17 +47,23 @@ export const useNodeStore = defineStore("nodeStore", {
                 path: '',
                 tls: "",
                 sni: "",
-            } as Node,
+            } as NodeInfo,
         },
 
     }),
     actions: {
         //获取全部节点
-        async getAllnode() {
-            const res = await nodeApi.getAllNodeApi(this.tableData.params)
-            this.nodeList = res.data
-            this.tableData.loading = false
-            this.tableData.total = this.nodeList.length
+        async getAllNode() {
+            const res = await nodeApi.getAllNodeApi()
+            this.nodeManageData.nodes.node_list = res.data
+            this.nodeManageData.loading = false
+
+        },
+        //获取全部节点 with Traffic,分页
+        async getNodeWithTraffic() {
+            const res = await nodeApi.getNodeWithTrafficApi(this.nodeManageData.params)
+            this.nodeManageData.nodes = res.data
+            this.nodeManageData.loading = false
 
         },
         //更新节点
@@ -80,15 +90,5 @@ export const useNodeStore = defineStore("nodeStore", {
                 ElMessage.success("新建节点成功")
             }
         },
-        async getNodeByName() {
-            const res = await nodeApi.getNodeByNameApi(this.tableData.params)
-            this.nodeList = res.data
-            this.tableData.loading = false
-            this.tableData.total = this.nodeList.length
-        },
-        async getNodeTraffic() {
-            const res = await nodeApi.getNodeTrafficApi(this.tableData.params)
-        }
-
     }
 })

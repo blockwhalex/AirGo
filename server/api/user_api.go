@@ -149,13 +149,15 @@ func GetUserlist(ctx *gin.Context) {
 
 // 新建用户
 func NewUser(ctx *gin.Context) {
+	//res, _ := ioutil.ReadAll(ctx.Request.Body)
+	//fmt.Println(string(res))
 	var u model.NewUser
 	err := ctx.ShouldBind(&u)
 	if err != nil {
 		response.Fail("新建用户参数错误"+err.Error(), nil, ctx)
 		return
 	}
-	//fmt.Println("新建用户:", u)
+	fmt.Println("新建用户:", u)
 	var user = u.User
 	user.UUID = uuid.NewV4()
 	err = service.Register(&user)

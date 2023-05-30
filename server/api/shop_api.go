@@ -81,10 +81,10 @@ func Purchase(ctx *gin.Context) {
 			response.Fail("alipay TradePreCreatePay err"+err.Error(), nil, ctx)
 			return
 		}
-		//返回用户qrcode
 		order.QRCode = res.Content.QRCode
-		service.UpdateOrder(&order) //更新数据库状态
-		response.OK("alipay TradePreCreatePay success:", res.Content.QRCode, ctx)
+		order.TradeStatus = "WAIT_BUYER_PAY"
+		service.UpdateOrder(&order)                                               //更新数据库状态
+		response.OK("alipay TradePreCreatePay success:", res.Content.QRCode, ctx) //返回用户qrcode
 		//5分钟等待付款
 		go PollAliPay(&order)
 	}
@@ -95,30 +95,7 @@ func PollAliPay(order *model.Orders) {
 	//defer t.Stop()
 	i := 0
 	for {
-		<-t.C
-		rsp, _ := alipay_plugin.TradeQuery(global.AlipayClient, order)
-		//fmt.Println("支付宝TradeQuery rsp:", rsp)
-		if rsp.Content.TradeStatus == "WAIT_BUYER_PAY" && order.TradeStatus != "WAIT_BUYER_PAY" { //支付宝预创建成功，等待支付，
-			order.TradeStatus = "WAIT_BUYER_PAY"
-			order.TradeNo = rsp.Content.TradeNo
-			err := service.UpdateOrder(order) //更新数据库状态
-			if err != nil {
-				return
-			}
-			continue
-		} else if rsp.Content.SubCode == "ACQ.TRADE_NOT_EXIST" || rsp.Content.SubCode == "ACQ.SYSTEM_ERROR" {
-			continue
-		} else if rsp.Content.TradeStatus == "TRADE_SUCCESS" || rsp.Content.TradeStatus == "TRADE_FINISHED" { //交易结束
-			fmt.Println("支付宝支付成功")
-			order.TradeStatus = "TRADE_SUCCESS" //更新数据库订单状态
-			order.BuyerLogonId = rsp.Content.BuyerLogonId
-			order.ReceiptAmount = rsp.Content.ReceiptAmount
-			order.BuyerPayAmount = rsp.Content.BuyerPayAmount
-			service.UpdateOrder(order)         //更新数据库状态
-			service.UpdateUserSubscribe(order) //更新用户订阅信息
-			return
-		}
-		if i == 30 {
+		if i == 18 { // 18*10s 3分钟
 			if order.TradeNo != "" {
 				res, _ := alipay_plugin.TradeClose(global.AlipayClient, order) //超时，取消订单
 				fmt.Println("支付宝取消订单结果:", res)
@@ -127,6 +104,24 @@ func PollAliPay(order *model.Orders) {
 			service.UpdateOrder(order)         //更新数据库状态
 			t.Stop()
 			return
+		}
+		<-t.C
+		rsp, _ := alipay_plugin.TradeQuery(global.AlipayClient, order)
+		fmt.Println("支付宝TradeQuery rsp.Content.TradeStatus:", rsp.Content.TradeStatus)
+		if rsp.Content.TradeStatus == "TRADE_SUCCESS" || rsp.Content.TradeStatus == "TRADE_FINISHED" { //交易结束
+			fmt.Println("支付宝支付成功")
+			order.TradeStatus = "TRADE_SUCCESS"
+			order.BuyerLogonId = rsp.Content.BuyerLogonId
+			order.ReceiptAmount = rsp.Content.ReceiptAmount
+			order.BuyerPayAmount = rsp.Content.BuyerPayAmount
+			service.UpdateOrder(order)         //更新数据库状态
+			service.UpdateUserSubscribe(order) //更新用户订阅信息
+			t.Stop()
+			return
+		}
+		if rsp.Content.TradeStatus == "WAIT_BUYER_PAY" && order.TradeStatus != "WAIT_BUYER_PAY" {
+			order.TradeNo = rsp.Content.TradeNo
+			service.UpdateOrder(order) //更新数据库状态
 		}
 		i++
 	}

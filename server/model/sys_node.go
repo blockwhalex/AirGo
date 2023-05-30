@@ -33,7 +33,7 @@ type Node struct {
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"-"            gorm:"index"`
-	ID        int        `json:"node_id"       gorm:"primary_key"`
+	ID        int        `json:"id"       gorm:"primary_key"`
 	//节点基础参数
 	// NodeGroup int `json:"node_group"`
 	// NodeClass int `json:"node_class"`
@@ -127,4 +127,10 @@ type ClashProxyGroup struct {
 	Name    string   `yaml:"name"`
 	Type    string   `yaml:"type"`
 	Proxies []string `yaml:"proxies"`
+}
+
+// 查询节点 with total
+type NodesWithTotal struct {
+	NodeList []Node `json:"node_list"`
+	Total    int64  `json:"total"`
 }

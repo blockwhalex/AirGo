@@ -65,10 +65,10 @@
           />
         </el-form-item>
         <el-form-item label="节点限速">
-          <el-input type="number" v-model="dialogData.nodeInfo.nodespeedlimit" placeholder="0"/>
+          <el-input type="number" v-model="dialogData.nodeInfo.nodespeed_limit" placeholder="0"/>
         </el-form-item>
         <el-form-item label="节点倍率">
-          <el-input type="number" v-model="dialogData.nodeInfo.trafficrate" placeholder="1"/>
+          <el-input type="number" v-model="dialogData.nodeInfo.traffic_rate" placeholder="1"/>
         </el-form-item>
       </el-form>
 
@@ -99,7 +99,7 @@ const emit = defineEmits(['refresh']);
 // 打开弹窗
 const openDialog = (type: string, row?: any) => {
     if (type=='add'){
-      dialogData.value.nodeInfo.node_id=0 //清空id,否则服务器无法插入
+      dialogData.value.nodeInfo.id=0 //编辑和添加公用一个store，清空id,否则服务器无法插入
         dialogData.value.type=type
         dialogData.value.title="新建节点"
         dialogData.value.isShowDialog = true

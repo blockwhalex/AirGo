@@ -2,7 +2,7 @@
 	<div class="container layout-padding">
 		<el-card shadow="hover" class="layout-padding-auto">
 			<div class="mb15">
-				<el-input v-model="userManageData.param.search" size="default" placeholder="请输入用户名称" style="max-width: 180px"> </el-input>
+				<el-input v-model="userManageData.params.search" size="default" placeholder="请输入用户名称" style="max-width: 180px"> </el-input>
 				<el-button  @click="onSearch" size="default" type="primary" class="ml10">
 					<el-icon>
 						<ele-Search />
@@ -16,7 +16,7 @@
 					新增用户
 				</el-button>
 			</div>
-			<el-table :data="userManageData.userList" fit style="width: 100%;flex: 1;">
+			<el-table :data="userManageData.users.user_list" fit style="width: 100%;flex: 1;">
 <!--				<el-table-column type="index" label="序号" width="60" />-->
 				<el-table-column prop="id" label="账户ID" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="user_name" label="账户名称" show-overflow-tooltip></el-table-column>
@@ -57,9 +57,9 @@
           layout="total, sizes, prev, pager, next, jumper"
           :page-sizes="[10, 20, 30]"
 				:pager-count="5"
-				v-model:current-page="userManageData.param.page_num"
-				v-model:page-size="userManageData.param.page_size"
-				:total="userManageData.total"
+				v-model:current-page="userManageData.params.page_num"
+				v-model:page-size="userManageData.params.page_size"
+				:total="userManageData.users.total"
           @size-change="onHandleSizeChange"
           @current-change="onHandleCurrentChange"
 			>
@@ -116,12 +116,12 @@ const onRowDel = (row: SysUser) => {
 };
 // 分页改变
 const onHandleSizeChange = (val: number) => {
-	userManageData.value.param.page_size = val;
+	userManageData.value.params.page_size = val;
 	userStore.getUserList()
 };
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  userManageData.value.param.page_num = val;
+  userManageData.value.params.page_num = val;
   userStore.getUserList()
 };
 // 页面加载时

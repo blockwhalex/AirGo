@@ -21,3 +21,9 @@ type RoleAndMenu struct {
 	RoleID         int
 	DynamicRouteID int
 }
+
+// roles with total
+type RolesWithTotal struct {
+	Total    int64  `json:"total"`
+	RoleList []Role `json:"role_list"`
+}

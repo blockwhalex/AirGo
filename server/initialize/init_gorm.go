@@ -165,19 +165,19 @@ func InsertInto(db *gorm.DB) error {
 	}
 	//插入sys_dynamic-router_data表
 	DynamicRouteData := []model.DynamicRoute{
-		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "odometer"}},
-		{ParentID: 0, Path: "/admin", Name: "admin", Component: "/layout/routerView/parent.vue", Meta: model.Meta{Title: "超级管理员", Icon: "iconfont icon-xitongshezhi"}},
+		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "iconfont icon-shouye"}},
+		{ParentID: 0, Path: "/admin", Name: "admin", Component: "/layout/routerView/parent.vue", Meta: model.Meta{Title: "超级管理员", Icon: "iconfont icon-shouye_dongtaihui"}},
 		{ParentID: 2, Path: "/admin/menu", Name: "adminMenu", Component: "/admin/menu/index.vue", Meta: model.Meta{Title: "菜单管理", Icon: "iconfont icon-caidan"}},
-		{ParentID: 2, Path: "/admin/role", Name: "adminRole", Component: "/admin/role/index.vue", Meta: model.Meta{Title: "角色管理", Icon: "ele-ColdDrink"}},
-		{ParentID: 2, Path: "/admin/user", Name: "adminUser", Component: "/admin/user/index.vue", Meta: model.Meta{Title: "用户管理", Icon: "ele-ColdDrink"}},
-		{ParentID: 2, Path: "/admin/order", Name: "adminOrder", Component: "/admin/order/index.vue", Meta: model.Meta{Title: "订单管理", Icon: "ele-ColdDrink"}},
-		{ParentID: 2, Path: "/admin/node", Name: "adminNode", Component: "/admin/node/index.vue", Meta: model.Meta{Title: "节点管理", Icon: "ele-ColdDrink"}},
-		{ParentID: 2, Path: "/admin/shop", Name: "adminShop", Component: "/admin/shop/index.vue", Meta: model.Meta{Title: "商品管理", Icon: "ele-ColdDrink"}},
+		{ParentID: 2, Path: "/admin/role", Name: "adminRole", Component: "/admin/role/index.vue", Meta: model.Meta{Title: "角色管理", Icon: "iconfont icon-icon-"}},
+		{ParentID: 2, Path: "/admin/user", Name: "adminUser", Component: "/admin/user/index.vue", Meta: model.Meta{Title: "用户管理", Icon: "iconfont icon-gerenzhongxin"}},
+		{ParentID: 2, Path: "/admin/order", Name: "adminOrder", Component: "/admin/order/index.vue", Meta: model.Meta{Title: "订单管理", Icon: "iconfont icon--chaifenhang"}},
+		{ParentID: 2, Path: "/admin/node", Name: "adminNode", Component: "/admin/node/index.vue", Meta: model.Meta{Title: "节点管理", Icon: "iconfont icon-shuxingtu"}},
+		{ParentID: 2, Path: "/admin/shop", Name: "adminShop", Component: "/admin/shop/index.vue", Meta: model.Meta{Title: "商品管理", Icon: "iconfont icon-zhongduancanshuchaxun"}},
 		//{ParentID: 2, Path: "/admin/trafficRecord", Name: "trafficRecord", Component: "/admin/trafficRecord/index.vue", Meta: model.Meta{Title: "流量记录", Icon: "ele-ColdDrink"}},
-		{ParentID: 2, Path: "/admin/system", Name: "system", Component: "/admin/system/index.vue", Meta: model.Meta{Title: "系统设置", Icon: "ele-ColdDrink"}},
-		{ParentID: 0, Path: "/shop", Name: "shop", Component: "/shop/index.vue", Meta: model.Meta{Title: "商店", Icon: "ele-ColdDrink"}},
-		{ParentID: 0, Path: "/myOrder", Name: "myOrder", Component: "/myOrder/index.vue", Meta: model.Meta{Title: "我的订单", Icon: "ele-ColdDrink"}},
-		{ParentID: 0, Path: "/personal", Name: "personal", Component: "/personal/index.vue", Meta: model.Meta{Title: "个人信息", Icon: "ele-ColdDrink"}},
+		{ParentID: 2, Path: "/admin/system", Name: "system", Component: "/admin/system/index.vue", Meta: model.Meta{Title: "系统设置", Icon: "iconfont icon-xitongshezhi"}},
+		{ParentID: 0, Path: "/shop", Name: "shop", Component: "/shop/index.vue", Meta: model.Meta{Title: "商店", Icon: "iconfont icon-zidingyibuju"}},
+		{ParentID: 0, Path: "/myOrder", Name: "myOrder", Component: "/myOrder/index.vue", Meta: model.Meta{Title: "我的订单", Icon: "iconfont icon--chaifenhang"}},
+		{ParentID: 0, Path: "/personal", Name: "personal", Component: "/personal/index.vue", Meta: model.Meta{Title: "个人信息", Icon: "iconfont icon-gerenzhongxin"}},
 	}
 	if err := db.Create(&DynamicRouteData).Error; err != nil {
 		return errors.New("sys_dynamic-router_data表数据初始化失败!")
@@ -201,10 +201,19 @@ func InsertInto(db *gorm.DB) error {
 	}
 	//插入role_and_menu
 	roleAndMenuData := []model.RoleAndMenu{
+		{RoleID: 1, DynamicRouteID: 1},
 		{RoleID: 1, DynamicRouteID: 2},
 		{RoleID: 1, DynamicRouteID: 3},
 		{RoleID: 1, DynamicRouteID: 4},
+		{RoleID: 1, DynamicRouteID: 5},
+		{RoleID: 1, DynamicRouteID: 6},
+		{RoleID: 1, DynamicRouteID: 7},
+		{RoleID: 1, DynamicRouteID: 8},
 		{RoleID: 1, DynamicRouteID: 9},
+		{RoleID: 1, DynamicRouteID: 10},
+		{RoleID: 1, DynamicRouteID: 11},
+		{RoleID: 1, DynamicRouteID: 12},
+
 		{RoleID: 2, DynamicRouteID: 1},
 		{RoleID: 2, DynamicRouteID: 8},
 		{RoleID: 2, DynamicRouteID: 9},
@@ -214,8 +223,8 @@ func InsertInto(db *gorm.DB) error {
 	}
 	//插入货物 goods
 	goodsData := []model.Goods{
-		{Subject: "1个馒头", TotalAmount: "0.01"},
-		{Subject: "2个馒头", TotalAmount: "0.01"},
+		{Subject: "10G|30天", TotalBandwidth: 10, ExpirationDate: 30, TotalAmount: "0.01"},
+		{Subject: "20G|180天", TotalBandwidth: 20, ExpirationDate: 180, TotalAmount: "0.01"},
 	}
 	if err := global.DB.Create(&goodsData).Error; err != nil {
 		return errors.New("goods表数据初始化失败!")
@@ -299,6 +308,7 @@ func InsertInto(db *gorm.DB) error {
 
 		{Ptype: "p", V0: "1", V1: "/order/getAllOrder", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/order/getOrderByUserID", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/order/completedOrder", V2: "POST"},
 
 		{Ptype: "p", V0: "1", V1: "/system/getThemeConfig", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/system/updateThemeConfig", V2: "POST"},

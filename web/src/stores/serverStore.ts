@@ -56,9 +56,9 @@ export const useServerStore = defineStore("serverStore", {
             this.serverConfig = res.data
         },
         //修改系统设置
-        async updateServerConfig() {
+        async updateServerConfig(){
             const res = await systemApi.updateServerConfig(this.serverConfig)
-            //this.serverConfig=res.data
+            return res
         }
 
     }

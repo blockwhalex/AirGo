@@ -5,27 +5,56 @@
                 <el-input v-model="goodsManageData.currentGoods.subject" />
             </el-form-item>
             <!-- input会自动将数字类型转换为了字符串类型，导致form表单提交后端报错，解决方案是Vue的修饰符 -->
+
             <el-form-item label="价格">
+              <el-col :span="4">
                 <el-input v-model="goodsManageData.currentGoods.total_amount" />
+              </el-col>
+              <el-col :span="2" style="text-align: center">
+                <span>-</span>
+              </el-col>
+              <el-col :span="18">
+                <span class="text-gray-500">RMB</span>
+              </el-col>
             </el-form-item>
+
+
             <el-form-item label="总流量">
+              <el-col :span="4">
                 <el-input v-model.number="goodsManageData.currentGoods.total_bandwidth" type="number"  />
+              </el-col>
+              <el-col :span="2" style="text-align: center">
+                <span>-</span>
+              </el-col>
+              <el-col :span="18">
+                <span class="text-gray-500">GB</span>
+              </el-col>
             </el-form-item>
+
             <el-form-item label="有效期">
+              <el-col :span="4">
                 <el-input v-model.number="goodsManageData.currentGoods.expiration_date" type="number" />
+              </el-col>
+              <el-col :span="2" style="text-align: center">
+                <span>-</span>
+              </el-col>
+              <el-col :span="18">
+                <span class="text-gray-500">天</span>
+              </el-col>
+
             </el-form-item>
           <el-form-item label="关联节点">
-
               <el-transfer
-                  v-model="goodsManageData.currentGoods.checkedNodes"
+                  :data="nodeManageData.nodes.node_list"
+                  v-model="goodsManageData.currentGoods.checked_nodes"
+                  :right-default-checked="goodsManageData.currentGoods.checked_nodes"
                   :props="{
-                  key: 'nodeID',
+                  key: 'id',
                   label: 'name',
                   }"
-                  :data="nodeList"
+                  :titles="['全部节点', '选中节点']"
+
               />
-
-
           </el-form-item>
         </el-form>
         <template #footer>
@@ -50,7 +79,7 @@ const { goodsManageData } = storeToRefs(shopStore)
 //store
 import { useNodeStore } from "/@/stores/node";
 const nodeStore = useNodeStore();
-const { nodeList } = storeToRefs(nodeStore);
+const { nodeManageData } = storeToRefs(nodeStore);
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 // 打开弹窗
@@ -64,8 +93,10 @@ const openDialog = (type: string, row?: any) => {
     goodsManageData.value.type=type
     goodsManageData.value.title="修改商品"
     goodsManageData.value.currentGoods=row //将当前row写入pinia
-      goodsManageData.value.currentGoods.checked_nodes=[] //剔除null
-      goodsManageData.value.currentGoods.nodes=[] //剔除null
+      if (goodsManageData.value.currentGoods.checked_nodes==undefined){
+        goodsManageData.value.currentGoods.checked_nodes=[] //剔除null,否则ts报错
+      }
+      goodsManageData.value.currentGoods.nodes=[] //清空nodes，否则传递多余信息
     goodsManageData.value.isShowDialog = true
     }
 

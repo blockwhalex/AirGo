@@ -30,7 +30,7 @@ type Orders struct {
 	QRCode         string `json:"qr_code"`                                                                          // 当前预下单请求生成的二维码码串，可以用二维码生成工具根据该码串值生成对应的二维码
 	TradeNo        string `json:"trade_no"         gorm:"comment:支付宝交易号"`                                           // 支付宝交易号
 	BuyerLogonId   string `json:"buyer_logon_id"   gorm:"comment:买家支付宝账号"`                                          // 买家支付宝账号
-	TradeStatus    string `json:"trade_status"     gorm:"default:created;comment:交易状态"`                             // 交易状态 1、WAIT_BUYER_PAY（交易创建，等待买家付款）；2、TRADE_CLOSED（未付款交易超时关闭，或支付完成后全额退款）；3、TRADE_SUCCESS（交易支付成功）； 4、TRADE_FINISHED（交易结束，不可退款）
+	TradeStatus    string `json:"trade_status"     gorm:"default:created;comment:交易状态"`                             // 交易状态 1、WAIT_BUYER_PAY（交易创建，等待买家付款）；2、TRADE_CLOSED（未付款交易超时关闭，或支付完成后全额退款）；3、TRADE_SUCCESS（交易支付成功）； 4、TRADE_FINISHED（交易结束，不可退款）；5、completed（手动完成订单）；6、created（订单已创建）
 	TotalAmount    string `json:"total_amount"     gorm:"comment:订单金额"`                                             // 订单金额
 	ReceiptAmount  string `json:"receipt_amount"   gorm:"comment:实收金额"`                                             // 实收金额
 	BuyerPayAmount string `json:"buyer_pay_amount" gorm:"comment:付款金额"`                                             // 付款金额

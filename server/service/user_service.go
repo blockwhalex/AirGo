@@ -20,6 +20,8 @@ func Register(u *model.User) error {
 	if err == nil {
 		return errors.New("用户已存在")
 	}
+	//默认角色
+	u.RoleGroup = []model.Role{{ID: 2}} //id=2,普通用户
 	return global.DB.Create(&u).Error
 
 }
@@ -139,25 +141,16 @@ func GetUserInfo(uID int) (*model.User, error) {
 }
 
 // 获取用户列表,分页
-func GetUserlist(params *model.PaginationParams) (*[]model.User, error) {
+func GetUserlist(params *model.PaginationParams) (*model.UsersWithTotal, error) {
 	//fmt.Println("获取用户列表,分页:", params)
-	var userArr []model.User
-	//var count int64
-	//global.DB.Model(&model.User{}).Count(&count)
+	var userArr model.UsersWithTotal
+	var err error
 	if params.Search != "" {
-		err := global.DB.Where("user_name like ?", "%"+params.Search+"%").Limit(params.PageSize).Offset((params.PageNum - 1) * params.PageSize).Find(&userArr).Error
-		if err != nil {
-			return nil, err
-		}
+		err = global.DB.Model(&model.User{}).Where("user_name like ?", ("%" + params.Search + "%")).Count(&userArr.Total).Limit(params.PageSize).Offset((params.PageNum - 1) * params.PageSize).Find(&userArr.UserList).Error
 	} else {
-		err := global.DB.Limit(params.PageSize).Offset((params.PageNum - 1) * params.PageSize).Find(&userArr).Error
-		if err != nil {
-			return nil, err
-		}
+		err = global.DB.Model(&model.User{}).Count(&userArr.Total).Limit(params.PageSize).Offset((params.PageNum - 1) * params.PageSize).Find(&userArr.UserList).Error
 	}
-
-	return &userArr, nil
-
+	return &userArr, err
 }
 
 // 新建用户

@@ -26,6 +26,7 @@ func main() {
 		fmt.Println("未找到sys_user库表,开始建表")
 		initialize.RegisterTables()      //创建table
 		initialize.InsertInto(global.DB) //导入数据
+		initialize.InitCasbin()          //重新加载casbin
 	}
 	initialize.InitServer()     //全局系统配置
 	initialize.InitTheme()      //全局主题
@@ -33,6 +34,7 @@ func main() {
 	//initialize.InitBase64Captcha() //Base64Captcha
 	initialize.InitCrontab()      //定时任务
 	initialize.InitAlipayClient() //alipay
+	initialize.InitEmailDialer()  //gomail Dialer
 	initialize.InitRouter()       //初始总路由
 
 }

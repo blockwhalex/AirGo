@@ -18,6 +18,14 @@ export function useOrderApi(){
                 data
             })
         },
+        //完成未支付订单
+        completedOrderApi:(data?:object)=>{
+            return service({
+                url: '/order/completedOrder',
+                method: 'POST',
+                data
+            })
+        },
 
     }
 

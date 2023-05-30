@@ -90,8 +90,8 @@ const state = reactive({
   isCountDown:false,
   countDowdTime:60,
 	ruleForm: {
-		user_name: 'admin@oicq.com',
-		password: 'admin',
+		user_name: '',
+		password: '',
 		email_code: '',
 	},
 	loading: {

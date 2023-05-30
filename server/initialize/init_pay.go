@@ -13,6 +13,6 @@ func InitAlipayClient() {
 		return
 	}
 
-	log.Println("alipay client done:", err)
+	log.Println("alipay client init:", err)
 	global.AlipayClient = client
 }

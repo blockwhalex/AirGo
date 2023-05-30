@@ -56,11 +56,12 @@ export const useUserStore = defineStore('userInfo', {
         },
         //用户管理页面数据
         userManageData: {
-            userInfos: {} as SysUser,
-            userList: [] as SysUser[],
-            total: 0,
             loading: false,
-            param: {
+            users:{
+                total: 0,
+                user_list:[] as SysUser[],
+            },
+            params: {
                 search: '',
                 page_num: 1,
                 page_size: 10,
@@ -71,7 +72,7 @@ export const useUserStore = defineStore('userInfo', {
                 title: '',
                 submitTxt: '',
                 userForm: {} as SysUser,
-                checkList: [],
+                check_list: [], //选中的角色
             },
         },
     }),
@@ -152,37 +153,31 @@ export const useUserStore = defineStore('userInfo', {
         },
         //获取用户列表
         async getUserList() {
-            const res = await userApi.getUserListApi(this.userManageData.param)
-            this.userManageData.userList = res.data
-            this.userManageData.total = this.userManageData.userList.length
+            const res = await userApi.getUserListApi(this.userManageData.params)
+            this.userManageData.users = res.data
         },
         //新建用户
         async newUser() {
             //密码加密
-            this.userManageData.userInfos.password = bcrypt.hashSync(this.userManageData.userInfos.password, 10)
+            this.userManageData.dialog.userForm.password = bcrypt.hashSync(this.userManageData.dialog.userForm.password, 10)
             const res = await userApi.newUserApi({
-                user: this.userManageData.userInfos,
-                checkList: this.userManageData.dialog.checkList
+                user: this.userManageData.dialog.userForm,
+                check_list: this.userManageData.dialog.check_list
             })
         },
         //修改用户
         async updateUser() {
-            if (!this.userManageData.userInfos.password.startsWith('$2a$10$')) {
-                this.userManageData.userInfos.password = bcrypt.hashSync(this.userManageData.userInfos.password, 10)
+            if (!this.userManageData.dialog.userForm.password.startsWith('$2a$10$')) {
+                this.userManageData.dialog.userForm.password = bcrypt.hashSync(this.userManageData.dialog.userForm.password, 10)
             }
             const res = await userApi.updateUserApi({
-                user: this.userManageData.userInfos,
-                checkList: this.userManageData.dialog.checkList
+                user: this.userManageData.dialog.userForm,
+                check_list: this.userManageData.dialog.check_list
             })
         },
         //删除用户
         async deleteUser(params?: object) {
             const res = await userApi.deleteUserApi(params)
-        },
-        //查询用户
-        async findUser() {
-            const res = await userApi.findUserApi(this.userManageData.userInfos)
-            this.userManageData.userInfos = res.data
         },
         //修改密码
         async changePassword() {

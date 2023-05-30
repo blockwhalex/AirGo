@@ -28,6 +28,7 @@ func GetOrderByUserID(ctx *gin.Context) {
 	uID, ok := ctx.Get("uID")
 	if !ok {
 		response.Fail("订单获取，uID参数错误", nil, ctx)
+		return
 	}
 	uIDInt := uID.(int)
 	var params model.PaginationParams
@@ -39,5 +40,27 @@ func GetOrderByUserID(ctx *gin.Context) {
 		return
 	}
 	response.OK("订单获取成功", res, ctx)
+}
+
+// 完成未支付订单
+func CompletedOrder(ctx *gin.Context) {
+	var order model.Orders
+	err := ctx.ShouldBind(&order)
+	if err != nil {
+		response.Fail("完成未支付订单参数错误"+err.Error(), nil, ctx)
+		return
+	}
+	order.TradeStatus = "completed"   //更新数据库订单状态,自定义结束状态completed
+	err = service.UpdateOrder(&order) //更新数据库状态
+	if err != nil {
+		response.Fail("更新数据库状态错误"+err.Error(), nil, ctx)
+		return
+	}
+	err = service.UpdateUserSubscribe(&order) //更新用户订阅信息
+	if err != nil {
+		response.Fail("更新用户订阅信息错误"+err.Error(), nil, ctx)
+		return
+	}
+	response.OK("完成未支付订单成功", nil, ctx)
 
 }

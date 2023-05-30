@@ -56,8 +56,9 @@ func NewTrafficLog(t *model.TrafficLog) error {
 }
 
 // 查询节点流量
-func GetNodeTraffic(params model.QueryParamsWithDate) []model.Node {
-	var nodeArr []model.Node
+func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
+	//var nodeArr []model.Node
+	var nodeArr model.NodesWithTotal
 	var startTime, endTime time.Time
 	//时间格式转换
 	if len(params.Date) == 2 {
@@ -71,24 +72,25 @@ func GetNodeTraffic(params model.QueryParamsWithDate) []model.Node {
 
 	//fmt.Println("默认前1个月数据", startTime, endTime)
 	if params.Search != "" {
-		fmt.Println("name:", params.Search)
-		err := global.DB.Debug().Where("search like ?", "%"+params.Search+"%").Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr).Error
+		//fmt.Println("name:", params.Search)
+		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Where("name LIKE ?", "%"+params.Search+"%").Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
 		if err != nil {
 			fmt.Println("err:", err)
-			return nil
+			return model.NodesWithTotal{}
 		}
 	} else {
-		err := global.DB.Debug().Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr).Error
+		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
 		if err != nil {
 			fmt.Println("err:", err)
-			return nil
+			return model.NodesWithTotal{}
 		}
 	}
-	for i1, _ := range nodeArr {
-		for _, v := range nodeArr[i1].TrafficLogs {
-			nodeArr[i1].TotalUp = nodeArr[i1].TotalUp + v.U
-			nodeArr[i1].TotalDown = nodeArr[i1].TotalDown + v.D
+	for i1, _ := range nodeArr.NodeList {
+		for _, v := range nodeArr.NodeList[i1].TrafficLogs {
+			nodeArr.NodeList[i1].TotalUp = nodeArr.NodeList[i1].TotalUp + v.U
+			nodeArr.NodeList[i1].TotalDown = nodeArr.NodeList[i1].TotalDown + v.D
 		}
+		//nodeArr[i1].TrafficLogs=[]model.TrafficLog{} //清空traffic
 	}
 	return nodeArr
 }

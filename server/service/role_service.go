@@ -26,16 +26,17 @@ func FindRoleIdsByuId(uId int) ([]int, error) {
 }
 
 // 分页获取角色列表
-func GetRoleList(roleParams *model.PaginationParams) ([]model.Role, error) {
+func GetRoleList(roleParams *model.PaginationParams) (*model.RolesWithTotal, error) {
 	//log.Println("接收role params：", roleParams.Search)
-	var roles []model.Role
+	var roleArr model.RolesWithTotal
+	var err error
 	if roleParams.Search != "" {
-		//gorm 模糊搜索
-		err := global.DB.Debug().Where("role_name like ?", ("%" + roleParams.Search + "%")).Preload("Menus").Limit(roleParams.PageSize).Offset((roleParams.PageNum - 1) * roleParams.PageSize).Find(&roles).Error
-		return roles, err
+		err = global.DB.Model(&model.Role{}).Count(&roleArr.Total).Where("role_name like ?", ("%" + roleParams.Search + "%")).Preload("Menus").Limit(roleParams.PageSize).Offset((roleParams.PageNum - 1) * roleParams.PageSize).Find(&roleArr.RoleList).Error
+	} else {
+		err = global.DB.Model(&model.Role{}).Count(&roleArr.Total).Preload("Menus").Limit(roleParams.PageSize).Offset((roleParams.PageNum - 1) * roleParams.PageSize).Find(&roleArr.RoleList).Error
 	}
-	err := global.DB.Preload("Menus").Limit(roleParams.PageSize).Offset((roleParams.PageNum - 1) * roleParams.PageSize).Find(&roles).Error
-	return roles, err
+	return &roleArr, err
+
 }
 
 // 修改角色信息

@@ -4,13 +4,21 @@ import (
 	"AirGo/api"
 	"AirGo/global"
 	"AirGo/middleware"
+	"context"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 // 初始化总路由
 func InitRouter() {
+	// 正式发布模式
+	gin.SetMode(gin.ReleaseMode) //ReleaseMode TestMode DebugMode
 	Router := gin.Default()
 	Router.Use(middleware.Cors()) //不开启跨域验证码出错
 	RouterGroup := Router.Group("/")
@@ -18,7 +26,7 @@ func InitRouter() {
 	//公共路由
 	publicRouter := RouterGroup.Group("public")
 	{
-		publicRouter.POST("getEmailCode", api.GetMailCode)
+		publicRouter.POST("getEmailCode", api.GetMailCode)     //获取验证码
 		publicRouter.GET("getThemeConfig", api.GetThemeConfig) //获取主题配置
 	}
 
@@ -61,7 +69,7 @@ func InitRouter() {
 	//角色
 	roleRouter := RouterGroup.Group("role")
 	{
-		roleRouter.POST("getAllRoleList", api.GetRoleList)    //获取role list
+		roleRouter.POST("getRoleList", api.GetRoleList)       //获取role list
 		roleRouter.POST("modifyRoleInfo", api.ModifyRoleInfo) //更新role 信息
 		roleRouter.POST("addRole", api.AddRole)               //更新role 信息
 		roleRouter.DELETE("delRole", api.DelRole)             //删除role
@@ -87,7 +95,7 @@ func InitRouter() {
 		nodeRouter.POST("newNode", api.NewNode)             //新建节点
 		nodeRouter.POST("deleteNode", api.DeleteNode)       //删除节点
 		nodeRouter.POST("updateNode", api.UpdateNode)       //更新节点
-		nodeRouter.POST("getTraffic", api.GetNodeTraffic)   //获取节点流量统计
+		nodeRouter.POST("getTraffic", api.GetNodeTraffic)   //获取节点 with Traffic,分页
 	}
 
 	//sspqnel
@@ -123,6 +131,7 @@ func InitRouter() {
 	{
 		orderRouter.POST("getAllOrder", api.GetAllOrder)           //获取全部订单，分页获取
 		orderRouter.POST("getOrderByUserID", api.GetOrderByUserID) //获取订单，分页获取
+		orderRouter.POST("completedOrder", api.CompletedOrder)
 	}
 
 	//casbin
@@ -137,5 +146,31 @@ func InitRouter() {
 		casbinRouter.POST("updateCasbinPolicy", api.UpdateCasbinPolicy)       //更新casbin权限
 		casbinRouter.POST("updateCasbinPolicyNew", api.UpdateCasbinPolicyNew) //更新casbin权限
 	}
-	Router.Run(":" + strconv.Itoa(global.CONFIG.System.Port))
+	//Router.Run(":" + strconv.Itoa(global.CONFIG.System.Port))
+
+	srv := &http.Server{
+		Addr:    ":" + strconv.Itoa(global.CONFIG.System.Port),
+		Handler: Router,
+	}
+
+	go func() {
+		// 服务连接
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("listen: %s\n", err)
+		}
+	}()
+
+	// 等待中断信号关闭服务器(设置 5 秒的超时时间)
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	log.Println("Shutdown Server ...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
+	}
+	log.Println("Server exiting")
+
 }

@@ -43,7 +43,7 @@ const onSubmitOrder = () => {
   //传goods_id
   shopApi.preCreatePayApi({goods_id:tableData.value.currentGoods.id}).then((res) => {
     if (res.code === 0) {
-      //保存订到信息到pinia
+      //保存订单信息到pinia
       tableData.value.currentOrder = res.data
       //关闭弹窗
       tableData.value.isShowSubmitOrderDialog = false

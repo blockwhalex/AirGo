@@ -1,7 +1,8 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 //api
-import { useShopApi } from "/@/api/shop/index";
-import { ElMessage } from "element-plus";
+import {useShopApi} from "/@/api/shop/index";
+import {ElMessage} from "element-plus";
+
 const shopApi = useShopApi()
 
 
@@ -24,8 +25,8 @@ export const useShopStore = defineStore("shopStore", {
                 product_code: "",
                 total_bandwidth: 0,
                 expiration_date: 0,
-                checked_nodes:[0], //套餐编辑时选中的节点
-                nodes:[],
+                checked_nodes: [0], //套餐编辑时选中的节点
+                nodes: [],
             } as Goods,
         },
 
@@ -35,7 +36,7 @@ export const useShopStore = defineStore("shopStore", {
         tableData: {
             isShowPurchaseDialog: false,
             isShowQRDialog: false,
-            isShowSubmitOrderDialog:false,
+            isShowSubmitOrderDialog: false,
             //二维码支付链接
             QRcode: null,
             QRtext: '',
@@ -49,19 +50,19 @@ export const useShopStore = defineStore("shopStore", {
                 expiration_date: 0,
             } as Goods,
             //当前支付商品创建订单
-            currentOrder:{
-                id:0,
-                out_trade_no:'',
-                goods_id:0,
-                subject:'',
-                price:'',
-                pay_type:'alipay',
-                trade_no:'',
-                buyer_logon_id:'',
-                trade_status:'',
-                total_amount:'',
-               // status:'',
-                qr_code:'',
+            currentOrder: {
+                id: 0,
+                out_trade_no: '',
+                goods_id: 0,
+                subject: '',
+                price: '',
+                pay_type: 'alipay',
+                trade_no: '',
+                buyer_logon_id: '',
+                trade_status: '',
+                total_amount: '',
+                // status:'',
+                qr_code: '',
             } as Order,
         }
     }),
@@ -85,6 +86,7 @@ export const useShopStore = defineStore("shopStore", {
         },
         //修改商品
         async updateGoods() {
+            console.log("修改商品:", this.goodsManageData.currentGoods)
             const res = await shopApi.updateGoodsApi(this.goodsManageData.currentGoods)
             if (res.code === 0) {
                 ElMessage.success(res.msg)

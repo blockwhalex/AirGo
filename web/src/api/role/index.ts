@@ -3,9 +3,9 @@ import request from '/@/utils/request';
 export function useRoleApi() {
     return {
         //获取全部role
-        getAllRoleListApi: (data?: object) => {
+        getRoleListApi: (data?: object) => {
             return request({
-                url: "/role/getAllRoleList",
+                url: "/role/getRoleList",
                 method: "post",
                 data,
             })

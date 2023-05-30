@@ -1,7 +1,7 @@
-declare interface Node {
+declare interface NodeInfo {
     created_at:string;
     updated_at:string;
-    node_id: number;
+    id: number;
     //基础参数
     name: string;
     address: string;
@@ -22,5 +22,5 @@ declare interface Node {
     path: string;
     tls: string;
     sni:string;
-
 }
+

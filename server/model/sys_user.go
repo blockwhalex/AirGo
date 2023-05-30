@@ -86,6 +86,12 @@ type UserChangePassword struct {
 	EmailCode  string `json:"email_code"`
 }
 
+// users with total
+type UsersWithTotal struct {
+	Total    int64  `json:"total"`
+	UserList []User `json:"user_list"`
+}
+
 // 可连接的用户 sspanel 响应模板
 //
 //	{

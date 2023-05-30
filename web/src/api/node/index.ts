@@ -2,7 +2,14 @@ import service from "/@/utils/request";
 
 export function useNodeApi(){
     return {
-        getAllNodeApi:(data?:object)=>{
+        getAllNodeApi:()=>{
+            return service({
+                url: '/node/getAllNode',
+                method: 'get',
+            })
+
+        },
+        getNodeWithTrafficApi:(data?:object)=>{
             return service({
                 url: '/node/getTraffic',
 				method: 'post',
@@ -39,12 +46,6 @@ export function useNodeApi(){
                 data
             })
         },
-        getNodeTrafficApi:(data?:object)=>{
-            return service({
-                url: '/node/getTraffic',
-                method: 'post',
-                data
-            })
-        }
+
     }
 }

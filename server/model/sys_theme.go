@@ -77,7 +77,7 @@ type Theme struct {
 	GlobalViceTitle     string `json:"globalViceTitle"      gorm:"default:AirGo;comment:网站副标题"`
 	GlobalViceTitleMsg  string `json:"globalViceTitleMsg"   gorm:"default:AirGo;comment:网站副标题"`
 	GlobalI18n          string `json:"globalI18n"           gorm:"default:zh-cn;comment:默认初始语言"`
-	GlobalComponentSize string `json:"globalComponentSize"  gorm:"default:large;comment:默认全局组件大小，可选值<large|'default'|small>"`
+	GlobalComponentSize string `json:"globalComponentSize"  gorm:"default:small;comment:默认全局组件大小，可选值<large|'default'|small>"`
 	//注册界面
-	EnableEmailCode bool `json:"enable_email_code" gorm:"default:false;comment:是否开启email验证码"`
+	EnableEmailCode bool `json:"enable_email_code"          gorm:"default:false;comment:是否开启email验证码"`
 }

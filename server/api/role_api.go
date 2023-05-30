@@ -69,7 +69,7 @@ func AddRole(ctx *gin.Context) {
 func DelRole(ctx *gin.Context) {
 	var role model.Role
 	err := ctx.ShouldBind(&role)
-	if err != nil {
+	if err != nil || role.ID == 1 || role.ID == 2 { //默认admin 普通用户不可删除
 		fmt.Println("ShouldBind err:", err.Error())
 		response.Fail("删除角色参数错误", err.Error(), ctx)
 		return

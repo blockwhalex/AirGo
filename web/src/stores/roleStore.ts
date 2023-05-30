@@ -42,41 +42,46 @@ export const useRoleStore = defineStore("roleStore", {
             } as CasbinInfo,
         },
 
-        //角色管理默认页参数
-        tableData: {
-            data: [] as RowRoleType[],//所有角色列表
-            total: 0,
+        //角色管理参数
+        roleManageData:{
+            roles:{
+                total: 0,
+                role_list:[] as RowRoleType[],
+            },
             loading: false,
-            param: {
+            params: {
                 search: '',
                 page_num: 1,
                 page_size: 10,
             },
-        },
+        }
     }),
     actions: {
-        //所有角色列表,分页
-        async setRoleList() {
-            const res: any = await roleApi.getAllRoleListApi(this.tableData.param)
-            // console.log("所有rolelist：",res.data)
-            this.tableData.data = res.data
+        //所有角色列表
+        async getAllRoleList(params?:object) {
+            console.log("params:",params)
+            const res: any = await roleApi.getRoleListApi(this.roleManageData.params)
+            this.roleManageData.roles = res.data
         },
-        //修改role 信息
-        //新建角色
-        //查询角色 by role name
-        //删除角色
+        //params===undefined,角色列表,分页;否则查询全部
+        async getRoleList(params?:object) {
+            if (params!=undefined) {
+                const res: any = await roleApi.getRoleListApi(params)
+                this.roleManageData.roles = res.data
+            } else {
+                const res: any = await roleApi.getRoleListApi(this.roleManageData.params)
+                this.roleManageData.roles = res.data
+            }
+        },
 
         //获取当前角色的权限
         async getPolicyByRoleIds() {
             const res = await roleApi.getPolicyByRoleIdsApi()
-            //console.log("获取当前角色的权限:",res.data)
         },
         //获取全部权限
         async getAllPolicy() {
             const res = await roleApi.getAllPolicyApi()
             this.dialogEditApi.allCasbinInfo = res.data
-            // console.log("获取全部权限:",this.adminCasbinInfo)
-
         },
         //更新角色权限
         async updateCasbinPolicy(): Promise<boolean> {

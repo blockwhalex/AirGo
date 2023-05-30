@@ -2,10 +2,10 @@
   <div class="container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
       <div class="mb15">
-        <el-input  size="default" placeholder="请输入名称" style="max-width: 180px"></el-input>
+        <el-input  v-model="nodeManageData.params.search" size="default" placeholder="请输入名称" style="max-width: 180px"></el-input>
         <el-date-picker
             size="default"
-            v-model="tableData.params.date"
+            v-model="nodeManageData.params.date"
             type="datetimerange"
             :shortcuts="shortcuts"
             range-separator="至"
@@ -13,7 +13,7 @@
             end-placeholder="结束日期"
             value-format="YYYY-MM-DD HH:mm:ss"
         />
-        <el-button size="default" type="primary" class="ml10">
+        <el-button  @click="nodeStore.getNodeWithTraffic()" size="default" type="primary" class="ml10">
           <el-icon>
             <ele-Search/>
           </el-icon>
@@ -26,7 +26,7 @@
           新增节点
         </el-button>
       </div>
-      <el-table :data="nodeList" height="250" style="width: 100%;flex: 1;">
+      <el-table :data="nodeManageData.nodes.node_list" height="100%" style="width: 100%;flex: 1;">
         <el-table-column fixed type="index" label="序号" width="60"/>
         <el-table-column prop="name" label="节点名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="address" label="节点地址" show-overflow-tooltip></el-table-column>
@@ -70,16 +70,16 @@
           :page-sizes="[10, 20, 30, 40]"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="onHandleSizeChange" @current-change="onHandleCurrentChange"
-          v-model:current-page="tableData.pageNum"
-          v-model:page-size="tableData.pageSize"
-          :total="tableData.total"
+          v-model:current-page="nodeManageData.params.page_num"
+          v-model:page-size="nodeManageData.params.page_size"
+          :total="nodeManageData.nodes.total"
       />
     </el-card>
-    <nodeDialog ref="nodeDialogRef" @refresh="nodeStore.getAllnode()"/>
+    <nodeDialog ref="nodeDialogRef" @refresh="nodeStore.getNodeWithTraffic()"/>
   </div>
 </template>
 
-<script setup lang="ts" name="Nodeanage">
+<script setup lang="ts" name="NodeManage">
 
 import {defineAsyncComponent, onMounted, ref} from "vue";
 import {useNodeStore} from "/@/stores/node";
@@ -89,9 +89,9 @@ import {storeToRefs} from "pinia";
 //导入弹出层
 const nodeDialog = defineAsyncComponent(() => import('/@/views/admin/node/dialog.vue'))
 const nodeDialogRef = ref()
-//store
+//node store
 const nodeStore = useNodeStore()
-const {nodeList, tableData} = storeToRefs(nodeStore)
+const {nodeManageData} = storeToRefs(nodeStore)
 //user store
 const userStore = useUserStore()
 const {userInfos} = storeToRefs(userStore)
@@ -140,7 +140,7 @@ function onOpenEditNode(type: string, row: Object) {
 function onRowDel(row: Object) {
   nodeStore.deleteNode(row)
   setTimeout(() => {
-    nodeStore.getAllnode()
+    nodeStore.getNodeWithTraffic()
   }, 2000);
 
 
@@ -148,23 +148,23 @@ function onRowDel(row: Object) {
 
 // 分页改变
 const onHandleSizeChange = (val: number) => {
-  tableData.value.params.page_size = val;
-  //getTableData();
+  nodeManageData.value.params.page_size = val;
+  nodeStore.getNodeWithTraffic()
 };
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  tableData.value.params.page_num = val;
-  //getTableData();
+  nodeManageData.value.params.page_num = val;
+  nodeStore.getNodeWithTraffic()
 };
 
 //查询节点
 function onSearch() {
-  // nodeStore.getNodeByName()
-  nodeStore.getAllnode()
+
+  nodeStore.getNodeWithTraffic()
 }
 
 onMounted(() => {
-  nodeStore.getAllnode()
+  nodeStore.getNodeWithTraffic()
 });
 
 </script>

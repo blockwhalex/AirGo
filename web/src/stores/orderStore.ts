@@ -40,12 +40,15 @@ export const useOrderStore = defineStore("orderStore", {
         },
         //获取用户全部订单
         async getOrder(params?: object) {
-            const res = await orderApi.getOrderApi(this.orderPersonal)
+            const res = await orderApi.getOrderApi(this.orderPersonal.queryParams)
             this.orderPersonal.allOrders.order_list = res.data
            // this.orderPersonal.queryParams.total=this.orderPersonal.allOrders.length
         },
+        //完成未支付订单
+        async completedOrder(params?: object) {
+            const res = await orderApi.completedOrderApi(params)
+            return res
 
-
-
+        },
     }
 })

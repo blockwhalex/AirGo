@@ -65,6 +65,7 @@ func TradePreCreatePay(client *alipay.Client, sysOrder *model.Orders) (*alipay.T
 	order.TotalAmount = sysOrder.TotalAmount
 	order.ProductCode = sysOrder.ProductCode
 	res, err := client.TradePreCreate(order)
+	fmt.Println("TradePreCreate:", res, err)
 	return res, err
 	//响应模板
 	// 	{

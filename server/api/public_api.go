@@ -37,11 +37,10 @@ func GetMailCode(ctx *gin.Context) {
 	}
 	//生成验证码
 	randomStr := encode_plugin.RandomString(4) //4位随机数
-	mail_plugin.SendEmail(u.UserName, randomStr)
 	//验证码存入local cache
 	global.LocalCache.Set(u.UserName+"emailcode", randomStr, 60000000000) //60秒过期
 	//发送邮件
-	err = mail_plugin.SendEmail(user.UserName, randomStr)
+	err = mail_plugin.SendEmail(global.EmailDialer, user.UserName, randomStr, global.Server.Email.EmailContent)
 	if err != nil {
 		fmt.Println("验证码获取失败:", err.Error())
 		response.OK("验证码获取失败"+err.Error(), nil, ctx)

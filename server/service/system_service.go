@@ -3,6 +3,8 @@ package service
 import (
 	"AirGo/global"
 	"AirGo/model"
+	"AirGo/utils/alipay_plugin"
+	"AirGo/utils/mail_plugin"
 )
 
 func GetThemeConfig() (*model.Theme, error) {
@@ -30,16 +32,27 @@ func GetSetting() (*model.Server, error) {
 // 修改系统配置
 func UpdateSetting(setting *model.Server) error {
 	//修改theme中的字段
-	var theme model.Theme
-	theme = global.Theme
-	theme.EnableEmailCode = setting.System.EnableEmailCode
-	global.DB.Save(&theme)
-	global.Theme = theme
-	// 修改系统配置
-	err := global.DB.Save(&setting).Error
+	global.Theme.EnableEmailCode = setting.System.EnableEmailCode
+	err := global.DB.Save(&global.Theme).Error
 	if err != nil {
 		return err
 	}
+	// 修改系统配置
+	err = global.DB.Save(&setting).Error
+	if err != nil {
+		return err
+	}
+	//重新加载系统配置
 	global.Server = *setting
+	//pay
+	client, err := alipay_plugin.InitAlipayClient()
+	if err == nil {
+		global.AlipayClient = client
+	}
+	//email
+	d := mail_plugin.InitEmailDialer()
+	if d != nil {
+		global.EmailDialer = d
+	}
 	return nil
 }

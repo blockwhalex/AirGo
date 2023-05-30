@@ -2,7 +2,7 @@
   <div class="container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
       <div class="mb15">
-        <el-input v-model="orderManageData.queryParams.search" size="default" placeholder="请输入订单号" style="max-width: 180px"></el-input>
+        <el-input v-model="orderManageData.queryParams.search"  placeholder="请输入订单号" style="max-width: 180px"></el-input>
         <el-date-picker
             size="default"
             v-model="orderManageData.queryParams.date"
@@ -14,6 +14,7 @@
             value-format="YYYY-MM-DD HH:mm:ss"
         />
         <el-button size="default" type="primary" class="ml10" @click="onSearch">
+
           <el-icon>
             <ele-Search/>
           </el-icon>
@@ -24,7 +25,11 @@
         <el-table-column type="index" label="序号"/>
         <el-table-column prop="id" label="订单ID"/>
         <el-table-column prop="out_trade_no" label="订单号"/>
-        <el-table-column prop="created_at" label="下单日期"/>
+        <el-table-column prop="created_at" label="下单日期">
+          <template #default="scope">
+            <el-tag type="success">{{DateStrtoTime(scope.row.created_at)}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="user_name" label="用户"/>
         <el-table-column prop="goods_id" label="商品ID" show-overflow-tooltip/>
         <el-table-column prop="subject" label="商品标题" show-overflow-tooltip/>
@@ -33,7 +38,12 @@
         <el-table-column prop="trade_status" label="交易状态" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.trade_status==='TRADE_SUCCESS'">支付成功</el-tag>
-            <el-tag type="warning" v-else>未支付</el-tag>
+            <el-tag type="warning" v-else-if="scope.row.trade_status==='WAIT_BUYER_PAY'">等待买家付款</el-tag>
+            <el-tag type="danger" v-else-if="scope.row.trade_status==='TRADE_CLOSED'">交易超时关闭</el-tag>
+            <el-tag type="success" v-else-if="scope.row.trade_status==='TRADE_FINISHED'">交易结束</el-tag>
+            <el-tag type="info" v-else-if="scope.row.trade_status==='created'">订单已创建</el-tag>
+            <el-tag type="success" v-else-if="scope.row.trade_status==='completed'">订单已完成</el-tag>
+            <el-tag type="danger" v-else>未知状态</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="100">
@@ -59,10 +69,14 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from 'element-plus';
 //store
 import {onMounted} from "vue";
 import {useOrderStore} from "/@/stores/orderStore";
 import {storeToRefs} from "pinia";
+//格式化时间
+import {DateStrtoTime} from "/@/utils/formatTime"
+// console.log(DateStrtoTime("2023-05-29T17:28:47.50276+08:00"))
 
 const orderStore = useOrderStore()
 const {orderManageData} = storeToRefs(orderStore)
@@ -76,6 +90,13 @@ onMounted(() => {
 })
 //完成未支付订单
 const onCompleteOrder = (row: Order) => {
+  orderStore.completedOrder(row).then((res)=>{
+    if (res.code === 0) {
+      ElMessage.success(res.msg)
+    } else {
+      ElMessage.error(res.msg)
+    }
+  })
 
 }
 // 分页改变
