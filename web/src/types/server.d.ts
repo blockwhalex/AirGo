@@ -19,7 +19,8 @@ declare interface System{
     enable_email_code:Boolean;
     is_multipoint:boolean;
     sub_name:string;
-
+    muKey:string;
+    default_goods:string;
 }
 declare interface Captcha{
     key_long:number;

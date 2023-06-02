@@ -6,6 +6,13 @@ import (
 	"fmt"
 )
 
+// 查询全部已启用商品
+func GetAllEnabledGoods() (*[]model.Goods, error) {
+	var goodsArr []model.Goods
+	err := global.DB.Where(&model.Goods{Status: true}).Find(&goodsArr).Error
+	return &goodsArr, err
+}
+
 // 查询全部商品
 func GetAllGoods() (*[]model.Goods, error) {
 	var goodsArr []model.Goods
@@ -17,7 +24,7 @@ func GetAllGoods() (*[]model.Goods, error) {
 			for _, v2 := range goodsArr[k1].Nodes {
 				goodsArr[k1].CheckedNodes = append(goodsArr[k1].CheckedNodes, v2.ID)
 			}
-			goodsArr[k1].Nodes = []model.Node{} //清空，防止传给前端多余信息
+			//goodsArr[k1].Nodes = []model.Node{} //清空，防止传给前端多余信息
 		}
 		//fmt.Println("goodsArr:", goodsArr[0].CheckedNodes)
 		return &goodsArr, err
@@ -25,14 +32,20 @@ func GetAllGoods() (*[]model.Goods, error) {
 
 }
 
-// 查询商品
-func FindGoodsByGoodsID(goodsID int) (model.Goods, error) {
+// 查询商品 by goodsID
+func FindGoodsByGoodsID(goodsID int) (*model.Goods, error) {
 	var goods model.Goods
 	err := global.DB.First(&goods, goodsID).Error
-	return goods, err
+	return &goods, err
 }
 
 // 查询商品
+func FindGoods(goods *model.Goods) (*model.Goods, error) {
+	err := global.DB.Where(goods).First(&goods).Error
+	return goods, err
+}
+
+// 查询商品 by nodeID
 func FindGoodsByNodeID(nodeID int) ([]model.Goods, error) {
 	//log.Println("nodeID:", nodeID)
 	var node model.Node
@@ -42,7 +55,6 @@ func FindGoodsByNodeID(nodeID int) ([]model.Goods, error) {
 	}
 	//log.Println("FindGoodsByNodeID:", node.Goods)
 	return node.Goods, nil
-
 }
 
 // 新建商品

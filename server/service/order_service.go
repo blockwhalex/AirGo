@@ -56,7 +56,8 @@ func GetOrderByUserID(userID int, orderParams *model.PaginationParams) (*[]model
 }
 
 // 获取用户订单
-func GetOrderByOrderID(userID int, order *model.Orders) (*model.Orders, error) {
-	err := global.DB.Model(&model.Orders{ID: order.ID}).First(&order).Error
-	return order, err
+func GetOrderByOrderID(order *model.Orders) (*model.Orders, error) {
+	var queryOrder model.Orders
+	err := global.DB.Debug().Where(&model.Orders{OutTradeNo: order.OutTradeNo, UserID: order.UserID}).First(&queryOrder).Error
+	return &queryOrder, err
 }

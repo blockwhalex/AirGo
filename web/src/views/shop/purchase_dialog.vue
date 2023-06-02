@@ -10,7 +10,7 @@
         <el-button type="success" plain>金额：</el-button>
         {{ tableData.currentOrder.total_amount }}元
       </div>
-      <div>
+      <div v-if="tableData.currentOrder.total_amount!=='0'">
         <el-button type="primary" plain>支付方式</el-button>
         <el-radio-group v-model="tableData.currentOrder.pay_type" class="ml-4">
           <el-radio :label="'alipay'">支付宝</el-radio>
@@ -21,7 +21,7 @@
       <template #footer>
             <span class="dialog-footer">
                 <el-button @click="tableData.isShowPurchaseDialog = false">取消</el-button>
-                <el-button type="primary" @click="onPurchase({id:tableData.currentGoods.id})">
+                <el-button type="warning" @click="onPurchase({id:tableData.currentGoods.id})">
                     确认支付
                 </el-button>
             </span>
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-
+import { ElMessageBox, ElMessage } from 'element-plus';
 //导入store
 import {storeToRefs} from 'pinia';
 import {useShopStore} from "/@/stores/shopStore";
@@ -54,9 +54,14 @@ const emits = defineEmits(['openQRDialog'])
 
 //购买按钮
 const onPurchase = (params: object) => {
-  //api
-  shopApi.purchaseApi(tableData.value.currentOrder).then((res) => {
-    if (res.code === 0 && res.data != "") {
+  //api，传out_trade_no，pay_type
+  shopApi.purchaseApi({out_trade_no:tableData.value.currentOrder.out_trade_no,pay_type:tableData.value.currentOrder.pay_type}).then((res) => {
+    if (res.code === 0 && res.msg==="购买成功"){
+      ElMessage.success("购买成功")
+      tableData.value.isShowPurchaseDialog =false
+      return
+
+    } else if (res.code === 0 && res.data != "") {
       //保存支付二维码
       tableData.value.QRtext = res.data
       //手机端跳转支付页面
@@ -66,6 +71,7 @@ const onPurchase = (params: object) => {
         return
       } else {
         //电脑端打开支付二维码弹窗
+        console.log("电脑端打开支付二维码弹窗")
         emits('openQRDialog')
       }
     }
@@ -89,7 +95,7 @@ const onPurchaseOld = () => {
         return
       } else {
         //电脑端打开支付二维码弹窗
-        openQRDialog()
+        //openQRDialog()
         // onInitQrcode()
       }
     }

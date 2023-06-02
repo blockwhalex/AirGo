@@ -1,11 +1,11 @@
 package api
 
 import (
+	"AirGo/global"
 	"AirGo/model"
 	"AirGo/service"
 	"AirGo/utils/response"
 	"fmt"
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -13,8 +13,11 @@ import (
 
 // 当前节点设置
 func SSNodeInfo(ctx *gin.Context) {
-
-	//参数
+	//验证key
+	if global.Server.System.MuKey != ctx.Query("muKey") {
+		return
+	}
+	//节点号
 	nodeID := ctx.Param("nodeID")
 	nodeIDInt, _ := strconv.Atoi(nodeID)
 	nodeInfo, err := service.SSNodeInfo(nodeIDInt)
@@ -28,7 +31,11 @@ func SSNodeInfo(ctx *gin.Context) {
 
 // 可连接的用户
 func SSUsers(ctx *gin.Context) {
-	//参数
+	//验证key
+	if global.Server.System.MuKey != ctx.Query("muKey") {
+		return
+	}
+	//节点号
 	nodeID := ctx.Query("node_id")
 	nodeIDInt, _ := strconv.Atoi(nodeID)
 	//节点属于哪些goods
@@ -48,11 +55,12 @@ func SSUsers(ctx *gin.Context) {
 
 // 上报用户的流量使用情况
 func SSUsersTraffic(ctx *gin.Context) {
-	node_id_str := ctx.Query("node_id")
-	node_id, _ := strconv.Atoi(node_id_str)
-	if node_id < 1 {
+	//验证key
+	if global.Server.System.MuKey != ctx.Query("muKey") {
 		return
 	}
+	node_id_str := ctx.Query("node_id")
+	node_id, _ := strconv.Atoi(node_id_str)
 	//fmt.Println("用户的流量使用情况node_id:", node_id)
 
 	var trafficReq model.TrafficReq
@@ -100,25 +108,5 @@ func SSUsersTraffic(ctx *gin.Context) {
 
 // 上报用户的当前在线IP
 func SSUsersAliveIP(ctx *gin.Context) {
-
-}
-
-// 获取订阅
-func GetSub(ctx *gin.Context) {
-	//订阅参数
-	link := ctx.Query("link")
-	subType := ctx.Query("type")
-
-	//link := "10010"
-	res := service.GetUserSub(link, subType)
-	if res == "" {
-		return
-	}
-	ctx.String(http.StatusOK, res)
-
-}
-
-// 获取订阅链接
-func GetSubUrl(ctx *gin.Context) {
 
 }

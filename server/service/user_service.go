@@ -22,7 +22,25 @@ func Register(u *model.User) error {
 	}
 	//默认角色
 	u.RoleGroup = []model.Role{{ID: 2}} //id=2,普通用户
-	return global.DB.Create(&u).Error
+	//默认套餐
+	return SaveUser(NewUserSubscribe(u))
+}
+
+// 新注册用户分配套餐
+func NewUserSubscribe(u *model.User) *model.User {
+	//查询商品信息
+	if global.Server.System.DefaultGoods == "" {
+		return u
+	}
+	var goods = model.Goods{
+		Subject: global.Server.System.DefaultGoods,
+	}
+	g, err := FindGoods(&goods)
+	if err != nil {
+		return u
+	}
+	// 处理用户订阅信息
+	return HandleUserSubscribe(u, g)
 
 }
 
@@ -85,6 +103,13 @@ func UpdateUserSubscribe(order *model.Orders) error {
 	//查询订单属于哪个用户
 	u, _ := FindUserByID(order.UserID)
 	//构建用户订阅信息
+	user := HandleUserSubscribe(u, goods)
+	//更新用户订阅信息
+	return global.DB.Save(&user).Error
+}
+
+// 处理用户订阅信息
+func HandleUserSubscribe(u *model.User, goods *model.Goods) *model.User {
 	u.SubscribeInfo.T = goods.TotalBandwidth * 1024 * 1024 * 1024 // TotalBandwidth单位：GB。总流量单位：B
 	u.SubscribeInfo.U = 0                                         //用户已用流量清零 //如果用struct ,gorm 不会更新“零值”
 	u.SubscribeInfo.D = 0                                         //用户已用流量清零 //如果用struct ,gorm 不会更新“零值”
@@ -95,10 +120,9 @@ func UpdateUserSubscribe(order *model.Orders) error {
 	u.SubscribeInfo.GoodsID = goods.ID //当前订购的套餐
 	u.SubscribeInfo.SubStatus = true   //订阅状态
 	t := time.Now().AddDate(0, 0, goods.ExpirationDate)
-	u.SubscribeInfo.ExpiredAt = &t //过期时间
-	//更新用户订阅信息
-	return global.DB.Save(&u).Error
-
+	u.SubscribeInfo.ExpiredAt = &t                      //过期时间
+	u.SubscribeInfo.NodeConnector = goods.NodeConnector //连接客户端数
+	return u
 }
 
 // 批量更新用户流量信息

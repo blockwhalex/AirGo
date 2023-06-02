@@ -101,5 +101,13 @@ export function useUserApi() {
 				data
 			});
 		},
+		//重置订阅
+		resetSubApi:()=>{
+			return request({
+				url: '/user/resetSub',
+				method: 'get',
+
+			});
+		},
 	};
 }

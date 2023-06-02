@@ -8,6 +8,7 @@ import (
 	"AirGo/utils/jwt_plugin"
 	"fmt"
 	"log"
+	"net/http"
 
 	//"AirGo/utils/encode_plugin"
 
@@ -44,7 +45,6 @@ func Register(c *gin.Context) {
 		return
 	}
 	response.OK("注册成功", nil, c)
-
 }
 
 // 用户登录
@@ -273,4 +273,34 @@ func ResetUserPassword(ctx *gin.Context) {
 	}
 	response.OK("重置密码成功", nil, ctx)
 
+}
+
+// 获取订阅
+func GetSub(ctx *gin.Context) {
+	//订阅参数
+	link := ctx.Query("link")
+	subType := ctx.Query("type")
+
+	res := service.GetUserSub(link, subType)
+	if res == "" {
+		return
+	}
+	ctx.String(http.StatusOK, res)
+
+}
+
+// 重置订阅
+func ResetSub(ctx *gin.Context) {
+	uID, _ := ctx.Get("uID")
+	uIDInt := uID.(int)
+	var u = model.User{
+		ID:            uIDInt,
+		SubscribeInfo: model.SubscribeInfo{SubscribeUrl: encode_plugin.RandomString(8)}, //随机字符串订阅url
+	}
+	err := service.UpdateUser(&u)
+	if err != nil {
+		response.Fail("重置订阅错误"+err.Error(), nil, ctx)
+		return
+	}
+	response.OK("重置订阅成功", nil, ctx)
 }

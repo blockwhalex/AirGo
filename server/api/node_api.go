@@ -9,22 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 根据node name 模糊查询节点
-func GetNodeByName(ctx *gin.Context) {
-	var nodeQuery model.Node
-	err := ctx.ShouldBind(&nodeQuery)
-	if err != nil {
-		fmt.Println("模糊查询节点err", err)
-	}
-	nodes, err := service.GetNodeByName(nodeQuery.Name)
-
-	if err != nil {
-		response.Fail("查询节点错误", nil, ctx)
-		return
-	}
-	response.OK("查询节点成功", nodes, ctx)
-}
-
 // 获取全部节点
 func GetAllNode(ctx *gin.Context) {
 	nodes, err := service.GetAllNode()

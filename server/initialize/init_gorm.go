@@ -256,6 +256,7 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/user/getUserInfo", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/user/changeUserPassword", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/user/resetUserPassword", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/user/resetSub", V2: "POST"},
 
 		{Ptype: "p", V0: "1", V1: "/user/getUserList", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/user/newUser", V2: "POST"},
@@ -281,6 +282,7 @@ func InsertInto(db *gorm.DB) error {
 		//{Ptype: "p", V0: "1", V1: "/shop/alipayTradePreCreatePay", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/preCreatePay", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/purchase", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/shop/getAllEnablesGoods", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/shop/getAllGoods", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/shop/findGoods", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/newGoods", V2: "POST"},
@@ -288,7 +290,6 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/shop/updateGoods", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/alipayNotify", V2: "POST"},
 
-		{Ptype: "p", V0: "1", V1: "/node/getNodeByName", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/node/getAllNode", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/node/newNode", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/node/deleteNode", V2: "POST"},
@@ -306,6 +307,7 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/casbin/getPolicy", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/casbin/getAllPolicy", V2: "GET"},
 
+		{Ptype: "p", V0: "1", V1: "/order/getOrderInfo", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/order/getAllOrder", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/order/getOrderByUserID", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/order/completedOrder", V2: "POST"},
@@ -324,13 +326,16 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "2", V1: "/user/changeUserPassword", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/user/resetUserPassword", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/user/getUserInfo", V2: "GET"},
-		//重置密码放到public？
+		{Ptype: "p", V0: "2", V1: "/user/resetSub", V2: "POST"},
+
 		{Ptype: "p", V0: "2", V1: "/menu/getRouteList", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/menu/getRouteTree", V2: "GET"},
 
+		{Ptype: "p", V0: "2", V1: "/order/getOrderInfo", V2: "POST"},
+
 		{Ptype: "p", V0: "2", V1: "/shop/preCreatePay", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/shop/purchase", V2: "POST"},
-		{Ptype: "p", V0: "2", V1: "/shop/getAllGoods", V2: "GET"},
+		{Ptype: "p", V0: "2", V1: "/shop/getAllEnablesGoods", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/shop/findGoods", V2: "POST"},
 
 		{Ptype: "p", V0: "2", V1: "/casbin/getPolicy", V2: "POST"},

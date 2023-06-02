@@ -6,16 +6,14 @@
 					<el-card class="box-card">
 						<template #header>
 							<div class="card-header">
-								<div class="block">
-								</div>
-								<el-tag class="ml-2" type="success">套餐详情</el-tag>
+								<el-tag class="ml-2" plain>套餐详情</el-tag>
 							</div>
 						</template>
 						<div class="text item">
-							<el-tag class="ml-2" type="info">剩余流量:</el-tag><span>{{ userInfos.used }}GB</span>
+							<el-tag class="ml-2" type="info">剩余流量:</el-tag><span>{{ (userInfos.subscribe_info.t-userInfos.subscribe_info.d-userInfos.subscribe_info.u)/1024/1024/1024 }}GB</span>
 						</div>
 						<div class="text item">
-							<el-tag class="ml-2" type="info">到期时间:</el-tag>{{ userInfos.expired }}
+							<el-tag class="ml-2" type="info">到期时间:</el-tag>{{ DateStrtoTime(userInfos.subscribe_info.expired_at) }}
 						</div>
 					</el-card>
 				</div>
@@ -25,12 +23,12 @@
 					<el-card class="box-card" style="width: 100%;flex: 1;">
 						<template #header>
 							<div class="card-header">
-								<el-tag class="ml-2" type="success">当前混淆:</el-tag>
-								<el-tag class="ml-2" type="info">{{ userInfos.userInfos.value.subscribe_info.host }}</el-tag>
+								<el-tag   plain>当前混淆:</el-tag>
+								<el-tag  type="info" >{{ userInfos.subscribe_info.host }}</el-tag>
 							</div>
 						</template>
 						<div class="mt-4">
-							<el-input v-model="userInfos.homeTableData.value.host" placeholder="输入混淆"
+							<el-input v-model="homeTableData.host" placeholder="输入混淆"
 								class="input-with-select">
 								<template #append>
 									<el-button @click="onChangeHost" :icon="Select">确认修改</el-button>
@@ -49,6 +47,7 @@
 						<template #header>
 							<div class="card-header">
 								<span>订阅地址</span>
+                <el-button type="primary" plain class="button" @click="onResetSub" >重置订阅链接</el-button>
 							</div>
 						</template>
 						<div>
@@ -65,55 +64,77 @@
 </template>
 
 <script setup lang="ts">
+//时间转换
+import {DateStrtoTime} from "/@/utils/formatTime";
+//api
+import {useUserApi} from '/@/api/user/index'
+const userApi=useUserApi()
 
 //store
 import { storeToRefs } from "pinia";
 import { useUserStore } from "/@/stores/userStore";
 import {  onMounted } from 'vue';
-const userInfo = useUserStore()
-const userInfos = storeToRefs(userInfo)
-
+const userStore = useUserStore()
+const {userInfos,homeTableData} = storeToRefs(userStore)
+//ElMessage
+import { ElMessage } from 'element-plus';
 //icon 
 import { Select } from '@element-plus/icons-vue'
 //复制剪切板
 import commonFunction from '/@/utils/commonFunction';
+
 const { copyText } = commonFunction();
 
 
 //修改混淆
 const onChangeHost = () => {
-	userInfo.changeHost()
+  userStore.changeHost()
+}
+//重置订阅
+const onResetSub=()=>{
+  userApi.resetSubApi().then((res)=>{
+    if (res.code === 0) {
+      ElMessage.success(res.msg)
+    } else {
+      ElMessage.error(res.msg)
+    }
+  })
 }
 const v2rayNGSub = (type: number) => {
 	switch (type) {
 		case 1:
-			copyText(userInfos.subV2rayNG.value)
+			copyText(userStore.subV2rayNG)
 			break
 		case 2:
-			copyText(userInfos.subClash.value)
+			copyText(userStore.subClash)
 			break
 		case 3:
-			copyText(userInfos.subShadowRocket.value)
+			copyText(userStore.subShadowRocket)
 			break
 		case 4:
-			copyText(userInfos.subQx.value)
+			copyText(userStore.subQx)
 			break
 		default:
-			copyText(userInfos.subV2rayNG.value)
+			copyText(userStore.subV2rayNG)
 			break;
 	}
 }
 // 页面加载时
 onMounted(() => {
 		//设置用户信息
-		userInfo.getUserInfo()
-})
+  userStore.getUserInfo()
+});
 
 
 
 </script>
 
 <style scoped lang="scss">
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .home-card-item {
 	width: 100%;
 	height: 100%;

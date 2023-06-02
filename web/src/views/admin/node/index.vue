@@ -159,7 +159,6 @@ const onHandleCurrentChange = (val: number) => {
 
 //查询节点
 function onSearch() {
-
   nodeStore.getNodeWithTraffic()
 }
 

@@ -22,7 +22,7 @@
                         </div>
                         <el-tag class="ml-2" type="info">有效期内不清零、不重置，长期有效</el-tag>
                         <div>
-                            <el-button @click="openSubmitOrderDialog(v)" type="primary">立即购买</el-button>
+                            <el-button @click="openSubmitOrderDialog(v.id)" type="primary">立即购买</el-button>
                         </div>
 
                     </el-card>
@@ -56,7 +56,6 @@ const qrcodeRef = ref();
 //导入store
 import { storeToRefs } from 'pinia';
 import { useShopStore } from "/@/stores/shopStore";
-import Submit_order_dialog from "/@/views/shop/submit_order_dialog.vue";
 const shopStore = useShopStore()
 const { goodsList ,tableData} = storeToRefs(shopStore)
 //引入弹窗组件
@@ -67,14 +66,15 @@ const PurchaseDialogRef=ref()
 const QRDialogRef=ref()
 const SubmitOrderDialogRef=ref()
 
-//加载时获取全部商品
+//加载时获取全部已启用商品
 onMounted(() => {
-    shopStore.getAllGoods()
+    shopStore.getAllEnabledGoods()
 })
-//打开提交订单弹窗
-const openSubmitOrderDialog=(v:Goods)=>{
-  tableData.value.currentGoods=v
-  SubmitOrderDialogRef.value.openDialog()
+//打开提交订单弹窗,传goods_id
+const openSubmitOrderDialog=(id:number)=>{
+ // tableData.value.currentGoods=v
+
+  SubmitOrderDialogRef.value.openDialog(id)
 }
 //打开确认支付弹窗
 const openPurchaseDialog=(goods:Goods)=>{

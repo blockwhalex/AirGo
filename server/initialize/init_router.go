@@ -41,6 +41,7 @@ func InitRouter() {
 		userRouter.POST("updateUser", api.UpdateUser)                 //修改用户
 		userRouter.POST("deleteUser", api.DeleteUser)                 //删除用户
 		userRouter.POST("changeUserPassword", api.ChangeUserPassword) //修改密码
+		userRouter.GET("resetSub", api.ResetSub)                      //重置订阅
 		//	userRouter.POST("findUser", api.Finduser)       //查询用户
 	}
 	userRouterNoVerify := RouterGroup.Group("user")
@@ -90,17 +91,15 @@ func InitRouter() {
 	nodeRouter := RouterGroup.Group("node")
 	nodeRouter.Use(middleware.ParseJwt(), middleware.CasbinMiddleware())
 	{
-		nodeRouter.POST("getNodeByName", api.GetNodeByName) //根据node name 模糊查询节点
-		nodeRouter.GET("getAllNode", api.GetAllNode)        //查询全部节点
-		nodeRouter.POST("newNode", api.NewNode)             //新建节点
-		nodeRouter.POST("deleteNode", api.DeleteNode)       //删除节点
-		nodeRouter.POST("updateNode", api.UpdateNode)       //更新节点
-		nodeRouter.POST("getTraffic", api.GetNodeTraffic)   //获取节点 with Traffic,分页
+		nodeRouter.GET("getAllNode", api.GetAllNode)      //查询全部节点
+		nodeRouter.POST("newNode", api.NewNode)           //新建节点
+		nodeRouter.POST("deleteNode", api.DeleteNode)     //删除节点
+		nodeRouter.POST("updateNode", api.UpdateNode)     //更新节点
+		nodeRouter.POST("getTraffic", api.GetNodeTraffic) //获取节点 with Traffic,分页
 	}
 
 	//sspqnel
 	sspanelRouter := RouterGroup.Group("mod_mu")
-	//sspanelRouter.Use(middleware.ParseJwt())
 	{
 		sspanelRouter.GET("nodes/:nodeID/info", api.SSNodeInfo) //获取节点信息
 		sspanelRouter.GET("users", api.SSUsers)                 //获取当前节点可连接的用户
@@ -115,11 +114,11 @@ func InitRouter() {
 		shopRouter.POST("preCreatePay", api.PreCreatePay) //alipay,统一收单线下交易预创建
 		shopRouter.POST("purchase", api.Purchase)         //支付
 
-		shopRouter.GET("getAllGoods", api.GetAllGoods)  //查询全部商品
-		shopRouter.POST("findGoods", api.FindGoods)     //查询商品
-		shopRouter.POST("newGoods", api.NewGoods)       //新建商品
-		shopRouter.POST("deleteGoods", api.DeleteGoods) //删除商品
-		shopRouter.POST("updateGoods", api.UpdateGoods) //更新商品
+		shopRouter.GET("getAllEnabledGoods", api.GetAllEnabledGoods) // 查询全部已启用商品
+		shopRouter.GET("getAllGoods", api.GetAllGoods)               //查询全部商品
+		shopRouter.POST("newGoods", api.NewGoods)                    //新建商品
+		shopRouter.POST("deleteGoods", api.DeleteGoods)              //删除商品
+		shopRouter.POST("updateGoods", api.UpdateGoods)              //更新商品
 	}
 	shopRouterNoVerify := RouterGroup.Group("/shop")
 	{
@@ -129,6 +128,7 @@ func InitRouter() {
 	orderRouter := RouterGroup.Group("order")
 	orderRouter.Use(middleware.ParseJwt(), middleware.CasbinMiddleware())
 	{
+		orderRouter.POST("getOrderInfo", api.GetOrderInfo)         //获取订单详情(下单时）
 		orderRouter.POST("getAllOrder", api.GetAllOrder)           //获取全部订单，分页获取
 		orderRouter.POST("getOrderByUserID", api.GetOrderByUserID) //获取订单，分页获取
 		orderRouter.POST("completedOrder", api.CompletedOrder)

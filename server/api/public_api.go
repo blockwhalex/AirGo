@@ -12,6 +12,26 @@ import (
 	"gorm.io/gorm"
 )
 
+// 主题配置
+func GetThemeConfig(ctx *gin.Context) {
+	//local cache
+	//theme, ok := global.LocalCache.Get("theme")
+	//if ok && theme != nil {
+	//	response.OK("主题获取成功", theme, ctx)
+	//	return
+	//}
+	//theme, err := service.GetThemeConfig()
+	//if err != nil {
+	//	response.Fail("主题获取错误"+err.Error(), nil, ctx)
+	//	return
+	//}
+	//global.LocalCache.SetNoExpire("theme", theme)
+	//response.OK("主题获取成功", theme, ctx)
+
+	response.OK("主题获取成功", global.Theme, ctx)
+
+}
+
 // 邮箱验证码
 func GetMailCode(ctx *gin.Context) {
 

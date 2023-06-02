@@ -19,78 +19,128 @@ import (
 	alipay "github.com/smartwalle/alipay/v3"
 )
 
-// 支付预创建
-func PreCreatePay(ctx *gin.Context) {
+// 订单预处理
+func PreHandleOrder(ctx *gin.Context) *model.Orders {
 	//res, _ := ioutil.ReadAll(ctx.Request.Body)
 	//fmt.Println("支付预创建 preOrder:", string(res))
 	uID, _ := ctx.Get("uID")
 	uName, _ := ctx.Get("uName")
 	uIDInt := uID.(int)
 	uNameStr := uName.(string)
-	//前端传过来 goods_id
-	var preOrder model.Orders
-	err := ctx.ShouldBind(&preOrder)
+
+	var receiveOrder model.Orders
+	err := ctx.ShouldBind(&receiveOrder) //前端传过来 goods_id
 	if err != nil {
-		response.Fail("支付预创建参数错误"+err.Error(), nil, ctx)
-		return
+		response.Fail("订单预处理参数错误"+err.Error(), nil, ctx)
+		return nil
 	}
+	fmt.Println("receiveOrder:", receiveOrder)
+
 	//通过商品id查找商品
-	goods, err := service.FindGoodsByGoodsID(preOrder.GoodsID)
+	goods, err := service.FindGoodsByGoodsID(receiveOrder.GoodsID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			response.Fail("商品不存在"+err.Error(), nil, ctx)
-			return
+			//response.Fail("商品不存在"+err.Error(), nil, ctx)
+			return nil
 		} else {
-			response.Fail("商品查询错误"+err.Error(), nil, ctx)
-			return
+			//response.Fail("商品查询错误"+err.Error(), nil, ctx)
+			return nil
 		}
 	}
+	fmt.Println("goods:", goods)
 	//构造系统订单参数
 	uIDStr := other_plugin.Sup(uIDInt, 5)
 	//uIDStr := strconv.Itoa(preOrder.UserID)
-	preOrder.OutTradeNo = strconv.FormatInt(time.Now().UnixNano(), 10) + uIDStr
-	preOrder.Subject = goods.Subject
-	preOrder.TotalAmount = goods.TotalAmount
-	preOrder.Price = goods.TotalAmount
-	preOrder.UserID = uIDInt
-	preOrder.UserName = uNameStr
+	receiveOrder.GoodsID = goods.ID
+	receiveOrder.OutTradeNo = strconv.FormatInt(time.Now().UnixNano(), 10) + uIDStr
+	receiveOrder.Subject = goods.Subject
+	receiveOrder.TotalAmount = goods.TotalAmount
+	receiveOrder.Price = goods.TotalAmount //优惠码
+	receiveOrder.UserID = uIDInt
+	receiveOrder.UserName = uNameStr
+	receiveOrder.PayType = receiveOrder.PayType //添加付款方式
+
+	return &receiveOrder
+}
+
+// 获取订单
+func GetOrderInfo(ctx *gin.Context) {
+	order := PreHandleOrder(ctx)
+	if order == nil {
+		response.Fail("获取订单详情错误", nil, ctx)
+		return
+	}
+	response.OK("订单详情", order, ctx)
+}
+
+// 支付预创建
+func PreCreatePay(ctx *gin.Context) {
+	order := PreHandleOrder(ctx)
+	if order == nil {
+		response.Fail("获取订单错误", nil, ctx)
+		return
+	}
 	//创建系统订单
-	order, err := service.CreateOrder(&preOrder)
+	order, err := service.CreateOrder(order)
 	if err != nil {
 		response.Fail("创建系统订单err:"+err.Error(), nil, ctx)
 		return
 	}
+
 	response.OK("创建系统订单成功", order, ctx)
 
 }
 
 func Purchase(ctx *gin.Context) {
-	//判断订单是否合理，未写
-	var order model.Orders
-	err := ctx.ShouldBind(&order)
-	if err != nil || order.OutTradeNo == "" {
-		response.Fail("订单参数获取错误"+err.Error(), nil, ctx)
+	uID, _ := ctx.Get("uID")
+	uIDInt := uID.(int)
+	var receiveOrder model.Orders
+	err := ctx.ShouldBind(&receiveOrder)
+	if err != nil || receiveOrder.OutTradeNo == "" {
+		response.Fail("订单参数获取错误", nil, ctx)
+		return
+	}
+	//根据订单号查询订单
+	receiveOrder.UserID = uIDInt //确认user id
+	sysOrder, err := service.GetOrderByOrderID(&receiveOrder)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			response.Fail("订单不存在"+err.Error(), nil, ctx)
+			return
+		} else {
+			response.Fail("订单查询错误"+err.Error(), nil, ctx)
+			return
+		}
+	}
+	sysOrder.PayType = receiveOrder.PayType
+	//如果价格=0，跳过支付
+	if sysOrder.TotalAmount == "0" {
+		sysOrder.TradeStatus = "completed"    //更新数据库订单状态,自定义结束状态completed
+		service.UpdateOrder(sysOrder)         //更新数据库状态
+		service.UpdateUserSubscribe(sysOrder) //更新用户订阅信息
+		response.OK("购买成功", nil, ctx)
 		return
 	}
 	//判断支付方式
-	switch order.PayType {
+	switch sysOrder.PayType {
 	case "alipay":
-		res, err := alipay_plugin.TradePreCreatePay(global.AlipayClient, &order)
+		res, err := alipay_plugin.TradePreCreatePay(global.AlipayClient, sysOrder)
 		//fmt.Println("AlipayTradePreCreatePay res:", res)
 		if err != nil || res.Content.QRCode == "" {
 			response.Fail("alipay TradePreCreatePay err"+err.Error(), nil, ctx)
 			return
 		}
-		order.QRCode = res.Content.QRCode
-		order.TradeStatus = "WAIT_BUYER_PAY"
-		service.UpdateOrder(&order)                                               //更新数据库状态
+		sysOrder.QRCode = res.Content.QRCode
+		sysOrder.TradeStatus = "WAIT_BUYER_PAY"
+		service.UpdateOrder(sysOrder)                                             //更新数据库状态
 		response.OK("alipay TradePreCreatePay success:", res.Content.QRCode, ctx) //返回用户qrcode
 		//5分钟等待付款
-		go PollAliPay(&order)
+		go PollAliPay(sysOrder)
 	}
 
 }
 func PollAliPay(order *model.Orders) {
+	fmt.Println("购买轮询")
 	t := time.NewTicker(10 * time.Second)
 	//defer t.Stop()
 	i := 0
@@ -158,9 +208,14 @@ func AlipayNotify(ctx *gin.Context) {
 	service.UpdateUserSubscribe(sysOrder) //更新用户订阅信息
 }
 
-// 查询商品
-func FindGoods(ctx *gin.Context) {
-
+// 查询全部已启用商品
+func GetAllEnabledGoods(ctx *gin.Context) {
+	goodsArr, err := service.GetAllEnabledGoods()
+	if err != nil {
+		response.Fail("查询全部商品错误"+err.Error(), nil, ctx)
+		return
+	}
+	response.OK("查询全部商品成功", goodsArr, ctx)
 }
 
 // 查询全部商品
@@ -176,6 +231,9 @@ func GetAllGoods(ctx *gin.Context) {
 
 // 新建商品
 func NewGoods(ctx *gin.Context) {
+	//rq, err := ioutil.ReadAll(ctx.Request.Body)
+	//fmt.Println("新建商品参数", string(rq))
+	//fmt.Println("新建商品参数err", err)
 	var goods model.Goods
 	err := ctx.ShouldBind(&goods)
 	if err != nil {

@@ -39,13 +39,6 @@ export function useNodeApi(){
                 data
             })
         },
-        getNodeByNameApi:(data?:object)=>{
-            return service({
-                url: '/node/getNodeByName',
-				method: 'post',
-                data
-            })
-        },
 
     }
 }

@@ -19,12 +19,12 @@ type User struct {
 	DeletedAt *time.Time `json:"-" gorm:"index"`
 
 	ID       int       `json:"id"      gorm:"primary_key"`
-	UUID     uuid.UUID `json:"uuid"         gorm:"comment:用户UUID"`                               // 用户UUID
-	UserName string    `json:"user_name"    gorm:"comment:用户登录名"`                                // 用户登录名,邮箱
-	Password string    `json:"password"     gorm:"comment:用户登录密码"`                               // 用户登录密码
-	NickName string    `json:"nick_name"    gorm:"default:系统用户;comment:用户昵称"`                    // 用户昵称
-	Avatar   string    `json:"avatar"       gorm:"default:/src/assets/avatar.jpeg;comment:用户头像"` // 用户头像
-	Phone    string    `json:"phone"        gorm:"comment:用户手机号"`                                // 用户手机号
+	UUID     uuid.UUID `json:"uuid"         gorm:"comment:用户UUID"`                                                                        // 用户UUID
+	UserName string    `json:"user_name"    gorm:"comment:用户登录名"`                                                                         // 用户登录名,邮箱
+	Password string    `json:"password"     gorm:"comment:用户登录密码"`                                                                        // 用户登录密码
+	NickName string    `json:"nick_name"    gorm:"default:系统用户;comment:用户昵称"`                                                             // 用户昵称
+	Avatar   string    `json:"avatar"       gorm:"default:https://telegraph-image.pages.dev/file/28f40afe1021a81434bfa.jpg;comment:用户头像"` // 用户头像
+	Phone    string    `json:"phone"        gorm:"comment:用户手机号"`                                                                         // 用户手机号
 	//Email  string `json:"email"       gorm:"comment:用户邮箱"`                                                                                             // 用户邮箱
 	Enable bool `json:"enable"      gorm:"default:true;comment:用户是否被冻结 true正常 false冻结"` //用户是否被冻结 1正常 2冻结
 	//角色组
@@ -46,7 +46,7 @@ type SubscribeInfo struct {
 	T              int        `json:"t"                 gorm:"comment:总流量（Byte）"`              //总流量（Byte）
 	U              int        `json:"u"                 gorm:"comment:上行流量"`                   //上行流量
 	D              int        `json:"d"                 gorm:"comment:下行流量"`                   //下行流量
-	ResetDay       int        `json:"reset_day"         gorm:"comment:流量下行流量重置日"`              //流量重置日
+	ResetDay       int        `json:"reset_day"         gorm:"comment:流量重置日"`                  //流量重置日
 	NodeSpeedLimit int        `json:"node_speedlimit"   gorm:"default:0;comment:限速Mbps（Mbps）"` //限速Mbps（Mbps）
 	NodeConnector  int        `json:"node_connector"    gorm:"default:3;comment:连接客户端数"`       //连接客户端数
 	//IsMultiUser    int    `json:"is_multi_user" gorm:"default:0"`   //is_multi_user==0>非单端口多用户承载端口  is_multi_user==1>混淆式单端口多用户承载端口  is_multi_user==2>协议式单端口多用户承载端口

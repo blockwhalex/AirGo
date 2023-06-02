@@ -32,7 +32,7 @@ func main() {
 	initialize.InitTheme()      //全局主题
 	initialize.InitLocalCache() //local cache
 	//initialize.InitBase64Captcha() //Base64Captcha
-	initialize.InitCrontab()      //定时任务
+	//initialize.InitCrontab()      //定时任务
 	initialize.InitAlipayClient() //alipay
 	initialize.InitEmailDialer()  //gomail Dialer
 	initialize.InitRouter()       //初始总路由

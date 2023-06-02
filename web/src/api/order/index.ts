@@ -2,6 +2,14 @@ import service from "/@/utils/request";
 
 export function useOrderApi(){
     return {
+        //获取订单详情(下单时）
+        getOrderInfoApi:(data?:object)=>{
+            return service({
+                url: '/order/getOrderInfo',
+                method: 'POST',
+                data
+            })
+        },
         //获取全部订单
         getAllOrderApi:(data?:object)=>{
             return service({

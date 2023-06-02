@@ -3,24 +3,21 @@ package service
 import (
 	"AirGo/global"
 	"AirGo/model"
-	"log"
+	"fmt"
 )
 
 // 根据uId查角色Ids
 func FindRoleIdsByuId(uId int) ([]int, error) {
-	type Roles struct {
-		RoleID int
-	}
-	var RolesSlice []Roles
-	err := global.DB.Model(&model.UserAndRole{}).Where("user_id=?", uId).Find(&RolesSlice).Error
+	var roles []model.UserAndRole
+	err := global.DB.Model(&model.UserAndRole{}).Select("role_id").Where("user_id=?", uId).Find(&roles).Error
 	if err != nil {
-		log.Println("DB err:", err)
+		fmt.Println("DB err:", err)
 		return nil, err
 	}
 	//角色id 数组
 	var roleIds []int
-	for item := range RolesSlice {
-		roleIds = append(roleIds, RolesSlice[item].RoleID)
+	for item := range roles {
+		roleIds = append(roleIds, roles[item].RoleID)
 	}
 	return roleIds, nil
 }

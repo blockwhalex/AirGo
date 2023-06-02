@@ -26,6 +26,13 @@ export function useShopApi(){
             })
         },
         //获取全部商品
+        getAllEnabledGoodsApi:()=>{
+            return request({
+                url:"/shop/getAllEnabledGoods",
+                method:"get",
+            })
+        },
+        //获取全部商品
         getAllGoodsApi:()=>{
             return request({
                 url:"/shop/getAllGoods",

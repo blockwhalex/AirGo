@@ -13,8 +13,8 @@ export const useUserStore = defineStore('userInfo', {
     state: () => ({
         //登录页面数据
         loginData: {
-            user_name: 'admin@oicq.com',
-            password: 'admin',
+            user_name: '',
+            password: '',
             email_code: '',
         },
         //注册页面数据

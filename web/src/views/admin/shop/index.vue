@@ -15,11 +15,17 @@
                 <el-table-column prop="total_amount" label="套餐价格(元)" show-overflow-tooltip  width="100"></el-table-column>
                 <el-table-column prop="total_bandwidth" label="总流量(GB)" show-overflow-tooltip  width="100"></el-table-column>
                 <el-table-column prop="expiration_date" label="有效期(天)" show-overflow-tooltip ></el-table-column>
-              <el-table-column prop="nodes" label="关联节点" show-overflow-tooltip >
-                <template #default="scope">
-                  <el-tag class="ml-2" type="success" v-for="(v,k) in scope.row.nodes" :key="k">{{v.name}}</el-tag>
-                </template>
-              </el-table-column>
+                <el-table-column prop="status" label="是否启用" show-overflow-tooltip >
+                              <template #default="scope">
+                                <el-tag class="ml-2"  v-if="scope.row.status" type="success" >启用</el-tag>
+                                <el-tag class="ml-2" v-if="!scope.row.status" type="danger" >禁用</el-tag>
+                              </template>
+                </el-table-column>
+<!--              <el-table-column prop="nodes" label="关联节点" show-overflow-tooltip >-->
+<!--                <template #default="scope">-->
+<!--                  <el-tag class="ml-2" type="success" v-for="(v,k) in scope.row.nodes" :key="k">{{v.name}}</el-tag>-->
+<!--                </template>-->
+<!--              </el-table-column>-->
                 <el-table-column label="操作" width="100">
                     <template #default="scope">
                         <el-button size="small" text type="primary"
@@ -29,10 +35,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination background v-model:current-page="goodsManageData.pageNum"
-                v-model:page-size="goodsManageData.pageSize" :page-sizes="[10, 20, 30, 40]"
-                layout="sizes, prev, pager, next" :total="goodsManageData.total" @size-change="onHandleSizeChange"
-                @current-change="onHandleCurrentChange" />
             </el-card>
             <!-- 引入弹窗组件 -->
             <shopDialog ref="shopDialogRef" @refresh="shopStore.getAllGoods()"></shopDialog>
@@ -41,13 +43,14 @@
 
 <script setup lang="ts">
 
-//导入store
+
 import { defineAsyncComponent, onMounted,ref } from 'vue';
 import { storeToRefs } from 'pinia';
+//shop store
 import { useShopStore } from "/@/stores/shopStore";
 const shopStore = useShopStore()
 const { goodsList, goodsManageData } = storeToRefs(shopStore)
-//store
+//node store
 import { useNodeStore } from "/@/stores/node";
 const nodeStore = useNodeStore()
 
@@ -79,16 +82,6 @@ const onOpenAddGoods = () => {
         shopStore.getAllGoods()
     },2000)
 }
-// 分页改变
-const onHandleSizeChange = (val: number) => {
-    goodsManageData.value.pageSize = val;
-    //getTableData();
-};
-// 分页改变
-const onHandleCurrentChange = (val: number) => {
-    goodsManageData.value.pageNum = val;
-    //getTableData();
-};
 //加载时
 onMounted(() => {
     shopStore.getAllGoods() //获取全部商品

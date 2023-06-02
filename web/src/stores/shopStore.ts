@@ -13,20 +13,18 @@ export const useShopStore = defineStore("shopStore", {
             isShowDialog: false,
             type: '',
             title: '',
-            total: 0,
-            //loading: true,
-            pageNum: 1,
-            pageSize: 10,
             //当前编辑商品
-            currentGoods: {
-                //  id: 0, 不能覆盖
-                subject: "",
-                total_amount: 0,
-                product_code: "",
-                total_bandwidth: 0,
-                expiration_date: 0,
-                checked_nodes: [0], //套餐编辑时选中的节点
-                nodes: [],
+            currentGoods: { //含有created_at updated_at 后端新建验证出错
+                // id: 0, //不能覆盖
+                // created_at:"",
+                // updated_at:"",
+                // subject: "",
+                // total_amount: "",
+                // product_code: "",
+                // total_bandwidth: 0,
+                // expiration_date: 0,
+                // checked_nodes: [0], //套餐编辑时选中的节点
+                // nodes: [],
             } as Goods,
         },
 
@@ -42,14 +40,19 @@ export const useShopStore = defineStore("shopStore", {
             QRtext: '',
             //当前支付商品
             currentGoods: {
-                id: 0,
+                id: 0, //不能覆盖
+                created_at:"",
+                updated_at:"",
                 subject: "",
-                total_amount: 0,
+                total_amount: "",
                 product_code: "",
                 total_bandwidth: 0,
                 expiration_date: 0,
+                checked_nodes: [0],
+                nodes: [],
+                status:false,
             } as Goods,
-            //当前支付商品创建订单
+            //当前商品订单
             currentOrder: {
                 id: 0,
                 out_trade_no: '',
@@ -67,12 +70,16 @@ export const useShopStore = defineStore("shopStore", {
         }
     }),
     actions: {
+        //加载时获取全部已启用商品
+        async getAllEnabledGoods() {
+            const res = await shopApi.getAllEnabledGoodsApi()
+            this.goodsList = res.data
+        },
         //获取全部订阅商品
         async getAllGoods() {
             const res = await shopApi.getAllGoodsApi()
             // console.log("获取全部订阅商品:",res.data)
             this.goodsList = res.data
-            this.goodsManageData.total = this.goodsList.length
         },
         //添加商品
         async newGoods() {
@@ -82,11 +89,9 @@ export const useShopStore = defineStore("shopStore", {
             } else {
                 ElMessage.error(res.msg)
             }
-
         },
         //修改商品
         async updateGoods() {
-            console.log("修改商品:", this.goodsManageData.currentGoods)
             const res = await shopApi.updateGoodsApi(this.goodsManageData.currentGoods)
             if (res.code === 0) {
                 ElMessage.success(res.msg)

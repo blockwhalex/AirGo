@@ -3,7 +3,7 @@
     <el-card>
       <el-tabs stretch  style="height: 100%" class="demo-tabs">
         <el-tab-pane label="登录/注册">
-          <el-form :model="serverConfig" label-width="100px">
+          <el-form :model="serverConfig" label-width="120px">
             <el-form-item label="是否开启注册" >
               <el-switch v-model="serverConfig.system.enable_register" inline-prompt active-text="开启" inactive-text="关闭" style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"></el-switch>
             </el-form-item>
@@ -13,9 +13,23 @@
             <el-form-item label="是否多点登录" >
               <el-switch v-model="serverConfig.system.is_multipoint" inline-prompt active-text="开启" inactive-text="关闭" style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"></el-switch>
             </el-form-item>
+            <el-form-item label="通信密钥" >
+              <el-input v-model="serverConfig.system.muKey" />
+            </el-form-item>
             <el-form-item label="订阅名称" >
               <el-input v-model="serverConfig.system.sub_name" />
             </el-form-item>
+            <el-form-item label="新注册分配套餐" >
+              <el-select v-model="serverConfig.system.default_goods" class="m-2" placeholder="选择套餐">
+                <el-option
+                    v-for="item in goodsList"
+                    :key="item.id"
+                    :label="item.subject"
+                    :value="item.subject"
+                />
+              </el-select>
+            </el-form-item>
+
             <el-form-item>
               <el-button @click="onSubmit" type="primary">保存</el-button>
             </el-form-item>
@@ -105,12 +119,16 @@
 
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus';
-//store
+import {onMounted} from "vue";
+//server store
 import {useServerStore} from "/@/stores/serverStore";
 import {storeToRefs} from "pinia";
-import {onMounted} from "vue";
 const serverStore = useServerStore()
 const {serverConfig} = storeToRefs(serverStore)
+//shop store
+import { useShopStore } from "/@/stores/shopStore";
+const shopStore = useShopStore()
+const { goodsList} = storeToRefs(shopStore)
 //保存提交
 const onSubmit=()=>{
   serverStore.updateServerConfig().then((res)=>{
@@ -127,6 +145,8 @@ const onSubmit=()=>{
 //加载时
 onMounted(()=>{
   serverStore.getServerConfig()
+  shopStore.getAllGoods()
+
 });
 
 </script>

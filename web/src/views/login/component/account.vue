@@ -89,11 +89,7 @@ const state = reactive({
   isShowEmailCode:false,
   isCountDown:false,
   countDowdTime:60,
-	ruleForm: {
-		user_name: '',
-		password: '',
-		email_code: '',
-	},
+
 	loading: {
 		signIn: false,
 	},

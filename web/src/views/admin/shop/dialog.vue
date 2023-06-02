@@ -43,6 +43,13 @@
               </el-col>
 
             </el-form-item>
+
+          <el-form-item label="是否启用">
+            <el-col :span="4">
+              <el-switch v-model="goodsManageData.currentGoods.status" inline-prompt active-text="开启" inactive-text="关闭" style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"></el-switch>
+            </el-col>
+          </el-form-item>
+
           <el-form-item label="关联节点">
               <el-transfer
                   :data="nodeManageData.nodes.node_list"
@@ -88,6 +95,7 @@ const openDialog = (type: string, row?: any) => {
         goodsManageData.value.type=type
         goodsManageData.value.title="新建商品"
         goodsManageData.value.isShowDialog = true
+      goodsManageData.value.currentGoods.id=0 //清空上次编辑的id，否则无法新建
     } else {
 
     goodsManageData.value.type=type

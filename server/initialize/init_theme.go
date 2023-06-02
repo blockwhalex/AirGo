@@ -14,5 +14,5 @@ func InitTheme() {
 		return
 	}
 	global.Theme = *res
-	//fmt.Println("global.Serve系统配置:", global.Server.JWT)
+	//fmt.Println("global.theme:", global.Theme)
 }
