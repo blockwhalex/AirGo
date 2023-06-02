@@ -282,7 +282,7 @@ func InsertInto(db *gorm.DB) error {
 		//{Ptype: "p", V0: "1", V1: "/shop/alipayTradePreCreatePay", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/preCreatePay", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/purchase", V2: "POST"},
-		{Ptype: "p", V0: "1", V1: "/shop/getAllEnablesGoods", V2: "GET"},
+		{Ptype: "p", V0: "1", V1: "/shop/getAllEnabledGoods", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/shop/getAllGoods", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/shop/findGoods", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/newGoods", V2: "POST"},
@@ -335,7 +335,7 @@ func InsertInto(db *gorm.DB) error {
 
 		{Ptype: "p", V0: "2", V1: "/shop/preCreatePay", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/shop/purchase", V2: "POST"},
-		{Ptype: "p", V0: "2", V1: "/shop/getAllEnablesGoods", V2: "GET"},
+		{Ptype: "p", V0: "2", V1: "/shop/getAllEnabledGoods", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/shop/findGoods", V2: "POST"},
 
 		{Ptype: "p", V0: "2", V1: "/casbin/getPolicy", V2: "POST"},
