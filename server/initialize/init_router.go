@@ -149,7 +149,7 @@ func InitRouter() {
 	//Router.Run(":" + strconv.Itoa(global.CONFIG.System.Port))
 
 	srv := &http.Server{
-		Addr:    ":" + strconv.Itoa(global.CONFIG.System.Port),
+		Addr:    ":" + strconv.Itoa(global.Config.SystemParams.Port),
 		Handler: Router,
 	}
 

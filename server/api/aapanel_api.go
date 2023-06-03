@@ -6,6 +6,7 @@ import (
 	"AirGo/service"
 	"AirGo/utils/response"
 	"fmt"
+	"io/ioutil"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -108,5 +109,6 @@ func SSUsersTraffic(ctx *gin.Context) {
 
 // 上报用户的当前在线IP
 func SSUsersAliveIP(ctx *gin.Context) {
-
+	body, err := ioutil.ReadAll(ctx.Request.Body)
+	fmt.Println("上报用户的当前在线IP body:", string(body), err)
 }

@@ -5,10 +5,6 @@ import (
 	"strings"
 )
 
-type IStruct interface {
-	GetStructData() interface{}
-}
-
 // struct转map
 func StructToMap(data interface{}) map[string]interface{} {
 
@@ -43,4 +39,20 @@ func StructToMap(data interface{}) map[string]interface{} {
 		m[name] = v.Field(i).Interface()
 	}
 	return m
+}
+
+// 利用反射将结构体转化为map
+func StructToMap1(obj interface{}) map[string]interface{} {
+	obj1 := reflect.TypeOf(obj)
+	obj2 := reflect.ValueOf(obj)
+
+	data := make(map[string]interface{})
+	for i := 0; i < obj1.NumField(); i++ {
+		if obj1.Field(i).Tag.Get("mapstructure") != "" {
+			data[obj1.Field(i).Tag.Get("mapstructure")] = obj2.Field(i).Interface()
+		} else {
+			data[obj1.Field(i).Name] = obj2.Field(i).Interface()
+		}
+	}
+	return data
 }

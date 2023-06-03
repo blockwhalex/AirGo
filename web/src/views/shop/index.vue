@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-row :gutter="15" class="home-card-one mb15">
-            <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6" v-for="(v, k) in goodsList" :key="k">
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-for="(v, k) in goodsList" :key="k">
                 <div class="home-card-item">
                     <el-card class="box-card">
                         <template #header>

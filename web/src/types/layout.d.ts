@@ -2,7 +2,10 @@
 // 布局配置
 declare interface ThemeConfigState {
 	themeConfig: {
-		id:number;
+		created_at:string;
+		updated_at:string;
+		id: number;
+
 		isDrawer: boolean;
 		primary: string;
 		topBar: string;

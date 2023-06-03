@@ -1,6 +1,6 @@
 <template>
   <div class="layout-breadcrumb-seting">
-    <el-drawer title="布局配置" v-model="getThemeConfig.isDrawer" direction="rtl" destroy-on-close size="260px">
+    <el-drawer title="布局配置" v-model="state.isDrawer" direction="rtl" destroy-on-close size="260px">
       <el-scrollbar class="layout-breadcrumb-seting-bar">
         <!-- 全局主题 -->
         <el-divider content-position="left">全局主题</el-divider>
@@ -435,7 +435,7 @@
           </div>
         </div>
         <div>
-          <el-button size="default" type="info" @click="getThemeConfig.isDrawer = false">取消</el-button>
+          <el-button size="default" type="info" @click="state.isDrawer = false">取消</el-button>
           <el-button size="default" type="primary" @click="onSubmit">保存</el-button>
         </div>
         <!--				<div class="copy-config">-->
@@ -479,6 +479,7 @@ const {copyText} = commonFunction();
 const {getLightColor, getDarkColor} = useChangeColor();
 const state = reactive({
   isMobile: false,
+  isDrawer:false,  //是否打开主题setting侧窗
 });
 
 // 获取布局配置信息
@@ -613,7 +614,7 @@ const onSetLayout = (layout: string) => {
   if (getThemeConfig.value.layout === layout) return false;
   if (layout === 'transverse') getThemeConfig.value.isCollapse = false;
   getThemeConfig.value.layout = layout;
-  getThemeConfig.value.isDrawer = false;
+  state.isDrawer = false;
   initLayoutChangeFun();
 };
 // 设置布局切换函数
@@ -630,21 +631,21 @@ const initLayoutChangeFun = () => {
 const onSubmit=()=>{
   //请求服务器修改theme
   storesThemeConfig.updateThemeConfig(getThemeConfig.value)
-  getThemeConfig.value.isDrawer = false;
+  state.isDrawer = false;
 
 };
 // 关闭弹窗时，初始化变量。变量用于处理 layoutScrollbarRef.value.update() 更新滚动条高度
 // const onDrawerClose = () => {
 // 	getThemeConfig.value.isFixedHeaderChange = false;
 // 	getThemeConfig.value.isShowLogoChange = false;
-// 	getThemeConfig.value.isDrawer = false;
+// 	state.isDrawer = false;
 // 	setLocalThemeConfig();
 //   //请求服务器修改theme
 //   storesThemeConfig.updateThemeConfig(getThemeConfig.value)
 // };
 // 布局配置弹窗打开
 const openDrawer = () => {
-  getThemeConfig.value.isDrawer = true;
+  state.isDrawer = true;
 };
 // 触发 store 布局配置更新
 const setDispatchThemeConfig = () => {
@@ -665,7 +666,7 @@ const onCopyConfigClick = () => {
   let copyThemeConfig = Local.get('themeConfig');
   copyThemeConfig.isDrawer = false;
   copyText(JSON.stringify(copyThemeConfig)).then(() => {
-    getThemeConfig.value.isDrawer = false;
+    state.isDrawer = false;
   });
 };
 // 一键恢复默认
@@ -695,7 +696,7 @@ onMounted(() => {
     // 监听窗口大小改变，非默认布局，设置成默认布局（适配移动端）
     mittBus.on('layoutMobileResize', (res: LayoutMobileResize) => {
       getThemeConfig.value.layout = res.layout;
-      getThemeConfig.value.isDrawer = false;
+      state.isDrawer = false;
       initLayoutChangeFun();
       state.isMobile = other.isMobile();
     });

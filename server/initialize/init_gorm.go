@@ -21,7 +21,7 @@ import (
 // Author SliverHorn
 func Gorm() *gorm.DB {
 
-	switch global.CONFIG.System.DbType {
+	switch global.Config.SystemParams.DbType {
 	case "mysql":
 		return GormMysql()
 	case "sqlite":
@@ -33,7 +33,7 @@ func Gorm() *gorm.DB {
 
 // 初始化sqlite数据库
 func GormSqlite() *gorm.DB {
-	if db, err := gorm.Open(sqlite.Open(global.CONFIG.Sqlite.Path), &gorm.Config{
+	if db, err := gorm.Open(sqlite.Open(global.Config.Sqlite.Path), &gorm.Config{
 		SkipDefaultTransaction: true, //关闭事务，将获得大约 30%+ 性能提升
 		NamingStrategy: schema.NamingStrategy{
 			//TablePrefix: "gormv2_",
@@ -44,8 +44,8 @@ func GormSqlite() *gorm.DB {
 		panic(err)
 	} else {
 		sqlDB, _ := db.DB()
-		sqlDB.SetMaxIdleConns(global.CONFIG.Mysql.MaxIdleConns)
-		sqlDB.SetMaxOpenConns(global.CONFIG.Mysql.MaxOpenConns)
+		sqlDB.SetMaxIdleConns(global.Config.Mysql.MaxIdleConns)
+		sqlDB.SetMaxOpenConns(global.Config.Mysql.MaxOpenConns)
 		return db
 	}
 }
@@ -53,8 +53,8 @@ func GormSqlite() *gorm.DB {
 // 初始化Mysql数据库
 func GormMysql() *gorm.DB {
 	mysqlConfig := mysql.Config{
-		DSN:                       global.CONFIG.Mysql.Username + ":" + global.CONFIG.Mysql.Password + "@tcp(" + global.CONFIG.Mysql.Path + ":" + global.CONFIG.Mysql.Port + ")/" + global.CONFIG.Mysql.Dbname + "?" + global.CONFIG.Mysql.Config, // DSN data source name
-		DefaultStringSize:         191,                                                                                                                                                                                                            // string 类型字段的默认长度
+		DSN:                       global.Config.Mysql.Username + ":" + global.Config.Mysql.Password + "@tcp(" + global.Config.Mysql.Path + ":" + global.Config.Mysql.Port + ")/" + global.Config.Mysql.Dbname + "?" + global.Config.Mysql.Config,
+		DefaultStringSize:         191, // string 类型字段的默认长度
 		SkipInitializeWithVersion: false,
 	}
 	if db, err := gorm.Open(mysql.New(mysqlConfig), &gorm.Config{
@@ -67,10 +67,10 @@ func GormMysql() *gorm.DB {
 		log.Println("gorm.Open error:", err)
 		panic(err)
 	} else {
-		db.InstanceSet("gorm:table_options", "ENGINE="+global.CONFIG.Mysql.Engine)
+		db.InstanceSet("gorm:table_options", "ENGINE="+global.Config.Mysql.Engine)
 		sqlDB, _ := db.DB()
-		sqlDB.SetMaxIdleConns(global.CONFIG.Mysql.MaxIdleConns)
-		sqlDB.SetMaxOpenConns(global.CONFIG.Mysql.MaxOpenConns)
+		sqlDB.SetMaxIdleConns(global.Config.Mysql.MaxIdleConns)
+		sqlDB.SetMaxOpenConns(global.Config.Mysql.MaxOpenConns)
 		return db
 	}
 }
@@ -112,52 +112,15 @@ func InsertInto(db *gorm.DB) error {
 	sysUserData := []model.User{
 		{
 			UUID:     uuid1,
-			UserName: "admin@oicq.com",
-			Password: utils.BcryptEncode("admin"),
+			UserName: global.Config.SystemParams.AdminEmail,
+			Password: utils.BcryptEncode(global.Config.SystemParams.AdminPassword),
 			NickName: "admin",
-			//Avatar:   "https://qmplusimg.henrongyi.top/gva_header.jpg",
-			Phone: "17611111111",
-			//Email: "333333333@qq.com",
-			SubscribeInfo: model.SubscribeInfo{
-				GoodsID:      1,
-				SubscribeUrl: "10010",
-			},
 		},
 		{
 			UUID:     uuid2,
 			UserName: "测试1@oicq.com",
 			Password: utils.BcryptEncode("123456"),
 			NickName: "测试1",
-			//Avatar:   "https://qmplusimg.henrongyi.top/gva_header.jpg",
-			Phone: "17611111111",
-			//Email: "333333333@qq.com",
-		},
-		{
-			UUID:     uuid2,
-			UserName: "测试2@oicq.com",
-			Password: utils.BcryptEncode("123456"),
-			NickName: "测试2",
-			//Avatar:   "https://qmplusimg.henrongyi.top/gva_header.jpg",
-			Phone: "",
-			//Email: "",
-		},
-		{
-			UUID:     uuid2,
-			UserName: "测试3@oicq.com",
-			Password: utils.BcryptEncode("123456"),
-			NickName: "测试3",
-			//Avatar:   "https://qmplusimg.henrongyi.top/gva_header.jpg",
-			Phone: "",
-			//Email: "",
-		},
-		{
-			UUID:     uuid2,
-			UserName: "测试4@oicq.com",
-			Password: utils.BcryptEncode("123456"),
-			NickName: "测试4",
-			//Avatar:   "https://qmplusimg.henrongyi.top/gva_header.jpg",
-			Phone: "",
-			//Email: "",
 		},
 	}
 	if err := db.Create(&sysUserData).Error; err != nil {
@@ -215,8 +178,9 @@ func InsertInto(db *gorm.DB) error {
 		{RoleID: 1, DynamicRouteID: 12},
 
 		{RoleID: 2, DynamicRouteID: 1},
-		{RoleID: 2, DynamicRouteID: 8},
-		{RoleID: 2, DynamicRouteID: 9},
+		{RoleID: 2, DynamicRouteID: 10},
+		{RoleID: 2, DynamicRouteID: 11},
+		{RoleID: 2, DynamicRouteID: 12},
 	}
 	if err := global.DB.Create(&roleAndMenuData).Error; err != nil {
 		return errors.New("role_and_menu表数据初始化失败!")
@@ -224,7 +188,7 @@ func InsertInto(db *gorm.DB) error {
 	//插入货物 goods
 	goodsData := []model.Goods{
 		{Subject: "10G|30天", TotalBandwidth: 10, ExpirationDate: 30, TotalAmount: "0.01"},
-		{Subject: "20G|180天", TotalBandwidth: 20, ExpirationDate: 180, TotalAmount: "0.01"},
+		{Subject: "20G|180天", TotalBandwidth: 20, ExpirationDate: 180, TotalAmount: "0"},
 	}
 	if err := global.DB.Create(&goodsData).Error; err != nil {
 		return errors.New("goods表数据初始化失败!")
@@ -326,7 +290,7 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "2", V1: "/user/changeUserPassword", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/user/resetUserPassword", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/user/getUserInfo", V2: "GET"},
-		{Ptype: "p", V0: "2", V1: "/user/resetSub", V2: "POST"},
+		{Ptype: "p", V0: "2", V1: "/user/resetSub", V2: "GET"},
 
 		{Ptype: "p", V0: "2", V1: "/menu/getRouteList", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/menu/getRouteTree", V2: "GET"},

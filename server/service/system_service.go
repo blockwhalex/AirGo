@@ -14,11 +14,7 @@ func GetThemeConfig() (*model.Theme, error) {
 }
 
 func UpdateThemeConfig(theme *model.Theme) error {
-	var t model.Theme
-	global.DB.First(&t)
-	theme.CreatedAt = t.CreatedAt
-	//theme.UpdatedAt=t.UpdatedAt
-	global.LocalCache.SetNoExpire("theme", theme) //保存theme到local cache
+	global.Theme = *theme
 	return global.DB.Debug().Model(&model.Theme{ID: 1}).Save(&theme).Error
 }
 

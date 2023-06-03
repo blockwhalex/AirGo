@@ -126,14 +126,14 @@ func Purchase(ctx *gin.Context) {
 	case "alipay":
 		res, err := alipay_plugin.TradePreCreatePay(global.AlipayClient, sysOrder)
 		//fmt.Println("AlipayTradePreCreatePay res:", res)
-		if err != nil || res.Content.QRCode == "" {
+		if err != nil || res.QRCode == "" {
 			response.Fail("alipay TradePreCreatePay err"+err.Error(), nil, ctx)
 			return
 		}
-		sysOrder.QRCode = res.Content.QRCode
+		sysOrder.QRCode = res.QRCode
 		sysOrder.TradeStatus = "WAIT_BUYER_PAY"
-		service.UpdateOrder(sysOrder)                                             //更新数据库状态
-		response.OK("alipay TradePreCreatePay success:", res.Content.QRCode, ctx) //返回用户qrcode
+		service.UpdateOrder(sysOrder)                                     //更新数据库状态
+		response.OK("alipay TradePreCreatePay success:", res.QRCode, ctx) //返回用户qrcode
 		//5分钟等待付款
 		go PollAliPay(sysOrder)
 	}
@@ -157,20 +157,20 @@ func PollAliPay(order *model.Orders) {
 		}
 		<-t.C
 		rsp, _ := alipay_plugin.TradeQuery(global.AlipayClient, order)
-		fmt.Println("支付宝TradeQuery rsp.Content.TradeStatus:", rsp.Content.TradeStatus)
-		if rsp.Content.TradeStatus == "TRADE_SUCCESS" || rsp.Content.TradeStatus == "TRADE_FINISHED" { //交易结束
+		fmt.Println("支付宝TradeQuery rsp.Content.TradeStatus:", rsp.TradeStatus)
+		if rsp.TradeStatus == "TRADE_SUCCESS" || rsp.TradeStatus == "TRADE_FINISHED" { //交易结束
 			fmt.Println("支付宝支付成功")
 			order.TradeStatus = "TRADE_SUCCESS"
-			order.BuyerLogonId = rsp.Content.BuyerLogonId
-			order.ReceiptAmount = rsp.Content.ReceiptAmount
-			order.BuyerPayAmount = rsp.Content.BuyerPayAmount
+			order.BuyerLogonId = rsp.BuyerLogonId
+			order.ReceiptAmount = rsp.ReceiptAmount
+			order.BuyerPayAmount = rsp.BuyerPayAmount
 			service.UpdateOrder(order)         //更新数据库状态
 			service.UpdateUserSubscribe(order) //更新用户订阅信息
 			t.Stop()
 			return
 		}
-		if rsp.Content.TradeStatus == "WAIT_BUYER_PAY" && order.TradeStatus != "WAIT_BUYER_PAY" {
-			order.TradeNo = rsp.Content.TradeNo
+		if rsp.TradeStatus == "WAIT_BUYER_PAY" && order.TradeStatus != "WAIT_BUYER_PAY" {
+			order.TradeNo = rsp.TradeNo
 			service.UpdateOrder(order) //更新数据库状态
 		}
 		i++
@@ -231,9 +231,6 @@ func GetAllGoods(ctx *gin.Context) {
 
 // 新建商品
 func NewGoods(ctx *gin.Context) {
-	//rq, err := ioutil.ReadAll(ctx.Request.Body)
-	//fmt.Println("新建商品参数", string(rq))
-	//fmt.Println("新建商品参数err", err)
 	var goods model.Goods
 	err := ctx.ShouldBind(&goods)
 	if err != nil {
@@ -252,9 +249,6 @@ func NewGoods(ctx *gin.Context) {
 
 // 删除商品
 func DeleteGoods(ctx *gin.Context) {
-	// rq, err := ioutil.ReadAll(ctx.Request.Body)
-	// fmt.Println("新建商品参数", string(rq))
-	// fmt.Println("新建商品参数err", err)
 	var goods model.Goods
 	err := ctx.ShouldBind(&goods)
 	if err != nil {

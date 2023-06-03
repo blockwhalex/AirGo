@@ -4,14 +4,14 @@ import "time"
 
 type Theme struct {
 	// 是否开启布局配置抽屉
-	CreatedAt time.Time  `json:"-"`
-	UpdatedAt time.Time  `json:"-"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"-" gorm:"index"`
 	ID        int        `json:"id"   gorm:"primary_key"`
 
 	IsDrawer bool `json:"isDrawer" gorm:"default:false;comment:是否开启布局配置抽屉"`
 	//全局主题
-	Primary  string `json:"primary"  gorm:"default:#409eff;comment:默认primary主题颜色"`
+	Primary  string `json:"primary"  gorm:"default:#F9A43D;comment:默认primary主题颜色"`
 	IsIsDark bool   `json:"isIsDark" gorm:"default:false;comment:是否开启深色模式"`
 
 	//顶栏设置

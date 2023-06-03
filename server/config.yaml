@@ -5,14 +5,12 @@ mysql:
   db-name:
   username: gin
   password: 817
-  prefix: ""
-  singular: false
-  engine: ""
+  engine: Innodb
   max-idle-conns: 10
   max-open-conns: 100
-  log-mode: error
-  log-zap: false
 system:
+  admin-email: admin@oicq.com
+  admin-password: admin
   port: 8899
   db-type: sqlite
 sqlite:

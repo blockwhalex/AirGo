@@ -4,7 +4,7 @@ import (
 	"github.com/songzhibin97/gkit/cache/local_cache"
 
 	"AirGo/global"
-	time_duration "AirGo/utils/time"
+	time_duration "AirGo/utils/time_plugin"
 )
 
 func InitLocalCache() {

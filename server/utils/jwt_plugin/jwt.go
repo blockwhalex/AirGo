@@ -7,7 +7,7 @@ import (
 	jwt "github.com/golang-jwt/jwt/v4"
 
 	"AirGo/global"
-	timeTool "AirGo/utils/time"
+	timeTool "AirGo/utils/time_plugin"
 )
 
 type JWT struct {

@@ -18,6 +18,8 @@ const publicApi=usePublicApi()
 export const useThemeConfig = defineStore('themeStore', {
 	state: (): ThemeConfigState => ({
 		themeConfig: {
+			created_at:'',
+			updated_at:'',
 			id:0,
 			// 是否开启布局配置抽屉
 			isDrawer: false,
@@ -113,7 +115,7 @@ export const useThemeConfig = defineStore('themeStore', {
 			// 是否开启水印
 			isWartermark: false,
 			// 水印文案
-			wartermarkText: 'OICQ',
+			wartermarkText: '',
 
 			/**
 			 * 其它设置
@@ -146,11 +148,11 @@ export const useThemeConfig = defineStore('themeStore', {
 			 * 全局网站标题 / 副标题
 			 */
 			// 网站主标题（菜单导航、浏览器当前网页标题）
-			globalTitle: 'OICQ',
+			globalTitle: '',
 			// 网站副标题（登录页顶部文字）
-			globalViceTitle: 'OICQ',
+			globalViceTitle: '',
 			// 网站副标题（登录页顶部文字）
-			globalViceTitleMsg: 'OICQ',
+			globalViceTitleMsg: '',
 			// 默认初始语言，可选值"<zh-cn|en|zh-tw>"，默认 zh-cn
 			globalI18n: 'zh-cn',
 			// 默认全局组件大小，可选值"<large|'default'|small>"，默认 'large'

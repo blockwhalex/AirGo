@@ -1,4 +1,4 @@
-package timeTool
+package time_plugin
 
 import (
 	"strconv"

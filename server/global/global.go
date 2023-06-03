@@ -1,7 +1,6 @@
 package global
 
 import (
-	"AirGo/config"
 	"AirGo/model"
 	"github.com/casbin/casbin/v2"
 	"github.com/mojocn/base64Captcha"
@@ -14,7 +13,7 @@ import (
 
 var (
 	DB                 *gorm.DB
-	CONFIG             config.Server          //全局配置（本地）
+	Config             model.Config           //全局配置（本地）
 	VP                 *viper.Viper           //
 	LocalCache         local_cache.Cache      //本地kv cache
 	AlipayClient       *alipay.Client         //alipay
