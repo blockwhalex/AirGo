@@ -12,7 +12,6 @@ func ParseDuration(d string) (time.Duration, error) {
 	if err == nil {
 		return dr, nil
 	}
-	//如果出错开始判断
 	if strings.Contains(d, "d") { //判断字符串s中是否包含个子串str。包含或者str为空则返回true
 		index := strings.Index(d, "d") //获取指定子字符串的第一个实例的索引值
 

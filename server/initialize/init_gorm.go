@@ -98,7 +98,7 @@ func RegisterTables() {
 		global.Logrus.Error("table创建失败", err.Error())
 		return
 	}
-	global.Logrus.Error("table创建成功", err.Error())
+	global.Logrus.Error("table创建成功")
 }
 
 // 导入数据
