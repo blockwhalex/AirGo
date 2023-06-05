@@ -1,10 +1,10 @@
 package api
 
 import (
+	"AirGo/global"
 	"AirGo/model"
 	"AirGo/service"
 	"AirGo/utils/response"
-	"log"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -23,21 +23,21 @@ func GetRouteList(c *gin.Context) {
 	//查询uId对应的角色
 	roleIds, err := service.FindRoleIdsByuId(uIdNew)
 	if err != nil {
-		log.Println(err)
+		global.Logrus.Error("角色查询错误", err.Error())
 		response.Fail("角色查询错误"+err.Error(), nil, c)
 		return
 	}
 	// 角色Ids对应的route Ids
 	routeIds, err := service.GetRouteIdsByRoleIds(roleIds)
 	if err != nil {
-		log.Println("GetRouteIdsByRoleIds err", err)
+		global.Logrus.Error("GetRouteIdsByRoleIds err", err)
 		response.Fail("GetRouteIdsByRoleIds err"+err.Error(), nil, c)
 		return
 	}
 	// 根据route Ids 查 route Slice
 	routeSlice, err := service.GetRouteSliceByRouteIds(routeIds)
 	if err != nil {
-		log.Println("GetRouteSliceByRouteIds err", err)
+		global.Logrus.Error("GetRouteSliceByRouteIds err", err)
 		response.Fail("GetRouteSliceByRouteIds err"+err.Error(), nil, c)
 		return
 	}
@@ -96,11 +96,10 @@ func NewDynamicRoute(ctx *gin.Context) {
 	var route model.DynamicRoute
 	err := ctx.ShouldBind(&route)
 	if err != nil {
-		log.Println(err)
+		global.Logrus.Error("新建动态路由参数错误", err.Error())
 		response.Fail("新建动态路由参数错误"+err.Error(), nil, ctx)
 		return
 	}
-	//fmt.Println("新建动态路由:", route)
 	// 查询动态路由是否存在
 	notExist := service.NotExistDynamicRoute(&route)
 	if !notExist {
@@ -109,7 +108,7 @@ func NewDynamicRoute(ctx *gin.Context) {
 	}
 	err = service.NewDynamicRoute(&route)
 	if err != nil {
-		log.Println(err)
+		global.Logrus.Error("新建动态路由参数错误", err.Error())
 		response.Fail("新建动态路由错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -122,8 +121,8 @@ func DelDynamicRoute(ctx *gin.Context) {
 	var route model.DynamicRoute
 	err := ctx.ShouldBind(&route)
 	if err != nil {
-		log.Println(err)
-		response.Fail("删除动态路由参数错误"+err.Error(), nil, ctx)
+		global.Logrus.Error("删除动态路由参数错误", err.Error())
+		response.Fail("动态路由参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	// 查询动态路由是否存在
@@ -134,8 +133,8 @@ func DelDynamicRoute(ctx *gin.Context) {
 	}
 	err = service.DelDynamicRoute(&route)
 	if err != nil {
-		log.Println(err)
-		response.Fail("删除动态路由错误"+err.Error(), nil, ctx)
+		global.Logrus.Error("删除动态路由参数错误", err.Error())
+		response.Fail("动态路由错误"+err.Error(), nil, ctx)
 		return
 	}
 	response.OK("删除动态路由成功", nil, ctx)
@@ -147,8 +146,8 @@ func UpdateDynamicRoute(ctx *gin.Context) {
 	var route model.DynamicRoute
 	err := ctx.ShouldBind(&route)
 	if err != nil {
-		log.Println(err)
-		response.Fail("修改动态路由参数错误"+err.Error(), nil, ctx)
+		global.Logrus.Error("修改动态路由参数错误", err.Error())
+		response.Fail("动态路由参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	// 查询动态路由是否存在
@@ -160,8 +159,8 @@ func UpdateDynamicRoute(ctx *gin.Context) {
 
 	err = service.UpdateDynamicRoute(&route)
 	if err != nil {
-		log.Println(err)
-		response.Fail("修改动态路由错误"+err.Error(), nil, ctx)
+		global.Logrus.Error("修改动态路由参数错误", err.Error())
+		response.Fail("动态路由错误"+err.Error(), nil, ctx)
 		return
 	}
 	response.OK("修改动态路由成功", nil, ctx)
@@ -173,15 +172,14 @@ func FindDynamicRoute(ctx *gin.Context) {
 	var route model.DynamicRoute
 	err := ctx.ShouldBind(&route)
 	if err != nil {
-		log.Println(err)
-		response.Fail("查询单条动态路由参数错误"+err.Error(), nil, ctx)
+		global.Logrus.Error("查询动态路由参数错误", err.Error())
+		response.Fail("单条动态路由参数错误"+err.Error(), nil, ctx)
 		return
 	}
-	//fmt.Println("查询动态路由参数：", route)
 	res, err := service.FindDynamicRoute(&route)
 	if err != nil {
-		log.Println(err)
-		response.Fail("查询单条动态路由错误"+err.Error(), nil, ctx)
+		global.Logrus.Error("查询动态路由参数错误", err.Error())
+		response.Fail("单条动态路由错误"+err.Error(), nil, ctx)
 		return
 	}
 	response.OK("查询单条动态路由成功", res, ctx)

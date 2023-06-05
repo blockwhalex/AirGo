@@ -7,7 +7,6 @@ import (
 	"AirGo/utils/encode_plugin"
 	"AirGo/utils/mail_plugin"
 	"AirGo/utils/response"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -62,7 +61,7 @@ func GetMailCode(ctx *gin.Context) {
 	//发送邮件
 	err = mail_plugin.SendEmail(global.EmailDialer, user.UserName, randomStr, global.Server.Email.EmailContent)
 	if err != nil {
-		fmt.Println("验证码获取失败:", err.Error())
+		global.Logrus.Error("验证码获取失败:", err.Error())
 		response.OK("验证码获取失败"+err.Error(), nil, ctx)
 		return
 	}

@@ -6,8 +6,6 @@ import (
 	utils "AirGo/utils/encode_plugin"
 	"errors"
 	"gorm.io/driver/sqlite"
-	"log"
-
 	//"go-admin/initialize"
 	//github.com/satori/go.uuid
 	gormadapter "github.com/casbin/gorm-adapter/v3"
@@ -40,7 +38,7 @@ func GormSqlite() *gorm.DB {
 			SingularTable: true, //单数表名
 		},
 	}); err != nil {
-		log.Println("gorm.Open error:", err)
+		global.Logrus.Error("gorm.Open error:", err)
 		panic(err)
 	} else {
 		sqlDB, _ := db.DB()
@@ -64,7 +62,7 @@ func GormMysql() *gorm.DB {
 			SingularTable: true, //单数表名
 		},
 	}); err != nil {
-		log.Println("gorm.Open error:", err)
+		global.Logrus.Error("gorm.Open error:", err)
 		panic(err)
 	} else {
 		db.InstanceSet("gorm:table_options", "ENGINE="+global.Config.Mysql.Engine)
@@ -96,13 +94,11 @@ func RegisterTables() {
 		model.Server{},
 	)
 	if err != nil {
-		// global.LOG.Error("register table failed", zap.Error(err))
 		//os.Exit(0)
-		log.Println("table创建失败", err.Error())
+		global.Logrus.Error("table创建失败", err.Error())
 		return
 	}
-	//global.LOG.Info("register table success")
-	log.Println("table创建成功")
+	global.Logrus.Error("table创建成功", err.Error())
 }
 
 // 导入数据
@@ -128,19 +124,19 @@ func InsertInto(db *gorm.DB) error {
 	}
 	//插入sys_dynamic-router_data表
 	DynamicRouteData := []model.DynamicRoute{
-		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "iconfont icon-shouye"}},
-		{ParentID: 0, Path: "/admin", Name: "admin", Component: "/layout/routerView/parent.vue", Meta: model.Meta{Title: "超级管理员", Icon: "iconfont icon-shouye_dongtaihui"}},
-		{ParentID: 2, Path: "/admin/menu", Name: "adminMenu", Component: "/admin/menu/index.vue", Meta: model.Meta{Title: "菜单管理", Icon: "iconfont icon-caidan"}},
-		{ParentID: 2, Path: "/admin/role", Name: "adminRole", Component: "/admin/role/index.vue", Meta: model.Meta{Title: "角色管理", Icon: "iconfont icon-icon-"}},
-		{ParentID: 2, Path: "/admin/user", Name: "adminUser", Component: "/admin/user/index.vue", Meta: model.Meta{Title: "用户管理", Icon: "iconfont icon-gerenzhongxin"}},
-		{ParentID: 2, Path: "/admin/order", Name: "adminOrder", Component: "/admin/order/index.vue", Meta: model.Meta{Title: "订单管理", Icon: "iconfont icon--chaifenhang"}},
-		{ParentID: 2, Path: "/admin/node", Name: "adminNode", Component: "/admin/node/index.vue", Meta: model.Meta{Title: "节点管理", Icon: "iconfont icon-shuxingtu"}},
-		{ParentID: 2, Path: "/admin/shop", Name: "adminShop", Component: "/admin/shop/index.vue", Meta: model.Meta{Title: "商品管理", Icon: "iconfont icon-zhongduancanshuchaxun"}},
-		//{ParentID: 2, Path: "/admin/trafficRecord", Name: "trafficRecord", Component: "/admin/trafficRecord/index.vue", Meta: model.Meta{Title: "流量记录", Icon: "ele-ColdDrink"}},
-		{ParentID: 2, Path: "/admin/system", Name: "system", Component: "/admin/system/index.vue", Meta: model.Meta{Title: "系统设置", Icon: "iconfont icon-xitongshezhi"}},
-		{ParentID: 0, Path: "/shop", Name: "shop", Component: "/shop/index.vue", Meta: model.Meta{Title: "商店", Icon: "iconfont icon-zidingyibuju"}},
-		{ParentID: 0, Path: "/myOrder", Name: "myOrder", Component: "/myOrder/index.vue", Meta: model.Meta{Title: "我的订单", Icon: "iconfont icon--chaifenhang"}},
-		{ParentID: 0, Path: "/personal", Name: "personal", Component: "/personal/index.vue", Meta: model.Meta{Title: "个人信息", Icon: "iconfont icon-gerenzhongxin"}},
+		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "iconfont icon-shouye"}},                                   //id==1
+		{ParentID: 0, Path: "/admin", Name: "admin", Component: "/layout/routerView/parent.vue", Meta: model.Meta{Title: "超级管理员", Icon: "iconfont icon-shouye_dongtaihui"}},     //id==2
+		{ParentID: 2, Path: "/admin/menu", Name: "adminMenu", Component: "/admin/menu/index.vue", Meta: model.Meta{Title: "菜单管理", Icon: "iconfont icon-caidan"}},                //id==3
+		{ParentID: 2, Path: "/admin/role", Name: "adminRole", Component: "/admin/role/index.vue", Meta: model.Meta{Title: "角色管理", Icon: "iconfont icon-icon-"}},                 //id==4
+		{ParentID: 2, Path: "/admin/user", Name: "adminUser", Component: "/admin/user/index.vue", Meta: model.Meta{Title: "用户管理", Icon: "iconfont icon-gerenzhongxin"}},         //id==5
+		{ParentID: 2, Path: "/admin/order", Name: "adminOrder", Component: "/admin/order/index.vue", Meta: model.Meta{Title: "订单管理", Icon: "iconfont icon--chaifenhang"}},       //id==6
+		{ParentID: 2, Path: "/admin/node", Name: "adminNode", Component: "/admin/node/index.vue", Meta: model.Meta{Title: "节点管理", Icon: "iconfont icon-shuxingtu"}},             //id==7
+		{ParentID: 2, Path: "/admin/shop", Name: "adminShop", Component: "/admin/shop/index.vue", Meta: model.Meta{Title: "商品管理", Icon: "iconfont icon-zhongduancanshuchaxun"}}, //id==8
+		{ParentID: 2, Path: "/admin/system", Name: "system", Component: "/admin/system/index.vue", Meta: model.Meta{Title: "系统设置", Icon: "iconfont icon-xitongshezhi"}},         //id==9
+		{ParentID: 0, Path: "/shop", Name: "shop", Component: "/shop/index.vue", Meta: model.Meta{Title: "商店", Icon: "iconfont icon-zidingyibuju"}},                             //id==10
+		{ParentID: 0, Path: "/myOrder", Name: "myOrder", Component: "/myOrder/index.vue", Meta: model.Meta{Title: "我的订单", Icon: "iconfont icon--chaifenhang"}},                  //id==11
+		{ParentID: 0, Path: "/personal", Name: "personal", Component: "/personal/index.vue", Meta: model.Meta{Title: "个人信息", Icon: "iconfont icon-gerenzhongxin"}},              //id==12
+		{ParentID: 0, Path: "/serverStatus", Name: "serverStatus", Component: "/serverStatus/index.vue", Meta: model.Meta{Title: "节点状态", Icon: "iconfont icon-putong"}},         //id==13
 	}
 	if err := db.Create(&DynamicRouteData).Error; err != nil {
 		return errors.New("sys_dynamic-router_data表数据初始化失败!")
@@ -176,11 +172,13 @@ func InsertInto(db *gorm.DB) error {
 		{RoleID: 1, DynamicRouteID: 10},
 		{RoleID: 1, DynamicRouteID: 11},
 		{RoleID: 1, DynamicRouteID: 12},
+		{RoleID: 1, DynamicRouteID: 13},
 
 		{RoleID: 2, DynamicRouteID: 1},
 		{RoleID: 2, DynamicRouteID: 10},
 		{RoleID: 2, DynamicRouteID: 11},
 		{RoleID: 2, DynamicRouteID: 12},
+		{RoleID: 2, DynamicRouteID: 13},
 	}
 	if err := global.DB.Create(&roleAndMenuData).Error; err != nil {
 		return errors.New("role_and_menu表数据初始化失败!")

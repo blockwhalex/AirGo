@@ -23,8 +23,6 @@ func StructToMap(data interface{}) map[string]interface{} {
 	for i := 0; i < t.NumField(); i++ {
 		name := t.Field(i).Name
 		tag := t.Field(i).Tag.Get("json")
-		//fmt.Println("name:", name)
-		//fmt.Println("tag:", tag)
 		if tag == "-" || name == "-" {
 			continue
 		}

@@ -1,10 +1,10 @@
 package api
 
 import (
+	"AirGo/global"
 	"AirGo/model"
 	"AirGo/service"
 	"AirGo/utils/response"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,10 +16,9 @@ func UpdateThemeConfig(ctx *gin.Context) {
 		response.Fail("", nil, ctx)
 		return
 	}
-	//fmt.Println("设置主题 theme:", theme)
 	err = service.UpdateThemeConfig(&theme)
 	if err != nil {
-		fmt.Println("设置主题 err:", err)
+		global.Logrus.Error("设置主题 err:", err)
 		response.Fail("主题设置错误"+err.Error(), nil, ctx)
 		return
 	}

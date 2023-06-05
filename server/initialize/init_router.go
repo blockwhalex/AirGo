@@ -5,7 +5,6 @@ import (
 	"AirGo/global"
 	"AirGo/middleware"
 	"context"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -146,6 +145,12 @@ func InitRouter() {
 		casbinRouter.POST("updateCasbinPolicy", api.UpdateCasbinPolicy)       //更新casbin权限
 		casbinRouter.POST("updateCasbinPolicyNew", api.UpdateCasbinPolicyNew) //更新casbin权限
 	}
+	//websocket
+	websocketRouter := RouterGroup.Group("websocket")
+	{
+		websocketRouter.GET("msg", api.WebSocketMsg)
+	}
+
 	//Router.Run(":" + strconv.Itoa(global.CONFIG.System.Port))
 
 	srv := &http.Server{
@@ -156,7 +161,7 @@ func InitRouter() {
 	go func() {
 		// 服务连接
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+			global.Logrus.Fatalf("listen: %s\n", err)
 		}
 	}()
 
@@ -164,13 +169,13 @@ func InitRouter() {
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
-	log.Println("Shutdown Server ...")
+	global.Logrus.Info("Shutdown Server ...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown:", err)
+		global.Logrus.Fatalf("Server Shutdown:", err)
 	}
-	log.Println("Server exiting")
+	global.Logrus.Info("Server exiting")
 
 }

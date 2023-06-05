@@ -4,7 +4,6 @@ import (
 	"AirGo/global"
 	"AirGo/model"
 	"AirGo/utils/response"
-	"log"
 	"strconv"
 	"strings"
 
@@ -44,16 +43,16 @@ func CasbinMiddleware() gin.HandlerFunc {
 			roleID := strconv.Itoa(v.ID)
 			success, err := global.Casbin.Enforce(roleID, obj, act) // 判断策略中是否存在
 			if err != nil {
-				log.Println("权限casbin err:", err)
+				global.Logrus.Error("权限casbin err:", err)
+				c.Abort()
+				return
 			}
 			if success {
-				//log.Println("权限通过角色ID:", v)
 				status = true
 				break
 			}
 		}
 		if !status {
-			//fmt.Println("权限组：", roleIds)
 			response.Fail(obj+"权限不足", nil, c)
 			c.Abort()
 			return

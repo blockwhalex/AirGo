@@ -49,6 +49,11 @@ export const useNodeStore = defineStore("nodeStore", {
                 sni: "",
             } as NodeInfo,
         },
+        //节点状态页面数据
+        serverStatusData:{
+            type:0,
+            data:[] as ServerStatusInfo[],
+        },
 
     }),
     actions: {

@@ -1,11 +1,10 @@
 package api
 
 import (
+	"AirGo/global"
 	"AirGo/model"
 	"AirGo/service"
 	"AirGo/utils/response"
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,11 +14,10 @@ func GetAllOrder(ctx *gin.Context) {
 	err := ctx.ShouldBind(&params)
 	res, err := service.GetAllOrder(&params)
 	if err != nil {
-		fmt.Println("获取全部订单 err:", err)
+		global.Logrus.Error("订单获取错误" + err.Error())
 		response.Fail("订单获取错误"+err.Error(), nil, ctx)
 		return
 	}
-	//fmt.Println("获取全部订单res:", res)
 	response.OK("全部订单获取成功", res, ctx)
 }
 
@@ -35,7 +33,7 @@ func GetOrderByUserID(ctx *gin.Context) {
 	err := ctx.ShouldBind(&params)
 	res, err := service.GetOrderByUserID(uIDInt, &params)
 	if err != nil {
-		fmt.Println("获取订单 err:", err)
+		global.Logrus.Error("获取订单 err:", err)
 		response.Fail("订单获取错误"+err.Error(), nil, ctx)
 		return
 	}

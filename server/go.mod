@@ -8,10 +8,12 @@ require (
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/gorilla/websocket v1.5.0
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/shirou/gopsutil/v3 v3.23.5
+	github.com/sirupsen/logrus v1.4.2
 	github.com/smartwalle/alipay/v3 v3.2.10
 	github.com/songzhibin97/gkit v1.2.11
 	github.com/spf13/viper v1.16.0
@@ -55,6 +57,7 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
+	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
@@ -67,6 +70,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230126093431-47fa9a501578 // indirect
+	github.com/shoenig/go-m1cpu v0.1.6 // indirect
 	github.com/smartwalle/ncrypto v1.0.2 // indirect
 	github.com/smartwalle/nsign v0.0.1 // indirect
 	github.com/spf13/afero v1.9.5 // indirect

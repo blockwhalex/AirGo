@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +19,7 @@ func SSNodeInfo(ctx *gin.Context) {
 	if global.Server.System.MuKey != ctx.Query("muKey") {
 		return
 	}
-	//节点号
+	//节点号 是否启用？
 	nodeID := ctx.Param("nodeID")
 	nodeIDInt, _ := strconv.Atoi(nodeID)
 	nodeInfo, err := service.SSNodeInfo(nodeIDInt)
@@ -36,7 +37,7 @@ func SSUsers(ctx *gin.Context) {
 	if global.Server.System.MuKey != ctx.Query("muKey") {
 		return
 	}
-	//节点号
+	//节点号 是否启用？
 	nodeID := ctx.Query("node_id")
 	nodeIDInt, _ := strconv.Atoi(nodeID)
 	//节点属于哪些goods
@@ -50,7 +51,6 @@ func SSUsers(ctx *gin.Context) {
 		response.SSUsersFail(ctx)
 		return
 	}
-	//fmt.Println("users", users)
 	response.SSUsersOK(users, ctx)
 }
 
@@ -60,17 +60,15 @@ func SSUsersTraffic(ctx *gin.Context) {
 	if global.Server.System.MuKey != ctx.Query("muKey") {
 		return
 	}
+	//节点号 是否启用？
 	node_id_str := ctx.Query("node_id")
 	node_id, _ := strconv.Atoi(node_id_str)
-	//fmt.Println("用户的流量使用情况node_id:", node_id)
-
 	var trafficReq model.TrafficReq
 	err := ctx.ShouldBind(&trafficReq)
 	if err != nil {
 		return
 	}
 	//用户的流量使用情况: {"data":[{"user_id":1,"u":445782,"d":1757834}]}
-	//fmt.Println("用户的流量使用情况trafficReq:", trafficReq.Data)
 	response.SSUsersOK("ok", ctx)
 
 	var userIds []int
@@ -90,19 +88,41 @@ func SSUsersTraffic(ctx *gin.Context) {
 		trafficLog.U = trafficLog.U + v.U
 		trafficLog.D = trafficLog.D + v.D
 	}
+	// 统计status
+	go func(id, u, d int, userIds []int) {
+		var nodeStatus = model.NodeStatus{
+			ID:         id,
+			UserAmount: len(userIds),
+			U:          float64(u),
+			D:          float64(d),
+			LastTime:   time.Now(),
+		}
+		//cache 取值
+		cacheStatus, ok := global.LocalCache.Get(strconv.Itoa(id) + "status")
+		oldStatus := cacheStatus.(model.NodeStatus)
+		if !ok {
+			global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, time.Hour)
+		} else {
+			//判断时间间隔
+			d := nodeStatus.LastTime.Sub(oldStatus.LastTime).Seconds()
+			nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.D/1024/1024/d), 64)
+			nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.U/1024/1024/d), 64)
+			global.LocalCache.SetNoExpire(strconv.Itoa(id)+"status", nodeStatus)
+		}
+
+	}(node_id, trafficLog.U, trafficLog.D, userIds)
 	//插入流量统计统计
 	err = service.NewTrafficLog(&trafficLog)
 	if err != nil {
 		return
 	}
 	//更新用户流量信息
-	//fmt.Println("更新用户流量信息userArr:", userArr)
 	if len(userArr) == 0 {
 		return
 	}
 	err = service.UpdateUserTrafficInfo(userArr, userIds)
 	if err != nil {
-		fmt.Println("更新用户流量信息err", err)
+		global.Logrus.Error("更新用户流量信息err", err)
 		return
 	}
 }
@@ -110,5 +130,5 @@ func SSUsersTraffic(ctx *gin.Context) {
 // 上报用户的当前在线IP
 func SSUsersAliveIP(ctx *gin.Context) {
 	body, err := ioutil.ReadAll(ctx.Request.Body)
-	fmt.Println("上报用户的当前在线IP body:", string(body), err)
+	global.Logrus.Error("上报用户的当前在线IP body:", string(body), err)
 }

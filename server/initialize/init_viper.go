@@ -2,8 +2,6 @@ package initialize
 
 import (
 	"AirGo/global"
-	"fmt"
-
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -15,18 +13,21 @@ func InitViper() *viper.Viper {
 	v.SetConfigType("yaml")        //设置文件的类型
 	err := v.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		global.Logrus.Panic("Fatal error config file:", err) //log之后会panic()
+		//panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
 	v.WatchConfig() //监听
 
 	v.OnConfigChange(func(e fsnotify.Event) {
-		fmt.Println("config file changed:", e.Name)
+		global.Logrus.Info("config file changed:", e.Name)
 		if err = v.Unmarshal(&global.Config); err != nil {
-			fmt.Println(err)
+			global.Logrus.Error(err)
+			//fmt.Println(err)
 		}
 	})
 	if err = v.Unmarshal(&global.Config); err != nil { //解析到全局配置
-		fmt.Println(err)
+		global.Logrus.Error(err)
+		//fmt.Println(err)
 	}
 	return v
 }

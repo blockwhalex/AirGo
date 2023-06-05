@@ -2,8 +2,10 @@ package global
 
 import (
 	"AirGo/model"
+	"AirGo/utils/websocket_plugin"
 	"github.com/casbin/casbin/v2"
 	"github.com/mojocn/base64Captcha"
+	"github.com/sirupsen/logrus"
 	alipay "github.com/smartwalle/alipay/v3"
 	"github.com/songzhibin97/gkit/cache/local_cache"
 	"github.com/spf13/viper"
@@ -23,5 +25,7 @@ var (
 	Base64Captcha      *base64Captcha.Captcha //Base64Captcha
 	Base64CaptchaStore base64Captcha.Store    //Base64CaptchaStore
 	EmailDialer        *gomail.Dialer         //Email
+	WsManager          *websocket_plugin.ClientManager
+	Logrus             *logrus.Logger
 	//Base64CaptchaDriver *base64Captcha.DriverDigit //Base64CaptchaDriver
 )

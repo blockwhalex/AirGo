@@ -3,7 +3,6 @@ package service
 import (
 	"AirGo/global"
 	"AirGo/model"
-	"fmt"
 )
 
 // 查询全部已启用商品
@@ -26,7 +25,6 @@ func GetAllGoods() (*[]model.Goods, error) {
 			}
 			//goodsArr[k1].Nodes = []model.Node{} //清空，防止传给前端多余信息
 		}
-		//fmt.Println("goodsArr:", goodsArr[0].CheckedNodes)
 		return &goodsArr, err
 	}
 
@@ -47,13 +45,11 @@ func FindGoods(goods *model.Goods) (*model.Goods, error) {
 
 // 查询商品 by nodeID
 func FindGoodsByNodeID(nodeID int) ([]model.Goods, error) {
-	//log.Println("nodeID:", nodeID)
 	var node model.Node
 	err := global.DB.Where("id = ?", nodeID).Preload("Goods").First(&node).Error
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("FindGoodsByNodeID:", node.Goods)
 	return node.Goods, nil
 }
 
@@ -72,7 +68,7 @@ func DeleteGoods(goods *model.Goods) error {
 	//删除关联
 	err := global.DB.Debug().Model(&model.Goods{ID: goods.ID}).Association("Nodes").Replace(nil)
 	if err != nil {
-		//fmt.Println("删除商品参数err1", err)
+		global.Logrus.Error("删除商品参数err:", err.Error())
 		return err
 	}
 	err = global.DB.Debug().Where(&model.Goods{ID: goods.ID}).Delete(&model.Goods{}).Error
@@ -82,7 +78,6 @@ func DeleteGoods(goods *model.Goods) error {
 
 // 更新商品
 func UpdateGoods(goods *model.Goods) error {
-	fmt.Println("更新商品:", goods, goods.CheckedNodes)
 	//查询关联节点
 	var nodeArr []model.Node
 	global.DB.Where("id in ?", goods.CheckedNodes).Find(&nodeArr)

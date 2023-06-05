@@ -1,9 +1,8 @@
 package initialize
 
 import (
+	"AirGo/global"
 	"AirGo/service"
-	"fmt"
-
 	"github.com/robfig/cron/v3"
 )
 
@@ -34,6 +33,7 @@ import (
 //c.Stop()  // 停止调度，但正在运行的作业不会被停止
 
 func InitCrontab() {
+	global.Logrus.Info("用户流量有效期定时任务")
 	UserCrontab()
 }
 
@@ -44,14 +44,13 @@ func UserCrontab() {
 	_, err := c.AddFunc("*/2 * * * *", func() {
 		err := service.UserExpiryCheck()
 		if err != nil {
-			fmt.Println("service.UserExpiryCheck err:", err)
+			global.Logrus.Error("service.UserExpiryCheck err:", err)
 		}
 	})
 	if err != nil {
 		return
 	}
 	c.Start()
-
 }
 
 // casbin 更新

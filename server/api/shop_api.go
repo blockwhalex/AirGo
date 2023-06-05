@@ -8,8 +8,6 @@ import (
 	"AirGo/utils/other_plugin"
 	"AirGo/utils/response"
 	"errors"
-	"fmt"
-	"log"
 	"strconv"
 	"time"
 
@@ -21,8 +19,6 @@ import (
 
 // 订单预处理
 func PreHandleOrder(ctx *gin.Context) *model.Orders {
-	//res, _ := ioutil.ReadAll(ctx.Request.Body)
-	//fmt.Println("支付预创建 preOrder:", string(res))
 	uID, _ := ctx.Get("uID")
 	uName, _ := ctx.Get("uName")
 	uIDInt := uID.(int)
@@ -34,8 +30,6 @@ func PreHandleOrder(ctx *gin.Context) *model.Orders {
 		response.Fail("订单预处理参数错误"+err.Error(), nil, ctx)
 		return nil
 	}
-	fmt.Println("receiveOrder:", receiveOrder)
-
 	//通过商品id查找商品
 	goods, err := service.FindGoodsByGoodsID(receiveOrder.GoodsID)
 	if err != nil {
@@ -47,7 +41,6 @@ func PreHandleOrder(ctx *gin.Context) *model.Orders {
 			return nil
 		}
 	}
-	fmt.Println("goods:", goods)
 	//构造系统订单参数
 	uIDStr := other_plugin.Sup(uIDInt, 5)
 	//uIDStr := strconv.Itoa(preOrder.UserID)
@@ -140,7 +133,6 @@ func Purchase(ctx *gin.Context) {
 
 }
 func PollAliPay(order *model.Orders) {
-	fmt.Println("购买轮询")
 	t := time.NewTicker(10 * time.Second)
 	//defer t.Stop()
 	i := 0
@@ -148,7 +140,8 @@ func PollAliPay(order *model.Orders) {
 		if i == 18 { // 18*10s 3分钟
 			if order.TradeNo != "" {
 				res, _ := alipay_plugin.TradeClose(global.AlipayClient, order) //超时，取消订单
-				fmt.Println("支付宝取消订单结果:", res)
+				//fmt.Println("支付宝取消订单结果:", res)
+				global.Logrus.Error("支付宝取消订单结果:", res)
 			}
 			order.TradeStatus = "TRADE_CLOSED" //更新数据库订单状态(超时已取消)
 			service.UpdateOrder(order)         //更新数据库状态
@@ -157,9 +150,9 @@ func PollAliPay(order *model.Orders) {
 		}
 		<-t.C
 		rsp, _ := alipay_plugin.TradeQuery(global.AlipayClient, order)
-		fmt.Println("支付宝TradeQuery rsp.Content.TradeStatus:", rsp.TradeStatus)
+		//fmt.Println("支付宝TradeQuery rsp.Content.TradeStatus:", rsp.TradeStatus)
 		if rsp.TradeStatus == "TRADE_SUCCESS" || rsp.TradeStatus == "TRADE_FINISHED" { //交易结束
-			fmt.Println("支付宝支付成功")
+			//fmt.Println("支付宝支付成功")
 			order.TradeStatus = "TRADE_SUCCESS"
 			order.BuyerLogonId = rsp.BuyerLogonId
 			order.ReceiptAmount = rsp.ReceiptAmount
@@ -196,10 +189,9 @@ func AlipayNotify(ctx *gin.Context) {
 		BuyerPayAmount: noti.BuyerPayAmount,
 		//Subject:        noti.Subject, // 商品的标题
 	}
-	//fmt.Println("回调参数更新数据库订单:", sysOrder)
 	err := service.UpdateOrder(sysOrder)
 	if err != nil && noti.TradeStatus == "TRADE_SUCCESS" {
-		log.Println("更新数据库订单错误")
+		global.Logrus.Error("更新数据库订单错误", err.Error())
 		return
 	}
 	// 确认收到通知消息
@@ -234,11 +226,10 @@ func NewGoods(ctx *gin.Context) {
 	var goods model.Goods
 	err := ctx.ShouldBind(&goods)
 	if err != nil {
-		fmt.Println("新建商品参数err", err)
+		global.Logrus.Error("新建商品参数err", err)
 		response.Fail("新建商品参数错误"+err.Error(), nil, ctx)
 		return
 	}
-	fmt.Println("新建商品goods", goods)
 	err = service.NewGoods(&goods)
 	if err != nil {
 		response.Fail("新建商品错误"+err.Error(), nil, ctx)
@@ -255,7 +246,6 @@ func DeleteGoods(ctx *gin.Context) {
 		response.Fail("删除商品参数错误"+err.Error(), nil, ctx)
 		return
 	}
-	//fmt.Println("删除商品goods", goods)
 	err = service.DeleteGoods(&goods)
 	if err != nil {
 		response.Fail("删除商品错误"+err.Error(), nil, ctx)
@@ -273,7 +263,6 @@ func UpdateGoods(ctx *gin.Context) {
 		response.Fail("更新商品参数错误"+err.Error(), nil, ctx)
 		return
 	}
-	fmt.Println("更新商品goods", goods)
 	err = service.UpdateGoods(&goods)
 	if err != nil {
 		response.Fail("更新商品错误"+err.Error(), nil, ctx)

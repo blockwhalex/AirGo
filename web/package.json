@@ -27,6 +27,7 @@
 		"vue": "^3.2.47",
 		"vue-clipboard3": "^2.0.0",
 		"vue-demi": "^0.13.11",
+		"vue-native-websocket": "^2.0.15",
 		"vue-router": "^4.1.6"
 	},
 	"devDependencies": {

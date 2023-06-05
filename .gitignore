@@ -3,4 +3,6 @@ web/node_modules
 server/config_dev.yaml
 server/test.db
 server/test-az.db
+server/logs
+server/main
 .idea/

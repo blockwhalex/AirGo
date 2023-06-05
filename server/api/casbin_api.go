@@ -1,11 +1,10 @@
 package api
 
 import (
+	"AirGo/global"
 	"AirGo/model"
 	"AirGo/utils/casbin_plugin"
 	"AirGo/utils/response"
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +19,7 @@ func UpdateCasbinPolicy(ctx *gin.Context) {
 		response.Fail("更新casbin权限参数错误", err, ctx)
 		return
 	}
-	fmt.Println("更新casbin权限参:", casbinInfo)
+	//fmt.Println("更新casbin权限参:", casbinInfo)
 	err = casbin_plugin.UpdateCasbinPolicy(&casbinInfo)
 	if err != nil {
 		response.Fail("更新casbin权限错误", err, ctx)
@@ -35,11 +34,10 @@ func UpdateCasbinPolicyNew(ctx *gin.Context) {
 	var data model.CasbinData
 	err := ctx.ShouldBind(&data)
 	if err != nil {
-		fmt.Println("更新casbin err:", err)
+		global.Logrus.Error("更新casbin权限参数错误", err)
 		response.Fail("更新casbin权限参数错误", err, ctx)
 		return
 	}
-	//fmt.Println("更新casbin data:", data)
 	//前端传过来的没有处理，只有method，从数据库查询完整的rules，再更新casbin
 	err = casbin_plugin.UpdateCasbinPolicyNew(&data)
 	if err != nil {
@@ -65,7 +63,6 @@ func GetPolicy(ctx *gin.Context) {
 		response.Fail("获取权限列表参数错误", nil, ctx)
 		return
 	}
-	//fmt.Println("casbinInfo:", casbinInfo)
 	res := casbin_plugin.GetPolicyPathByRoleId(&casbinInfo)
 	response.OK("获取权限列表成功", res, ctx)
 }
@@ -87,7 +84,6 @@ func GetPolicyByRoleIds(ctx *gin.Context) {
 		response.Fail("获取权限列表参数错误", nil, ctx)
 		return
 	}
-	//fmt.Println("casbinInfo:", casbinInfo)
 	res := casbin_plugin.GetPolicyPathByRoleId(&casbinInfo)
 
 	response.OK("获取权限列表成功", res, ctx)

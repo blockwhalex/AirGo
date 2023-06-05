@@ -3,13 +3,12 @@ package service
 import (
 	"AirGo/global"
 	"AirGo/model"
-	"fmt"
+	"strconv"
 	"time"
 )
 
 // 根据node name 模糊查询节点
 func GetNodeByName(name string) ([]model.Node, error) {
-	fmt.Println("查询节点name", name)
 	var nodes []model.Node
 	err := global.DB.Where("name like ?", ("%" + name + "%")).Find(&nodes).Error
 	return nodes, err
@@ -23,7 +22,6 @@ func GetAllNode() (*[]model.Node, error) {
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Println("查询全部节点", nodes)
 	return &nodes, nil
 }
 
@@ -69,19 +67,16 @@ func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
 		endTime = time.Now().Local()
 		startTime = endTime.AddDate(0, 0, -30)
 	}
-
-	//fmt.Println("默认前1个月数据", startTime, endTime)
 	if params.Search != "" {
-		//fmt.Println("name:", params.Search)
 		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Where("name LIKE ?", "%"+params.Search+"%").Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
 		if err != nil {
-			fmt.Println("err:", err)
+			global.Logrus.Error("查询节点流量err:", err.Error())
 			return model.NodesWithTotal{}
 		}
 	} else {
 		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
 		if err != nil {
-			fmt.Println("err:", err)
+			global.Logrus.Error("查询节点流量err:", err.Error())
 			return model.NodesWithTotal{}
 		}
 	}
@@ -93,4 +88,32 @@ func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
 		//nodeArr[i1].TrafficLogs=[]model.TrafficLog{} //清空traffic
 	}
 	return nodeArr
+}
+
+// 获取 node status
+func GetNodesStatus() *[]model.NodeStatus {
+	var nodesIds []model.Node
+	global.DB.Model(&model.Node{}).Select("id", "name").Find(&nodesIds)
+	var nodestatusArr []model.NodeStatus
+	for _, v := range nodesIds {
+		var nodeStatus = model.NodeStatus{}
+		vStatus, ok := global.LocalCache.Get(strconv.Itoa(v.ID) + "status")
+		if !ok {
+			nodeStatus.ID = v.ID
+			nodeStatus.Name = v.Name
+			nodeStatus.D = 0
+			nodeStatus.U = 0
+			nodestatusArr = append(nodestatusArr, nodeStatus)
+		} else {
+			nodeStatus = vStatus.(model.NodeStatus)
+			nodeStatus.Name = v.Name
+			if time.Now().Sub(nodeStatus.LastTime).Seconds() > 60 {
+				nodeStatus.Status = false
+			} else {
+				nodeStatus.Status = true
+			}
+			nodestatusArr = append(nodestatusArr, nodeStatus)
+		}
+	}
+	return &nodestatusArr
 }

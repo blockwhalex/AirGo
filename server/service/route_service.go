@@ -5,26 +5,22 @@ import (
 	"AirGo/model"
 	"AirGo/utils/array_plugin"
 	"errors"
-	"fmt"
-	"log"
-
 	"gorm.io/gorm"
 )
 
 // 角色Ids对应的route Ids
 func GetRouteIdsByRoleIds(roleIds []int) ([]int, error) {
 	var RoleAndMenuArr []model.RoleAndMenu
-	if roleIds == nil { //查询全部
-		//fmt.Println("查询全部route Ids")
+	if roleIds == nil {
 		err := global.DB.Find(&RoleAndMenuArr).Error
 		if err != nil {
-			log.Println("DB err:", err)
+			global.Logrus.Error("DB err:", err)
 			return nil, err
 		}
 	} else {
 		err := global.DB.Where("role_id in (?)", roleIds).Find(&RoleAndMenuArr).Error
 		if err != nil {
-			log.Println("DB err:", err)
+			global.Logrus.Error("DB err:", err)
 			return nil, err
 		}
 	}
@@ -35,7 +31,6 @@ func GetRouteIdsByRoleIds(roleIds []int) ([]int, error) {
 	}
 	//过滤重复
 	routeIdsNew := array_plugin.ArrayDeduplication(routeIds)
-	fmt.Println("route Ids:", routeIdsNew)
 	return routeIdsNew, nil
 
 }
@@ -47,13 +42,13 @@ func GetRouteSliceByRouteIds(routeIds []int) (*[]model.DynamicRoute, error) {
 	if routeIds == nil {
 		err := global.DB.Find(&RouteArr).Error
 		if err != nil {
-			log.Println("DB err:", err)
+			global.Logrus.Error("DB err:", err)
 			return nil, err
 		}
 	} else {
 		err := global.DB.Where("id in (?)", routeIds).Find(&RouteArr).Error
 		if err != nil {
-			log.Println("DB err:", err)
+			global.Logrus.Error("DB err:", err)
 			return nil, err
 		}
 	}
@@ -67,13 +62,13 @@ func GetRouteNodeByRouteIds(routeIds []int) (*[]model.RouteNode, error) {
 	if routeIds == nil {
 		err := global.DB.Model(model.DynamicRoute{}).Find(&routeNodeSlice).Error
 		if err != nil {
-			fmt.Println("DB err", err)
+			global.Logrus.Error("根据routeds 查 routeNode err:", err.Error())
 			return nil, err
 		}
 	} else {
 		err := global.DB.Model(model.DynamicRoute{}).Where("id in (?)", routeIds).Find(&routeNodeSlice).Error
 		if err != nil {
-			fmt.Println("DB err", err)
+			global.Logrus.Error("根据routeds 查 routeNode err:", err.Error())
 			return nil, err
 		}
 	}
@@ -89,7 +84,6 @@ func GetDynamicRoute(RouterSlice *[]model.DynamicRoute) *[]model.DynamicRoute {
 	for _, value := range *RouterSlice {
 		routeMap[value.ParentID] = append(routeMap[value.ParentID], value)
 	}
-	//log.Println("菜单形成 Map：", routeMap)
 	routeSlice := routeMap[0]              //0为左侧顶级菜单,从左侧菜单开始，找到每一个菜单的子菜单
 	for i := 0; i < len(routeSlice); i++ { //
 		getChildrenRoute(&routeSlice[i], routeMap) //获取每一个一级菜单的子菜单

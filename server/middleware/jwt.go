@@ -12,7 +12,6 @@ func ParseJwt() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//获取token
 		token := c.GetHeader("Authorization")
-		//log.Println("获取token：", token)
 		//判断
 		if token == "" {
 			response.Fail("未携带token", nil, c)

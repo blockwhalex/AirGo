@@ -4,8 +4,6 @@ import (
 	"AirGo/model"
 	"AirGo/service"
 	"AirGo/utils/response"
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,7 +26,6 @@ func NewNode(ctx *gin.Context) {
 		response.Fail("新建节点参数错误", nil, ctx)
 		return
 	}
-	fmt.Println("新建节点node", node)
 	err = service.NewNode(&node)
 	if err != nil {
 		response.Fail("新建节点错误", nil, ctx)
@@ -45,7 +42,6 @@ func DeleteNode(ctx *gin.Context) {
 		response.Fail("删除节点参数错误", nil, ctx)
 		return
 	}
-	fmt.Println("删除节点node", node)
 	err = service.DeleteNode(&node)
 	if err != nil {
 		response.Fail("删除节点错误", nil, ctx)
@@ -62,7 +58,6 @@ func UpdateNode(ctx *gin.Context) {
 		response.Fail("更新节点参数错误", nil, ctx)
 		return
 	}
-	//fmt.Println("更新节点node", node)
 	err = service.UpdateNode(&node)
 	if err != nil {
 		response.Fail("更新节点错误", nil, ctx)
@@ -85,7 +80,6 @@ func GetNodeTraffic(ctx *gin.Context) {
 		response.Fail("查询节点流量参数错误"+err.Error(), nil, ctx)
 		return
 	}
-	//fmt.Println("查询节点流量trafficParams:", trafficParams)
 	res := service.GetNodeTraffic(trafficParams)
 	response.OK("查询节点流量", res, ctx)
 }

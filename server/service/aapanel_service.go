@@ -5,7 +5,6 @@ import (
 	"AirGo/model"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"net/url"
 	"strconv"
 	"strings"
@@ -183,9 +182,8 @@ func ClashSubscribe(nodes *[]model.Node, uuid, host string) string {
 	clashYaml.ProxyGroups = append(clashYaml.ProxyGroups, proxyGroup)
 
 	res, err := yaml.Marshal(clashYaml)
-	//fmt.Println("clashYaml:", string(res))
 	if err != nil {
-		fmt.Println("yaml.Marshal err:", err)
+		global.Logrus.Error("yaml.Marshal err:", err)
 		return ""
 	}
 	return string(res)
@@ -244,7 +242,6 @@ func QxSubscribe(nodes *[]model.Node, uuid, host string) string {
 
 // generate v2rayNG vmess
 func V2rayNGVmess(node model.Node, uuid, host string) string {
-	//fmt.Println("根据goodsID 查找具体的节点uuid", uuid)
 	var vmess model.Vmess
 	vmess.V = node.V
 	vmess.Name = node.Name

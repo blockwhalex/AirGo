@@ -47,7 +47,6 @@ func NewUserSubscribe(u *model.User) *model.User {
 // 用户登录
 func Login(u *model.UserLogin) (*model.User, error) {
 	var user model.User
-	fmt.Println("用户登录 u:", u)
 	err := global.DB.Where("user_name = ?", u.UserName).First(&user).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, errors.New("用户不存在")
@@ -71,7 +70,6 @@ func FindUsersByGoods(goods *[]model.Goods) (*[]model.SSUsers, error) {
 	var users []model.SSUsers
 	//err := global.DB.Model(&model.User{}).Where("goods_id in (?)", goodsArr).Find(&users).Error
 	err := global.DB.Model(&model.User{}).Where("goods_id in (?) and sub_status = ?", goodsArr, true).Find(&users).Error
-	//log.Println("users:", users, err)
 	return &users, err
 }
 
@@ -86,7 +84,6 @@ func FindUsersByOrderID(outTradeNo string) (*model.User, error) {
 func FindUserByID(id int) (*model.User, error) {
 	var u model.User
 	err := global.DB.First(&u, id).Error
-	//fmt.Println("根据id 查用户:", u)
 	return &u, err
 }
 
@@ -166,7 +163,6 @@ func GetUserInfo(uID int) (*model.User, error) {
 
 // 获取用户列表,分页
 func GetUserlist(params *model.PaginationParams) (*model.UsersWithTotal, error) {
-	//fmt.Println("获取用户列表,分页:", params)
 	var userArr model.UsersWithTotal
 	var err error
 	if params.Search != "" {

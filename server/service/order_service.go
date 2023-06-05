@@ -3,15 +3,13 @@ package service
 import (
 	"AirGo/global"
 	"AirGo/model"
-	"fmt"
 	"time"
 )
 
-// 创建系统订单
 func CreateOrder(order *model.Orders) (*model.Orders, error) {
 	err := global.DB.Debug().Create(&order).Error
 	//直接获取新建的id
-	fmt.Println(err)
+	global.Logrus.Error("创建系统订单err:", err.Error())
 	return order, err
 }
 
@@ -35,7 +33,6 @@ func GetAllOrder(orderParams *model.QueryParamsWithDate) (*model.OrdersWithTotal
 		//默认前1个月数据
 		endTime = time.Now().Local()
 		startTime = endTime.AddDate(0, 0, -30)
-		fmt.Println("默认前1个月数据", startTime, endTime)
 	}
 	var ordersWithTotal model.OrdersWithTotal
 	var err error

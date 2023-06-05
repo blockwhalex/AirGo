@@ -3,7 +3,6 @@ package service
 import (
 	"AirGo/global"
 	"AirGo/model"
-	"fmt"
 )
 
 // 根据uId查角色Ids
@@ -11,7 +10,7 @@ func FindRoleIdsByuId(uId int) ([]int, error) {
 	var roles []model.UserAndRole
 	err := global.DB.Model(&model.UserAndRole{}).Select("role_id").Where("user_id=?", uId).Find(&roles).Error
 	if err != nil {
-		fmt.Println("DB err:", err)
+		global.Logrus.Error("根据uId查角色Ids err:", err.Error())
 		return nil, err
 	}
 	//角色id 数组
@@ -24,7 +23,6 @@ func FindRoleIdsByuId(uId int) ([]int, error) {
 
 // 分页获取角色列表
 func GetRoleList(roleParams *model.PaginationParams) (*model.RolesWithTotal, error) {
-	//log.Println("接收role params：", roleParams.Search)
 	var roleArr model.RolesWithTotal
 	var err error
 	if roleParams.Search != "" {
@@ -70,7 +68,6 @@ func DelRole(id int) error {
 	if err != nil {
 		return err
 	}
-	//fmt.Println("查到的role：", role)
 	global.DB.Model(&role).Association("Menus").Delete(role.Menus)
 	//最后删除角色
 	err = global.DB.Where("id = ?", id).Delete(&model.Role{}).Error

@@ -4,7 +4,6 @@ import (
 	"AirGo/global"
 	"AirGo/model"
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/casbin/casbin/v2"
@@ -34,7 +33,7 @@ func Casbin() *casbin.CachedEnforcer {
 
 	m, err := casbinModel.NewModelFromString(text)
 	if err != nil {
-		fmt.Println("casbin加载模型失败!")
+		global.Logrus.Error("casbin加载模型失败!", err.Error())
 		return nil
 	}
 	a, _ := gormadapter.NewAdapterByDB(global.DB)
@@ -42,7 +41,8 @@ func Casbin() *casbin.CachedEnforcer {
 	cachedEnforcer.SetExpireTime(60 * 60)
 	err = cachedEnforcer.LoadPolicy()
 	if err != nil {
-		fmt.Println("cachedEnforcer.LoadPolicy err:", err)
+		//fmt.Println("cachedEnforcer.LoadPolicy err:", err)
+		global.Logrus.Error("cachedEnforcer.LoadPolicy err:", err)
 	}
 	return cachedEnforcer
 }
@@ -55,7 +55,7 @@ func UpdateCasbinPolicy(casbinInfo *model.CasbinInfo) error {
 	for _, v := range casbinInfo.CasbinItems {
 		rules = append(rules, []string{roleIDInt, v.Path, v.Method})
 	}
-	//fmt.Println("需要更新的casbin rules:", rules) //不能重复，负责casbin出错！
+	//fmt.Println("需要更新的casbin rules:", rules) //id 不能重复，负责casbin出错！
 	//[[2 /user/login POST] [2 /user/getSub GET] [2 /casbin/getPolicyByRoleIds GET] [2 /casbin/updateCasbinPolicy POST] ]
 	success, _ := global.Casbin.AddPolicies(rules)
 	if !success {
@@ -81,11 +81,9 @@ func UpdateCasbinPolicyNew(casbinData *model.CasbinData) error {
 	for _, v := range list {
 		rules = append(rules, []string{roleID, v.V1, v.V2})
 	}
-	// fmt.Println("casbin list", list)
-	// fmt.Println("casbin rules", rules)
 	success, err := global.Casbin.AddPolicies(rules)
 	if !success {
-		fmt.Println("casbin添加失败 err", success, err)
+		global.Logrus.Error("casbin添加失败 err", success, err)
 		return errors.New("casbin添加失败")
 	}
 	err = global.Casbin.InvalidateCache()
@@ -127,7 +125,6 @@ func GetPolicyPathByRoleId(casbinInfo *model.CasbinInfo) *model.CasbinInfo {
 func GetAllPolicy() *model.CasbinInfo {
 	var casbinInfo model.CasbinInfo
 	list := global.Casbin.GetFilteredPolicy(0, "1") //超级管理员为全部api
-	fmt.Println("获取全部权限 list:", list)
 	for _, v := range list {
 		casbinInfo.CasbinItems = append(casbinInfo.CasbinItems, model.CasbinItem{
 			Path:   v[1],

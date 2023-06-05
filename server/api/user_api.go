@@ -6,8 +6,6 @@ import (
 	"AirGo/service"
 	"AirGo/utils/encode_plugin"
 	"AirGo/utils/jwt_plugin"
-	"fmt"
-	"log"
 	"net/http"
 
 	//"AirGo/utils/encode_plugin"
@@ -70,8 +68,8 @@ func Login(c *gin.Context) {
 	//查询用户
 	user, err := service.Login(&l)
 	if err != nil {
-		response.Fail(err.Error(), nil, c)
-		log.Println(err)
+		response.Fail("查询用户"+err.Error(), nil, c)
+		global.Logrus.Error("查询用户", err.Error())
 		return
 	}
 	//登录以后签发jwt
@@ -82,9 +80,10 @@ func Login(c *gin.Context) {
 	myClaims := jwt_plugin.CreateClaims(baseClaims)
 	token, err := jwt_plugin.CreateToken(myClaims)
 	if err != nil {
-		log.Println("生成token err:", err)
+		global.Logrus.Error("生成token err", err.Error())
+		return
 	}
-	log.Println("生成token :", token)
+	//fmt.Println("生成token :", token)
 	response.OK("登录成功", gin.H{
 		"user":  user,
 		"token": token,
@@ -132,8 +131,6 @@ func GetUserInfo(ctx *gin.Context) {
 
 // 获取用户列表
 func GetUserlist(ctx *gin.Context) {
-	//body, _ := ioutil.ReadAll(ctx.Request.Body)
-	//fmt.Println("请求body", string(body))
 	var params model.PaginationParams
 	err := ctx.ShouldBind(&params)
 	if err != nil {
@@ -149,15 +146,12 @@ func GetUserlist(ctx *gin.Context) {
 
 // 新建用户
 func NewUser(ctx *gin.Context) {
-	//res, _ := ioutil.ReadAll(ctx.Request.Body)
-	//fmt.Println(string(res))
 	var u model.NewUser
 	err := ctx.ShouldBind(&u)
 	if err != nil {
 		response.Fail("新建用户参数错误"+err.Error(), nil, ctx)
 		return
 	}
-	fmt.Println("新建用户:", u)
 	var user = u.User
 	user.UUID = uuid.NewV4()
 	err = service.Register(&user)
@@ -181,13 +175,13 @@ func UpdateUser(ctx *gin.Context) {
 	//err = service.UpdateUser(&user)
 	err = service.SaveUser(&user)
 	if err != nil {
-		fmt.Println("修改用户错误 err:", err)
+		global.Logrus.Error("修改用户错误 err:", err)
 		response.Fail("修改用户错误"+err.Error(), nil, ctx)
 		return
 	}
 	err = service.UpdateUserRoleGroup(u.RoleList, &user)
 	if err != nil {
-		fmt.Println("修改用户角色错误 err:", err)
+		global.Logrus.Error("修改用户角色错误 err:", err)
 		response.Fail("修改用户角色错误"+err.Error(), nil, ctx)
 		return
 	}
