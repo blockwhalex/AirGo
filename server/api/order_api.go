@@ -33,7 +33,7 @@ func GetOrderByUserID(ctx *gin.Context) {
 	err := ctx.ShouldBind(&params)
 	res, err := service.GetOrderByUserID(uIDInt, &params)
 	if err != nil {
-		global.Logrus.Error("获取订单 err:", err)
+		global.Logrus.Error("获取订单 error:", err)
 		response.Fail("订单获取错误"+err.Error(), nil, ctx)
 		return
 	}

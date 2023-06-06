@@ -175,13 +175,13 @@ func UpdateUser(ctx *gin.Context) {
 	//err = service.UpdateUser(&user)
 	err = service.SaveUser(&user)
 	if err != nil {
-		global.Logrus.Error("修改用户错误 err:", err)
+		global.Logrus.Error("修改用户错误 error:", err)
 		response.Fail("修改用户错误"+err.Error(), nil, ctx)
 		return
 	}
 	err = service.UpdateUserRoleGroup(u.RoleList, &user)
 	if err != nil {
-		global.Logrus.Error("修改用户角色错误 err:", err)
+		global.Logrus.Error("修改用户角色错误 error:", err)
 		response.Fail("修改用户角色错误"+err.Error(), nil, ctx)
 		return
 	}

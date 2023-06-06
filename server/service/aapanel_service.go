@@ -183,7 +183,7 @@ func ClashSubscribe(nodes *[]model.Node, uuid, host string) string {
 
 	res, err := yaml.Marshal(clashYaml)
 	if err != nil {
-		global.Logrus.Error("yaml.Marshal err:", err)
+		global.Logrus.Error("yaml.Marshal error:", err)
 		return ""
 	}
 	return string(res)

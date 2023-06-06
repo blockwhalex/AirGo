@@ -2,8 +2,12 @@ package websocket_plugin
 
 import (
 	"AirGo/model"
+	"AirGo/utils/logrus_plugin"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
+	"os"
 	"sync"
 	"time"
 
@@ -69,7 +73,7 @@ func (m *ClientManager) NewClientManager() {
 			case oneClient := <-m.OfflineChannel:
 				err := oneClient.WsSocket.Close() //关闭该client连接
 				if err != nil {
-					fmt.Println("oneClient.WsSocket.Close() err:", err)
+					fmt.Println("oneClient.WsSocket.Close() error:", err)
 					continue
 				}
 				oneClient.QuitChanel <- true   //通知write 关闭
@@ -104,8 +108,17 @@ func (m *ClientManager) NewClientManager() {
 func (c *Client) Read(manager *ClientManager, f func() *[]model.NodeStatus) {
 	// 把当前客户端注销
 	defer func() {
+		if err := recover(); err != nil {
+			logFile, err1 := logrus_plugin.SetOutputFile()
+			if err1 == nil {
+				mw := io.MultiWriter(os.Stdout, logFile)
+				log.SetOutput(mw)
+				log.Println("websocket read error:", err)
+				logFile.Close()
+			}
+		}
 		//_ = c.WsSocket.Close()
-		fmt.Println("defer close ws read")
+		//fmt.Println("defer close ws read")
 		manager.OfflineChannel <- c //通知manager 下线该client
 	}()
 	for {
@@ -117,7 +130,7 @@ func (c *Client) Read(manager *ClientManager, f func() *[]model.NodeStatus) {
 		var wsmsg WsMessage
 		err = json.Unmarshal(data, &wsmsg)
 		if err != nil {
-			fmt.Println("json.Unmarshal err:", err)
+			fmt.Println("json.Unmarshal error:", err)
 			continue
 		}
 		switch wsmsg.Type {
@@ -144,8 +157,17 @@ func (c *Client) Read(manager *ClientManager, f func() *[]model.NodeStatus) {
 // Write 把对应消息写回客户端
 func (c *Client) Write(manager *ClientManager) {
 	defer func() {
+		if err := recover(); err != nil {
+			logFile, err1 := logrus_plugin.SetOutputFile()
+			if err1 == nil {
+				mw := io.MultiWriter(os.Stdout, logFile)
+				log.SetOutput(mw)
+				log.Println("websocket write error:", err)
+				logFile.Close()
+			}
+		}
 		//_ = c.WsSocket.Close()
-		fmt.Println("defer close ws write")
+		//fmt.Println("defer close ws write")
 		//manager.OfflineChannel <- c
 	}()
 	for {
@@ -156,7 +178,7 @@ func (c *Client) Write(manager *ClientManager) {
 			}
 			err := c.WsSocket.WriteMessage(websocket.TextMessage, msg)
 			if err != nil {
-				fmt.Println("c.WsSocket.WriteMessage err:", err)
+				fmt.Println("c.WsSocket.WriteMessage error:", err)
 				return
 			}
 		case <-c.QuitChanel:

@@ -44,7 +44,7 @@ func UserCrontab() {
 	_, err := c.AddFunc("*/2 * * * *", func() {
 		err := service.UserExpiryCheck()
 		if err != nil {
-			global.Logrus.Error("service.UserExpiryCheck err:", err)
+			global.Logrus.Error("service.UserExpiryCheck error:", err)
 		}
 	})
 	if err != nil {

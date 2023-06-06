@@ -14,13 +14,13 @@ func GetRouteIdsByRoleIds(roleIds []int) ([]int, error) {
 	if roleIds == nil {
 		err := global.DB.Find(&RoleAndMenuArr).Error
 		if err != nil {
-			global.Logrus.Error("DB err:", err)
+			global.Logrus.Error("DB error:", err)
 			return nil, err
 		}
 	} else {
 		err := global.DB.Where("role_id in (?)", roleIds).Find(&RoleAndMenuArr).Error
 		if err != nil {
-			global.Logrus.Error("DB err:", err)
+			global.Logrus.Error("DB error:", err)
 			return nil, err
 		}
 	}
@@ -42,13 +42,13 @@ func GetRouteSliceByRouteIds(routeIds []int) (*[]model.DynamicRoute, error) {
 	if routeIds == nil {
 		err := global.DB.Find(&RouteArr).Error
 		if err != nil {
-			global.Logrus.Error("DB err:", err)
+			global.Logrus.Error("DB error:", err)
 			return nil, err
 		}
 	} else {
 		err := global.DB.Where("id in (?)", routeIds).Find(&RouteArr).Error
 		if err != nil {
-			global.Logrus.Error("DB err:", err)
+			global.Logrus.Error("DB error:", err)
 			return nil, err
 		}
 	}
@@ -62,24 +62,21 @@ func GetRouteNodeByRouteIds(routeIds []int) (*[]model.RouteNode, error) {
 	if routeIds == nil {
 		err := global.DB.Model(model.DynamicRoute{}).Find(&routeNodeSlice).Error
 		if err != nil {
-			global.Logrus.Error("根据routeds 查 routeNode err:", err.Error())
+			global.Logrus.Error("根据routeds 查 routeNode error:", err.Error())
 			return nil, err
 		}
 	} else {
 		err := global.DB.Model(model.DynamicRoute{}).Where("id in (?)", routeIds).Find(&routeNodeSlice).Error
 		if err != nil {
-			global.Logrus.Error("根据routeds 查 routeNode err:", err.Error())
+			global.Logrus.Error("根据routeds 查 routeNode error:", err.Error())
 			return nil, err
 		}
 	}
-
 	return &routeNodeSlice, nil
 }
 
 // 获取角色动态路由
 func GetDynamicRoute(RouterSlice *[]model.DynamicRoute) *[]model.DynamicRoute {
-
-	//菜单形成 Map:父子
 	routeMap := make(map[int][]model.DynamicRoute)
 	for _, value := range *RouterSlice {
 		routeMap[value.ParentID] = append(routeMap[value.ParentID], value)
@@ -101,8 +98,6 @@ func getChildrenRoute(route *model.DynamicRoute, routeMap map[int][]model.Dynami
 
 // 角色的路由节点树
 func GetRouteNodeTree(routeNodeSlice *[]model.RouteNode) *[]model.RouteNode {
-
-	//形成map：父子
 	routeNodeMap := make(map[int][]model.RouteNode)
 	for _, value := range *routeNodeSlice {
 		routeNodeMap[value.ParentID] = append(routeNodeMap[value.ParentID], value)
@@ -152,7 +147,6 @@ func DelDynamicRoute(route *model.DynamicRoute) error {
 	}
 	//删除路由
 	err = global.DB.Where(&route).Delete(&model.DynamicRoute{}).Error
-
 	return err
 
 }

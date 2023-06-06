@@ -43,7 +43,7 @@ func CasbinMiddleware() gin.HandlerFunc {
 			roleID := strconv.Itoa(v.ID)
 			success, err := global.Casbin.Enforce(roleID, obj, act) // 判断策略中是否存在
 			if err != nil {
-				global.Logrus.Error("权限casbin err:", err)
+				global.Logrus.Error("权限casbin error:", err)
 				c.Abort()
 				return
 			}

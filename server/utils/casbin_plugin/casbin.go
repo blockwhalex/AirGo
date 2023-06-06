@@ -41,8 +41,8 @@ func Casbin() *casbin.CachedEnforcer {
 	cachedEnforcer.SetExpireTime(60 * 60)
 	err = cachedEnforcer.LoadPolicy()
 	if err != nil {
-		//fmt.Println("cachedEnforcer.LoadPolicy err:", err)
-		global.Logrus.Error("cachedEnforcer.LoadPolicy err:", err)
+		//fmt.Println("cachedEnforcer.LoadPolicy error:", err)
+		global.Logrus.Error("cachedEnforcer.LoadPolicy error:", err)
 	}
 	return cachedEnforcer
 }

@@ -18,7 +18,7 @@ func UpdateThemeConfig(ctx *gin.Context) {
 	}
 	err = service.UpdateThemeConfig(&theme)
 	if err != nil {
-		global.Logrus.Error("设置主题 err:", err)
+		global.Logrus.Error("设置主题 error:", err)
 		response.Fail("主题设置错误"+err.Error(), nil, ctx)
 		return
 	}

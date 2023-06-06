@@ -32,12 +32,16 @@ func WebSocketMsg(ctx *gin.Context) {
 	//uIDInt := uID.(int)
 	conn, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
-		global.Logrus.Error("websocket upgrade err:", err)
+		//ebsocket: the client is not using the websocket protocol: 'upgrade' token not found in 'Connection' header"
+		//nginx:
+		//proxy_set_header Upgrade $http_upgrade;
+		//proxy_set_header Connection upgrade;
+		//proxy_set_header X-Real-IP $remote_addr;
+		global.Logrus.Error("websocket upgrade error:", err)
 		response.Fail("websocket err"+err.Error(), nil, ctx)
 		return
 	}
 	//defer conn.Close()
-	//client
 	client := &websocket_plugin.Client{
 		//ID:            strconv.Itoa(uIDInt),
 		ID:            ctx.ClientIP(),

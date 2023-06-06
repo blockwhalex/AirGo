@@ -99,14 +99,15 @@ func SSUsersTraffic(ctx *gin.Context) {
 		}
 		//cache 取值
 		cacheStatus, ok := global.LocalCache.Get(strconv.Itoa(id) + "status")
-		oldStatus := cacheStatus.(model.NodeStatus)
-		if !ok {
+		//panic: interface conversion: interface {} is nil, not model.NodeStatus
+		if !ok || cacheStatus == nil {
 			global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, time.Hour)
 		} else {
 			//判断时间间隔
+			oldStatus := cacheStatus.(model.NodeStatus)
 			d := nodeStatus.LastTime.Sub(oldStatus.LastTime).Seconds()
-			nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.D/1024/1024/d), 64)
-			nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.U/1024/1024/d), 64)
+			nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", (nodeStatus.D-oldStatus.D)/1024/1024/d), 64)
+			nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", (nodeStatus.U-oldStatus.U)/1024/1024/d), 64)
 			global.LocalCache.SetNoExpire(strconv.Itoa(id)+"status", nodeStatus)
 		}
 

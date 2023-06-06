@@ -76,7 +76,7 @@ func PreCreatePay(ctx *gin.Context) {
 	//创建系统订单
 	order, err := service.CreateOrder(order)
 	if err != nil {
-		response.Fail("创建系统订单err:"+err.Error(), nil, ctx)
+		response.Fail("创建系统订单error:"+err.Error(), nil, ctx)
 		return
 	}
 

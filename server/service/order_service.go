@@ -9,7 +9,7 @@ import (
 func CreateOrder(order *model.Orders) (*model.Orders, error) {
 	err := global.DB.Debug().Create(&order).Error
 	//直接获取新建的id
-	global.Logrus.Error("创建系统订单err:", err.Error())
+	global.Logrus.Error("创建系统订单error:", err.Error())
 	return order, err
 }
 

@@ -12,7 +12,7 @@ import (
 func InitLogrus() *logrus.Logger {
 	//实例化
 	logger := logrus.New()
-	src, _ := setOutputFile()
+	src, _ := SetOutputFile()
 	//设置输出
 	logger.Out = src
 	//设置日志级别
@@ -29,7 +29,7 @@ func InitLogrus() *logrus.Logger {
 	return logger
 }
 
-func setOutputFile() (*os.File, error) {
+func SetOutputFile() (*os.File, error) {
 	now := time.Now()
 	logFileName := now.Format("2006-01-02") + ".log" //日志文件名
 	logFilePath := ""                                //路径

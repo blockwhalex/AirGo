@@ -44,8 +44,8 @@ type SubscribeInfo struct {
 	GoodsID        int        `json:"goods_id"          gorm:"comment:商品ID"`                   //商品ID
 	ExpiredAt      *time.Time `json:"expired_at"        gorm:"comment:过期时间"`                   //过期时间
 	T              int        `json:"t"                 gorm:"comment:总流量（Byte）"`              //总流量（Byte）
-	U              int        `json:"u"                 gorm:"comment:上行流量"`                   //上行流量
-	D              int        `json:"d"                 gorm:"comment:下行流量"`                   //下行流量
+	U              int        `json:"u"                 gorm:"comment:上行流量"`                   //上行流量（Byte）
+	D              int        `json:"d"                 gorm:"comment:下行流量"`                   //下行流量（Byte）
 	ResetDay       int        `json:"reset_day"         gorm:"comment:流量重置日"`                  //流量重置日
 	NodeSpeedLimit int        `json:"node_speedlimit"   gorm:"default:0;comment:限速Mbps（Mbps）"` //限速Mbps（Mbps）
 	NodeConnector  int        `json:"node_connector"    gorm:"default:3;comment:连接客户端数"`       //连接客户端数
