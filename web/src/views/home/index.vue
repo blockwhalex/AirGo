@@ -28,8 +28,7 @@
 							</div>
 						</template>
 						<div>
-							<el-input v-model="homeTableData.host" placeholder="输入混淆"
-								class="input-with-select">
+							<el-input v-model="homeTableData.host" placeholder="输入混淆">
 								<template #append>
 									<el-button @click="onChangeHost" :icon="Select">确认修改</el-button>
 								</template>

@@ -51,7 +51,7 @@ func WebSocketMsg(ctx *gin.Context) {
 		//ID:            ctx.ClientIP(),
 		WsSocket:      conn,
 		ClientChannel: make(chan []byte),
-		ExpireTime:    5 * time.Second, //5秒过期时间
+		ExpireTime:    30 * time.Second, //过期时间
 		QuitChanel:    make(chan bool),
 	}
 	global.WsManager.OnlineChannel <- client

@@ -181,7 +181,7 @@ func InsertInto(db *gorm.DB) error {
 		{RoleID: 1, DynamicRouteID: 13},
 		{RoleID: 1, DynamicRouteID: 14},
 
-		{RoleID: 2, DynamicRouteID: 1},
+		{RoleID: 2, DynamicRouteID: 9},
 		{RoleID: 2, DynamicRouteID: 10},
 		{RoleID: 2, DynamicRouteID: 11},
 		{RoleID: 2, DynamicRouteID: 12},
@@ -307,7 +307,7 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "2", V1: "/menu/getRouteList", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/menu/getRouteTree", V2: "GET"},
 
-		{Ptype: "p", V0: "2", V1: "/order/getOrderInfo", V2: "POST"},
+		{Ptype: "p", V0: "2", V1: "/order/getOrderByUserID", V2: "POST"},
 
 		{Ptype: "p", V0: "2", V1: "/shop/preCreatePay", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/shop/purchase", V2: "POST"},
@@ -315,6 +315,7 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "2", V1: "/shop/findGoods", V2: "POST"},
 
 		{Ptype: "p", V0: "2", V1: "/casbin/getPolicy", V2: "POST"},
+		{Ptype: "p", V0: "2", V1: "/websocket/msg", V2: "GET"},
 	}
 	if err := global.DB.Create(&casbinRuleData).Error; err != nil {
 		return errors.New("casbin_rule表数据初始化失败!")

@@ -5,20 +5,20 @@
       <div class="home-card-item">
         <el-card class="box-card">
           <el-row :gutter="10" justify="space-around" align="middle" >
-            <el-col :xs="12" :sm="12" :md="5" :lg="5" :xl="5" style="margin-top: 20px;margin-bottom: 10px">
+            <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
               {{ v.name }}
             </el-col>
-            <el-col :xs="12" :sm="12" :md="5" :lg="5" :xl="5" style="margin-top: 20px;margin-bottom: 10px">
+            <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
               倍率：{{v.traffic_rate}}
             </el-col>
-            <el-col :xs="12" :sm="12" :md="5" :lg="5" :xl="5" style="margin-top: 20px;margin-bottom: 10px">
+            <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
               <el-button v-if="v.status" type="success" plain>在线</el-button>
               <el-button v-else type="info" plain>离线</el-button>
             </el-col>
-            <el-col :xs="12" :sm="12" :md="5" :lg="5" :xl="5" style="margin-top: 20px;margin-bottom: 10px">
+            <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
               {{ v.user_amount }}人在线
             </el-col>
-            <el-col :xs="12" :sm="12" :md="5" :lg="5" :xl="5" style="margin-top: 20px;margin-bottom: 10px">
+            <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
               <el-icon color="#409EFC"><Top /></el-icon><span>{{ v.u }}MB/s</span>
             </el-col>
             <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
@@ -55,7 +55,7 @@ function initWS(){
     ws.send('{"type":1,"data":"hi"}');
     interval = setInterval(() => {
       ws.send('{"type":1,"data":"hi"}');
-    }, 3000);
+    }, 30000);
   }
 //接收服务器发回的信息
   ws.onmessage = function (data) {
