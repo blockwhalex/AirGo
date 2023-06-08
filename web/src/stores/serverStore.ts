@@ -6,8 +6,8 @@ const systemApi = useSystemApi()
 export const useServerStore = defineStore("serverStore", {
     state: () => ({
         serverConfig: {
-            created_at:'',
-            updated_at:'',
+            created_at: '',
+            updated_at: '',
             id: 0,
             jwt: {
                 signing_key: '',
@@ -18,8 +18,8 @@ export const useServerStore = defineStore("serverStore", {
             system: {
                 enable_register: true,
                 enable_email_code: false,
-                is_multipoint:true,
-                sub_name:'',
+                is_multipoint: true,
+                sub_name: '',
             },
             captcha: {
                 key_long: 0,
@@ -42,8 +42,12 @@ export const useServerStore = defineStore("serverStore", {
                 email_port: 0,
                 email_is_ssl: true,
                 email_nickname: '',
-                email_subject:'',
-                email_content:'',
+                email_subject: '',
+                email_content: '',
+            },
+            rate_limit_params: {
+                ip_role_param: 0,
+                visit_param: 0,
             },
         } as Server,
         other: 0,
@@ -56,7 +60,7 @@ export const useServerStore = defineStore("serverStore", {
             this.serverConfig = res.data
         },
         //修改系统设置
-        async updateServerConfig(){
+        async updateServerConfig() {
             const res = await systemApi.updateServerConfig(this.serverConfig)
             return res
         }

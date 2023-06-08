@@ -1,6 +1,6 @@
 <template>
 	<div class="system-role-dialog-container">
-		<el-dialog :title="dialog.title" v-model="dialog.isShowDialog" width="769px">
+		<el-dialog :title="dialog.title" v-model="dialog.isShowDialog" width="769px" destroy-on-close>
 			<el-form ref="roleDialogFormRef" :model="dialog.ruleForm" size="default" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -69,7 +69,6 @@ const tree_ref = ref()
 const openDialog = (type: string, row: RowRoleType) => {
 	dialog.value.type = type
 	if (type === "edit") {
-		// console.log("role-传进来的row：", row)
 		//获取当前role
     dialog.value.ruleForm = row
 		//获取当前role的菜单节点

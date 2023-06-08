@@ -74,7 +74,7 @@ func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
 			return model.NodesWithTotal{}
 		}
 	} else {
-		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
+		err := global.DB.Debug().Model(&model.Node{}).Count(&nodeArr.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
 		if err != nil {
 			global.Logrus.Error("查询节点流量error:", err.Error())
 			return model.NodesWithTotal{}
@@ -101,6 +101,7 @@ func GetNodesStatus() *[]model.NodeStatus {
 		if !ok {
 			nodeStatus.ID = v.ID
 			nodeStatus.Name = v.Name
+			nodeStatus.Status = false
 			nodeStatus.D = 0
 			nodeStatus.U = 0
 			nodestatusArr = append(nodestatusArr, nodeStatus)
@@ -108,6 +109,7 @@ func GetNodesStatus() *[]model.NodeStatus {
 			nodeStatus = vStatus.(model.NodeStatus)
 			nodeStatus.Name = v.Name
 			if time.Now().Sub(nodeStatus.LastTime).Seconds() > 60 {
+				nodeStatus.UserAmount = 0
 				nodeStatus.Status = false
 			} else {
 				nodeStatus.Status = true

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="goodsManageData.isShowDialog" :title="goodsManageData.title" width="769px">
+    <el-dialog v-model="goodsManageData.isShowDialog" :title="goodsManageData.title" width="769px" destroy-on-close>
         <el-form :model="goodsManageData.currentGoods" label-width="120px">
             <el-form-item label="商品标题">
                 <el-input v-model="goodsManageData.currentGoods.subject" />

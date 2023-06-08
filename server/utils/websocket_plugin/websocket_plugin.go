@@ -24,27 +24,27 @@ type WsMessage struct {
 type Client struct {
 	ID            string
 	IpAddress     string
-	WsSocket      *websocket.Conn //WsSocket则是用来记录客户端和服务端直接到WebSocket连接
+	WsSocket      *websocket.Conn
 	ClientChannel chan []byte
-	ExpireTime    time.Duration // 一段时间没有接收到心跳则过期
+	ExpireTime    time.Duration
 	QuitChanel    chan bool
 }
 
 // 客户端管理
 type ClientManager struct {
-	Clients        map[string]*Client // 记录在线用户
+	Clients        map[string]*Client //记录在线用户
 	MapLock        sync.RWMutex       //map读写锁
 	Broadcast      chan []byte        //触发消息广播
-	OnlineChannel  chan *Client       // 新用户登陆
-	OfflineChannel chan *Client       // 用户退出
+	OnlineChannel  chan *Client       //用户登陆
+	OfflineChannel chan *Client       //用户退出
 }
 
 func NewManager() *ClientManager {
 	return &ClientManager{
-		Clients:        make(map[string]*Client), // 记录在线用户
-		Broadcast:      make(chan []byte, 100),   //触发消息广播
-		OnlineChannel:  make(chan *Client, 100),  // 触发新用户登陆
-		OfflineChannel: make(chan *Client, 100),  // 触发用户退出
+		Clients:        make(map[string]*Client),
+		Broadcast:      make(chan []byte, 10),
+		OnlineChannel:  make(chan *Client, 10),
+		OfflineChannel: make(chan *Client, 10),
 	}
 }
 
@@ -58,11 +58,6 @@ func (m *ClientManager) NewClientManager() {
 				m.MapLock.Lock()
 				m.Clients[oneClient.ID] = oneClient
 				m.MapLock.Unlock()
-				// 如果有新用户连接则发送消息给他
-				//count := len(m.Clients)
-				//resp, _ := json.Marshal(&WsMessage{Type: 1, Data: count})
-				//log.Printf("当前在线%v人", count)
-				//m.Clients[oneClient.ID].ClientChannel <- resp
 			}
 		}
 	}()
@@ -73,7 +68,13 @@ func (m *ClientManager) NewClientManager() {
 			case oneClient := <-m.OfflineChannel:
 				err := oneClient.WsSocket.Close() //关闭该client连接
 				if err != nil {
-					fmt.Println("oneClient.WsSocket.Close() error:", err)
+					logFile, err1 := logrus_plugin.SetOutputFile()
+					if err1 == nil {
+						mw := io.MultiWriter(os.Stdout, logFile)
+						log.SetOutput(mw)
+						log.Println("oneClient.WsSocket.Close() error:", err)
+						logFile.Close()
+					}
 					continue
 				}
 				oneClient.QuitChanel <- true   //通知write 关闭
@@ -83,18 +84,13 @@ func (m *ClientManager) NewClientManager() {
 				m.MapLock.Lock()
 				delete(m.Clients, oneClient.ID) //deleted client
 				m.MapLock.Unlock()
-				//data := "系统通知:" + offlineMsg
-				//resp, _ := json.Marshal(&WsMessage{Type: 1, Data: data})
-				//m.Broadcast <- resp
 			}
 		}
-
 	}()
 	//该goroutine负责广播
 	go func() {
 		for {
 			select {
-			// 只要有一方发消息就广播
 			case msg := <-m.Broadcast:
 				for _, oneClient := range m.Clients {
 					oneClient.ClientChannel <- msg
@@ -104,7 +100,7 @@ func (m *ClientManager) NewClientManager() {
 	}()
 }
 
-// 读取客户端发送过来的消息,根据不同的type发送到对应的channel
+// 读取消息,根据不同的type发送到对应的channel
 func (c *Client) Read(manager *ClientManager, f func() *[]model.NodeStatus) {
 	// 把当前客户端注销
 	defer func() {
@@ -145,16 +141,11 @@ func (c *Client) Read(manager *ClientManager, f func() *[]model.NodeStatus) {
 			data := f()
 			resp, _ := json.Marshal(&WsMessage{Type: 1, Data: data})
 			c.ClientChannel <- resp
-
-			//case 3:
-			//	// 广播消息
-			//	resp, _ := json.Marshal(&WsMessage{Type: 4, Data: "你好，这是 广播模式"})
-			//	Manager.Broadcast <- resp
 		}
 	}
 }
 
-// Write 把对应消息写回客户端
+// 把对应消息写回客户端
 func (c *Client) Write(manager *ClientManager) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -166,9 +157,6 @@ func (c *Client) Write(manager *ClientManager) {
 				logFile.Close()
 			}
 		}
-		//_ = c.WsSocket.Close()
-		//fmt.Println("defer close ws write")
-		//manager.OfflineChannel <- c
 	}()
 	for {
 		select {
@@ -187,6 +175,5 @@ func (c *Client) Write(manager *ClientManager) {
 			manager.OfflineChannel <- c
 			return
 		}
-
 	}
 }

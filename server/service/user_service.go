@@ -2,7 +2,6 @@ package service
 
 import (
 	"AirGo/global"
-	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"time"
@@ -142,8 +141,8 @@ func UpdateUserTrafficInfo(userArr []model.User, userIds []int) error {
 
 // 用户流量，有效期 检测任务
 func UserExpiryCheck() error {
-	fmt.Println("开始用户流量，有效期 检测任务")
-	return global.DB.Debug().Exec("update user set sub_status = 0 where expired_at < ? or ( u + d ) > t", time.Now()).Error
+	//fmt.Println("开始用户流量，有效期 检测任务")
+	return global.DB.Exec("update user set sub_status = 0 where expired_at < ? or ( u + d ) > t", time.Now()).Error
 }
 
 // 修改混淆
@@ -152,7 +151,6 @@ func ChangeSubHost(uID int, host string) error {
 	u.ID = uID
 	u.SubscribeInfo.Host = host
 	return global.DB.Debug().Updates(&u).Error
-
 }
 
 // 获取自身信息

@@ -14,13 +14,11 @@ func GetRouteIdsByRoleIds(roleIds []int) ([]int, error) {
 	if roleIds == nil {
 		err := global.DB.Find(&RoleAndMenuArr).Error
 		if err != nil {
-			global.Logrus.Error("DB error:", err)
 			return nil, err
 		}
 	} else {
 		err := global.DB.Where("role_id in (?)", roleIds).Find(&RoleAndMenuArr).Error
 		if err != nil {
-			global.Logrus.Error("DB error:", err)
 			return nil, err
 		}
 	}
@@ -42,13 +40,11 @@ func GetRouteSliceByRouteIds(routeIds []int) (*[]model.DynamicRoute, error) {
 	if routeIds == nil {
 		err := global.DB.Find(&RouteArr).Error
 		if err != nil {
-			global.Logrus.Error("DB error:", err)
 			return nil, err
 		}
 	} else {
 		err := global.DB.Where("id in (?)", routeIds).Find(&RouteArr).Error
 		if err != nil {
-			global.Logrus.Error("DB error:", err)
 			return nil, err
 		}
 	}
@@ -62,13 +58,11 @@ func GetRouteNodeByRouteIds(routeIds []int) (*[]model.RouteNode, error) {
 	if routeIds == nil {
 		err := global.DB.Model(model.DynamicRoute{}).Find(&routeNodeSlice).Error
 		if err != nil {
-			global.Logrus.Error("根据routeds 查 routeNode error:", err.Error())
 			return nil, err
 		}
 	} else {
 		err := global.DB.Model(model.DynamicRoute{}).Where("id in (?)", routeIds).Find(&routeNodeSlice).Error
 		if err != nil {
-			global.Logrus.Error("根据routeds 查 routeNode error:", err.Error())
 			return nil, err
 		}
 	}

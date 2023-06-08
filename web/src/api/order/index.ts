@@ -34,7 +34,14 @@ export function useOrderApi(){
                 data
             })
         },
-
+        //获取订单统计
+        getMonthOrderStatisticsApi:(data?:object)=>{
+            return service({
+                url: '/order/getMonthOrderStatistics',
+                method: 'POST',
+                data
+            })
+        },
     }
 
 }

@@ -185,7 +185,6 @@ export const useUserStore = defineStore('userInfo', {
         },
         //确认重置密码
         async submitResetPassword() {
-            //console.log("确认重置密码:",this.loginData)
             return await userApi.resetPasswordApi(this.loginData)
         }
     },

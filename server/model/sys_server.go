@@ -9,11 +9,12 @@ type Server struct {
 	DeletedAt *time.Time `json:"-" gorm:"index"`
 	ID        int        `json:"id"   gorm:"primary_key"`
 
-	JWT     JWT     `json:"jwt"      gorm:"embedded"`
-	System  System  `json:"system"   gorm:"embedded"`
-	Captcha Captcha `json:"captcha"  gorm:"embedded"` //验证码
-	Pay     Pay     `json:"pay"      gorm:"embedded"` // 支付相关配置
-	Email   Email   `json:"email"    gorm:"embedded"`
+	JWT             JWT             `json:"jwt"      gorm:"embedded"`
+	System          System          `json:"system"   gorm:"embedded"`
+	Captcha         Captcha         `json:"captcha"  gorm:"embedded"` //验证码
+	Pay             Pay             `json:"pay"      gorm:"embedded"` // 支付相关配置
+	Email           Email           `json:"email"    gorm:"embedded"`
+	RateLimitParams RateLimitParams `json:"rate_limit_params"  gorm:"embedded"`
 	//Mysql   Mysql   `json:"mysql"    gorm:"embedded"` // gorm
 }
 type Email struct {
@@ -56,6 +57,12 @@ type Pay struct {
 	PrivateKey   string `json:"private_key"`
 	AliPublicKey string `json:"ali_public_key"`
 	EncryptKey   string `json:"encrypt_key"`
+}
+
+// 限流参数
+type RateLimitParams struct {
+	IPRoleParam int `json:"ip_role_param" gorm:"default:600"`
+	VisitParam  int `json:"visit_param"   gorm:"default:60"`
 }
 
 //// mysql配置

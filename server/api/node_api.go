@@ -67,11 +67,6 @@ func UpdateNode(ctx *gin.Context) {
 
 }
 
-// 获取节点流量统计
-func GetTraffic(ctx *gin.Context) {
-
-}
-
 // 查询节点流量
 func GetNodeTraffic(ctx *gin.Context) {
 	var trafficParams model.QueryParamsWithDate

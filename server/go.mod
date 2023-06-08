@@ -17,6 +17,7 @@ require (
 	github.com/smartwalle/alipay/v3 v3.2.10
 	github.com/songzhibin97/gkit v1.2.11
 	github.com/spf13/viper v1.16.0
+	github.com/yudeguang/ratelimit v0.0.0-20230316132559-4d9cafca864e
 	golang.org/x/crypto v0.9.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gopkg.in/yaml.v2 v2.4.0
@@ -82,6 +83,7 @@ require (
 	github.com/tklauser/numcpus v0.6.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
+	github.com/yudeguang/iox v0.0.0-20220912082704-297952f8e912 // indirect
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/image v0.0.0-20190802002840-cff245a6509b // indirect

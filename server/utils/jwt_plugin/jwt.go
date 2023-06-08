@@ -32,11 +32,8 @@ type MyClaims struct {
 	jwt.StandardClaims
 }
 type BaseClaims struct {
-	// UUID        uuid.UUID
 	ID       int
 	UserName string
-	// NickName    string
-	// AuthorityId uint
 }
 
 func CreateClaims(baseClaims BaseClaims) MyClaims {

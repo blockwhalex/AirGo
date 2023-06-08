@@ -68,7 +68,6 @@ func DeleteGoods(goods *model.Goods) error {
 	//删除关联
 	err := global.DB.Debug().Model(&model.Goods{ID: goods.ID}).Association("Nodes").Replace(nil)
 	if err != nil {
-		global.Logrus.Error("删除商品参数error:", err.Error())
 		return err
 	}
 	err = global.DB.Debug().Where(&model.Goods{ID: goods.ID}).Delete(&model.Goods{}).Error

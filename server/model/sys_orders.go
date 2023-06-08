@@ -42,3 +42,9 @@ type OrdersWithTotal struct {
 	OrderList []Orders `json:"order_list"`
 	Total     int64    `json:"total"`
 }
+
+// 订单收入统计
+type OrderStatistics struct {
+	Total       int64 `json:"total"`
+	TotalAmount int64 `json:"total_amount"`
+}

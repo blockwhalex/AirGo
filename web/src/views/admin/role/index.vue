@@ -93,8 +93,6 @@ const onRowDel = (row: RowRoleType) => {
 		cancelButtonText: '取消',
 		type: 'warning',
 	}).then(() => {
-		//请求
-		//console.log("删除角色:", row.roleName)
 		roleApi.delRoleApi({ id: row.id }).then((res) => {
 			if (res.code != 0) {
 				ElMessage.success('删除失败');

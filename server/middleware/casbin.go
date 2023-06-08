@@ -12,7 +12,7 @@ import (
 )
 
 // Casbin 拦截器
-func CasbinMiddleware() gin.HandlerFunc {
+func Casbin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//从middleware获取user id
 		uID, ok := c.Get("uID")
@@ -41,6 +41,10 @@ func CasbinMiddleware() gin.HandlerFunc {
 		for _, v := range u.RoleGroup {
 			roleIds = append(roleIds, v.ID)
 			roleID := strconv.Itoa(v.ID)
+			//log.Println("casbin sub:", roleID) //casbin sub: 888
+			//log.Println("casbin obj:", obj)    // casbin obj: /user/getUserInfo
+			//log.Println("casbin act:", act)    //casbin act: GET
+
 			success, err := global.Casbin.Enforce(roleID, obj, act) // 判断策略中是否存在
 			if err != nil {
 				global.Logrus.Error("权限casbin error:", err)
@@ -60,10 +64,6 @@ func CasbinMiddleware() gin.HandlerFunc {
 		//将角色组写入 gin.Context
 		c.Set("roleIds", roleIds)
 		c.Next()
-
-		// // log.Println("casbin sub:", sub) //casbin sub: 888
-		// // log.Println("casbin obj:", obj) // casbin obj: /user/getUserInfo
-		// // log.Println("casbin act:", act) //casbin act: GET
 
 	}
 }

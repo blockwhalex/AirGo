@@ -54,7 +54,6 @@ export const useRoutesStore = defineStore("routesStore", {
         //新建动态路由
         async newDynamicRoute(params: object) {
             const res = menuApi.newDynamicRouteApi(params)
-            //console.log("新建动态路由",res)
         },
         //删除动态路由
         async delDynamicRoute(params: object) {

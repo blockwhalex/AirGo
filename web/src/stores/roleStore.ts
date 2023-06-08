@@ -57,12 +57,6 @@ export const useRoleStore = defineStore("roleStore", {
         }
     }),
     actions: {
-        //所有角色列表
-        async getAllRoleList(params?:object) {
-            console.log("params:",params)
-            const res: any = await roleApi.getRoleListApi(this.roleManageData.params)
-            this.roleManageData.roles = res.data
-        },
         //params===undefined,角色列表,分页;否则查询全部
         async getRoleList(params?:object) {
             if (params!=undefined) {
@@ -89,7 +83,6 @@ export const useRoleStore = defineStore("roleStore", {
                 roleID: this.dialogEditApi.casbinInfo.roleID,
                 data: this.dialogEditApi.casbinInfo.casbinItems
             })
-            // console.log("更新角色权限:",res.data)
             if (res.code === 0) {
                 ElMessage.success(res.msg)
             } else {

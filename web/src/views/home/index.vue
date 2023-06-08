@@ -6,14 +6,14 @@
 					<el-card class="box-card">
 						<template #header>
 							<div class="card-header">
-								<el-tag class="ml-2" plain>套餐详情</el-tag>
+								<el-tag size="large" plain>套餐详情</el-tag>
 							</div>
 						</template>
-						<div class="text item">
-							<el-tag class="ml-2" type="info">剩余流量:</el-tag><span>{{ (userInfos.subscribe_info.t-userInfos.subscribe_info.d-userInfos.subscribe_info.u)/1024/1024/1024 }}GB</span>
+						<div >
+							<el-tag style="margin-top: 10px;margin-bottom: 10px" type="info">剩余流量:</el-tag><span>{{ (userInfos.subscribe_info.t-userInfos.subscribe_info.d-userInfos.subscribe_info.u)/1024/1024/1024 }}GB</span>
 						</div>
-						<div class="text item">
-							<el-tag class="ml-2" type="info">到期时间:</el-tag>{{ DateStrtoTime(userInfos.subscribe_info.expired_at) }}
+						<div >
+							<el-tag style="margin-top: 10px;margin-bottom: 10px" type="info">到期时间:</el-tag>{{ DateStrtoTime(userInfos.subscribe_info.expired_at) }}
 						</div>
 					</el-card>
 				</div>
@@ -23,11 +23,11 @@
 					<el-card class="box-card" style="width: 100%;flex: 1;">
 						<template #header>
 							<div class="card-header">
-								<el-tag   plain>当前混淆:</el-tag>
-								<el-tag  type="info" >{{ userInfos.subscribe_info.host }}</el-tag>
+								<el-tag  size="large" plain>当前混淆:</el-tag>
+								<el-tag  size="large" type="info" >{{ userInfos.subscribe_info.host }}</el-tag>
 							</div>
 						</template>
-						<div class="mt-4">
+						<div>
 							<el-input v-model="homeTableData.host" placeholder="输入混淆"
 								class="input-with-select">
 								<template #append>
@@ -51,10 +51,10 @@
 							</div>
 						</template>
 						<div>
-							<el-button @click="v2rayNGSub(1)" type="primary" plain>复制v2rayNG订阅</el-button>
-							<el-button @click="v2rayNGSub(2)" type="success" plain>复制Clash Meta订阅</el-button>
-							<el-button @click="v2rayNGSub(3)" type="info" plain>复制shadowrocket订阅</el-button>
-							<el-button @click="v2rayNGSub(4)" type="warning" plain>复制Quantumult X订阅</el-button>
+							<el-button style="margin-top: 10px;margin-bottom: 10px" @click="v2rayNGSub(1)" type="primary" plain>复制v2rayNG订阅</el-button>
+							<el-button style="margin-top: 10px;margin-bottom: 10px" @click="v2rayNGSub(2)" type="success" plain>复制Clash Meta订阅</el-button>
+							<el-button style="margin-top: 10px;margin-bottom: 10px" @click="v2rayNGSub(3)" type="info" plain>复制shadowrocket订阅</el-button>
+							<el-button style="margin-top: 10px;margin-bottom: 10px" @click="v2rayNGSub(4)" type="warning" plain>复制Quantumult X订阅</el-button>
 						</div>
 					</el-card>
 				</div>
@@ -82,7 +82,6 @@ import { ElMessage } from 'element-plus';
 import { Select } from '@element-plus/icons-vue'
 //复制剪切板
 import commonFunction from '/@/utils/commonFunction';
-
 const { copyText } = commonFunction();
 
 
@@ -123,9 +122,8 @@ const v2rayNGSub = (type: number) => {
 onMounted(() => {
 		//设置用户信息
   userStore.getUserInfo()
+
 });
-
-
 
 </script>
 

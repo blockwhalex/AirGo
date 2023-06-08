@@ -28,8 +28,8 @@
       </div>
       <el-table :data="nodeManageData.nodes.node_list" height="100%" style="width: 100%;flex: 1;">
         <el-table-column fixed type="index" label="序号" width="60"/>
-        <el-table-column prop="name" label="节点名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="address" label="节点地址" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="120"></el-table-column>
+        <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="120"></el-table-column>
         <el-table-column prop="port" label="节点端口" show-overflow-tooltip></el-table-column>
         <el-table-column prop="sort" label="类型" show-overflow-tooltip>
           <template #default="scope">
@@ -38,14 +38,14 @@
             <el-tag type="success" v-if="scope.row.sort ===14">trojan</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="totalUp" label="上行流量(GB)" show-overflow-tooltip>
+        <el-table-column prop="total_up" label="上行流量(GB)" show-overflow-tooltip width="200">
           <template #default="scope">
-            <el-tag type="warning">{{ scope.row.totalUp / 1024 / 1024 / 1024 }}</el-tag>
+            <el-tag type="warning">{{ scope.row.total_up / 1024 / 1024 / 1024 }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="sort" label="下行流量(GB)" show-overflow-tooltip>
+        <el-table-column prop="total_down" label="下行流量(GB)" show-overflow-tooltip width="200">
           <template #default="scope">
-            <el-tag type="warning">{{ scope.row.totalDown / 1024 / 1024 / 1024 }}</el-tag>
+            <el-tag type="warning">{{ scope.row.total_down / 1024 / 1024 / 1024 }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="节点状态" show-overflow-tooltip>

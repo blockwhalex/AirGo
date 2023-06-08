@@ -6,6 +6,8 @@ const themeApi = useSystemApi()
 //publicApi
 import { usePublicApi } from "/@/api/public/index";
 const publicApi=usePublicApi()
+//ElMessage
+import {  ElMessage } from 'element-plus';
 
 /**
  * 布局配置
@@ -168,6 +170,10 @@ export const useThemeConfig = defineStore('themeStore', {
 		async getThemeConfig(params?: object) {
 			//this.themeConfig = data.themeConfig;
 			const res = await publicApi.getThemeConfigApi()
+			if (res.code!==0){
+				ElMessage.error("当前ip已被限流，请60s后重试")
+				return
+			}
 			this.themeConfig = res.data
 			Local.set('themeConfig',this.themeConfig)
 		},

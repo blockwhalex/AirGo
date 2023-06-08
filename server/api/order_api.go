@@ -21,6 +21,19 @@ func GetAllOrder(ctx *gin.Context) {
 	response.OK("全部订单获取成功", res, ctx)
 }
 
+// 获取订单统计
+func GetMonthOrderStatistics(ctx *gin.Context) {
+	var params model.QueryParamsWithDate
+	err := ctx.ShouldBind(&params)
+	res, err := service.GetMonthOrderStatistics(&params)
+	if err != nil {
+		global.Logrus.Error("获取订单统计错误" + err.Error())
+		response.Fail("获取订单统计错误"+err.Error(), nil, ctx)
+		return
+	}
+	response.OK("获取订单统计成功", res, ctx)
+}
+
 // 获取用户订单by user id
 func GetOrderByUserID(ctx *gin.Context) {
 	uID, ok := ctx.Get("uID")

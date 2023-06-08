@@ -8,20 +8,20 @@
                             <div class="card-header">
                                 <div class="block">
                                 </div>
-                                <el-tag class="ml-2" type="success">{{ v.subject }}</el-tag>
+                                <el-tag size="large" type="success">{{ v.subject }}</el-tag>
                             </div>
                         </template>
-                        <div class="text item">
-                            <el-tag class="ml-2" type="warning">套餐流量:</el-tag><span>{{ v.total_bandwidth }}GB</span>
+                        <div style="margin-bottom: 10px">
+                            <el-tag style="width: 70px" type="warning">套餐流量</el-tag><span>{{ v.total_bandwidth }}GB</span>
                         </div>
-                        <div class="text item">
-                            <el-tag class="ml-2" type="warning">有效期:</el-tag><span>{{ v.expiration_date }}天</span>
+                        <div style="margin-top: 10px;margin-bottom: 10px">
+                            <el-tag style="width: 70px" type="warning">有效期(天)</el-tag><span>{{ v.expiration_date }}</span>
                         </div>
-                        <div class="text item">
-                            <el-tag class="ml-2" type="warning">价格:</el-tag><span>{{ v.total_amount }}元</span>
+                        <div style="margin-top: 10px;margin-bottom: 10px">
+                            <el-tag style="width: 70px" type="warning">价格(元)</el-tag><span>{{ v.total_amount }}</span>
                         </div>
-                        <el-tag class="ml-2" type="info">有效期内不清零、不重置，长期有效</el-tag>
-                        <div>
+                        <el-tag  type="info">有效期内不清零、不重置，长期有效</el-tag>
+                        <div style="margin-top: 10px;margin-bottom: 10px">
                             <el-button @click="openSubmitOrderDialog(v.id)" type="primary">立即购买</el-button>
                         </div>
 

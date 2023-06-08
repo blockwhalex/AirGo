@@ -1,7 +1,6 @@
 <template>
-    <el-dialog v-model="dialogData.isShowDialog" :title="dialogData.title" width="769px">
+    <el-dialog v-model="dialogData.isShowDialog" :title="dialogData.title" width="769px" destroy-on-close>
       <el-divider content-position="left">节点参数</el-divider>
-
           <el-form :model="dialogData.nodeInfo" label-width="120px">
             <el-form-item label="Protocol">
               <el-radio-group v-model="dialogData.nodeInfo.sort">

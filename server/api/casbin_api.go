@@ -48,25 +48,6 @@ func UpdateCasbinPolicyNew(ctx *gin.Context) {
 
 }
 
-// 获取用户自身权限
-func GetPolicy(ctx *gin.Context) {
-	uID, ok := ctx.Get("uID")
-	if !ok {
-		return
-	}
-	uIDInt, _ := uID.(int)
-	var casbinInfo = model.CasbinInfo{
-		RoleID: uIDInt,
-	}
-	err := ctx.ShouldBind(&casbinInfo)
-	if err != nil {
-		response.Fail("获取权限列表参数错误", nil, ctx)
-		return
-	}
-	res := casbin_plugin.GetPolicyPathByRoleId(&casbinInfo)
-	response.OK("获取权限列表成功", res, ctx)
-}
-
 // 获取全部权限
 func GetAllPolicy(ctx *gin.Context) {
 
@@ -88,16 +69,3 @@ func GetPolicyByRoleIds(ctx *gin.Context) {
 
 	response.OK("获取权限列表成功", res, ctx)
 }
-
-// // "更新角色api权限"
-// func UpdateCasbin(ctx *gin.Context) {
-// 	var casbinInfo model.CasbinInfo
-// 	err := ctx.ShouldBind(&casbinInfo)
-// 	if err != nil {
-// 		response.Fail("获取权限列表参数错误", nil, ctx)
-// 		return
-// 	}
-
-// 	casbin_plugin.UpdateCasbinApi()
-
-// }

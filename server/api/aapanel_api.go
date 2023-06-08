@@ -85,14 +85,14 @@ func SSUsersTraffic(ctx *gin.Context) {
 		user.SubscribeInfo.D = v.D
 		userArr = append(userArr, user)
 		//该节点总流量
-		trafficLog.U = trafficLog.U + v.U
-		trafficLog.D = trafficLog.D + v.D
+		trafficLog.D = trafficLog.U + v.U
+		trafficLog.U = trafficLog.D + v.D
 	}
 	// 统计status
-	go func(id, u, d int, userIds []int) {
+	go func(id, u, d, userAmount int) {
 		var nodeStatus = model.NodeStatus{
 			ID:         id,
-			UserAmount: len(userIds),
+			UserAmount: userAmount,
 			U:          float64(u),
 			D:          float64(d),
 			LastTime:   time.Now(),
@@ -103,15 +103,14 @@ func SSUsersTraffic(ctx *gin.Context) {
 		if !ok || cacheStatus == nil {
 			global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, time.Hour)
 		} else {
-			//判断时间间隔
 			oldStatus := cacheStatus.(model.NodeStatus)
-			d := nodeStatus.LastTime.Sub(oldStatus.LastTime).Seconds()
-			nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", (nodeStatus.D-oldStatus.D)/1024/1024/d), 64)
-			nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", (nodeStatus.U-oldStatus.U)/1024/1024/d), 64)
+			d := nodeStatus.LastTime.Sub(oldStatus.LastTime).Seconds() //判断时间间隔
+			nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.D/1024/1024/d), 64)
+			nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.U/1024/1024/d), 64)
 			global.LocalCache.SetNoExpire(strconv.Itoa(id)+"status", nodeStatus)
 		}
 
-	}(node_id, trafficLog.U, trafficLog.D, userIds)
+	}(node_id, trafficLog.U, trafficLog.D, len(userIds))
 	//插入流量统计统计
 	err = service.NewTrafficLog(&trafficLog)
 	if err != nil {

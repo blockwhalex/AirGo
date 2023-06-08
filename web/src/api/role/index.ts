@@ -9,7 +9,6 @@ export function useRoleApi() {
                 method: "post",
                 data,
             })
-
         },
         //修改role 信息
         modifyRoleInfoApi: (data?: object) => {
@@ -35,7 +34,6 @@ export function useRoleApi() {
                 method: "post",
                 data,
             })
-
         },
         //删除角色
         delRoleApi: (data?: object) => {
@@ -44,7 +42,6 @@ export function useRoleApi() {
                 method: "delete",
                 data,
             })
-
         },
         //获取当前角色的权限
         getPolicyByRoleIdsApi: (params?: object) => {

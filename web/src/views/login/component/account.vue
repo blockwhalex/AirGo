@@ -1,7 +1,7 @@
 <!-- eslint-disable no-console -->
 <template>
 	<el-form size="large" class="login-content-form">
-		<el-form-item class="login-animation1">
+		<el-form-item>
 			<el-input text placeholder="用户名" v-model="loginData.user_name" clearable
 				autocomplete="off">
 				<template #prefix>

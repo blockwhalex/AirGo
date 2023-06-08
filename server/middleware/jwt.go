@@ -11,12 +11,15 @@ import (
 func ParseJwt() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//获取token
-		token := c.GetHeader("Authorization")
+		var token string
+		token = c.GetHeader("Authorization")
 		//判断
 		if token == "" {
-			response.Fail("未携带token", nil, c)
-			c.Abort()
-			return
+			if token = c.GetHeader("Sec-WebSocket-Protocol"); token == "" {
+				response.Fail("未携带token", nil, c)
+				c.Abort()
+				return
+			}
 		}
 		if strings.HasPrefix(token, "Bearer ") {
 			//去掉bearer

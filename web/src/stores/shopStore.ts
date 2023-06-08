@@ -78,7 +78,6 @@ export const useShopStore = defineStore("shopStore", {
         //获取全部订阅商品
         async getAllGoods() {
             const res = await shopApi.getAllGoodsApi()
-            // console.log("获取全部订阅商品:",res.data)
             this.goodsList = res.data
         },
         //添加商品

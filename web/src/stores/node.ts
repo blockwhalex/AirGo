@@ -9,11 +9,11 @@ const nodeApi = useNodeApi()
 export const useNodeStore = defineStore("nodeStore", {
     state: () => ({
         //节点管理页数据
-        nodeManageData:{
+        nodeManageData: {
             loading: true,
-            nodes:{
-                total:0,
-                node_list:[] as NodeInfo[],
+            nodes: {
+                total: 0,
+                node_list: [] as NodeInfo[],
             },
             params: {
                 search: '',
@@ -29,7 +29,7 @@ export const useNodeStore = defineStore("nodeStore", {
             title: "",
             isShowDialog: false,
             nodeInfo: {
-                id:0,
+                id: 0,
                 name: '',
                 address: '',
                 port: '',
@@ -50,9 +50,9 @@ export const useNodeStore = defineStore("nodeStore", {
             } as NodeInfo,
         },
         //节点状态页面数据
-        serverStatusData:{
-            type:0,
-            data:[] as ServerStatusInfo[],
+        serverStatusData: {
+            type: 0,
+            data: [] as ServerStatusInfo[],
         },
 
     }),
@@ -65,16 +65,20 @@ export const useNodeStore = defineStore("nodeStore", {
 
         },
         //获取全部节点 with Traffic,分页
-        async getNodeWithTraffic() {
+        async getNodeWithTraffic(params?: object) {
             const res = await nodeApi.getNodeWithTrafficApi(this.nodeManageData.params)
             this.nodeManageData.nodes = res.data
             this.nodeManageData.loading = false
 
         },
+        //获取全部节点 with Traffic,订单统计
+        async getNodeStatistics(params?: object) {
+            const res = await nodeApi.getNodeWithTrafficApi(params)
+            return res
+        },
         //更新节点
         async updateNode() {
             const res = await nodeApi.updateNodeApi(this.dialogData.nodeInfo)
-            //console.log("更新节点:", res)
             if (res.code === 0) {
                 ElMessage.success("更新节点成功")
             }
@@ -82,7 +86,6 @@ export const useNodeStore = defineStore("nodeStore", {
         //删除节点
         async deleteNode(params: object) {
             const res = await nodeApi.deleteNodeApi(params)
-            //console.log("更新节点:", res)
             if (res.code === 0) {
                 ElMessage.success("删除节点成功")
             }
@@ -90,7 +93,6 @@ export const useNodeStore = defineStore("nodeStore", {
         //新建节点
         async newNode() {
             const res = await nodeApi.newNodeApi(this.dialogData.nodeInfo)
-            //console.log("新建节点:", res)
             if (res.code === 0) {
                 ElMessage.success("新建节点成功")
             }

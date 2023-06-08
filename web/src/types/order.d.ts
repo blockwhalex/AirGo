@@ -22,6 +22,6 @@ declare interface Order {
     buyer_pay_amount: string;
 }
 declare interface OrdersWithTotal{
-    order_list:Order[];
+    total_amount:number;
     total:number;
 }

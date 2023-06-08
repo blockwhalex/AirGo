@@ -10,7 +10,6 @@ func FindRoleIdsByuId(uId int) ([]int, error) {
 	var roles []model.UserAndRole
 	err := global.DB.Model(&model.UserAndRole{}).Select("role_id").Where("user_id=?", uId).Find(&roles).Error
 	if err != nil {
-		global.Logrus.Error("根据uId查角色Ids error:", err.Error())
 		return nil, err
 	}
 	//角色id 数组

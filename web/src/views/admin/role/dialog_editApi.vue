@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogEditApi.isShowDialog" title="修改角色api权限" style="width: 80%;flex: 1;">
+  <el-dialog v-model="dialogEditApi.isShowDialog" title="修改角色api权限" style="width: 80%;flex: 1;" destroy-on-close>
     <el-transfer v-model="dialogEditApi.casbinInfo.casbinItems"
     :props="{
       key: 'path',
@@ -30,7 +30,6 @@ const { dialogEditApi } = storeToRefs(roleStore)
 // 打开弹窗
 const openDialog = (row:RowRoleType) => { //RowRoleType 角色类型
   //获取当前roleID
-  //console.log("获取当前roleID",row.roleID)
   dialogEditApi.value.casbinInfo.roleID=row.roleID
   //获取全部api list
   roleStore.getAllPolicy()
@@ -43,7 +42,6 @@ const closeDialog = () => {
 };
 //提交
 const onSubmit = () => {
-  //console.log("选中的api：",casbinInfo.value.casbinItems)
     roleStore.updateCasbinPolicy()
     closeDialog()
 }

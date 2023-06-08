@@ -96,7 +96,7 @@ const onOpenPWDialog = () => {
         if (isLt2M) {
           resolve(file)
         }
-        console.log(file) // 压缩到400KB,这里的400就是要压缩的大小,可自定义
+      //  console.log(file) // 压缩到400KB,这里的400就是要压缩的大小,可自定义
         imageConversion.compressAccurately(file, 400).then(res => { // console.log(res)
          resolve(res)
         })
