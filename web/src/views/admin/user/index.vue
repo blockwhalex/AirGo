@@ -18,8 +18,8 @@
 			</div>
 			<el-table :data="userManageData.users.user_list" fit style="width: 100%;flex: 1;">
 <!--				<el-table-column type="index" label="序号" width="60" />-->
-				<el-table-column prop="id" label="账户ID" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="user_name" label="账户名称" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="id" label="账户ID" show-overflow-tooltip fixed></el-table-column>
+				<el-table-column prop="user_name" label="账户名称" show-overflow-tooltip fixed></el-table-column>
         <el-table-column prop="subscribe_info.expired_at" label="订阅到期时间" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="success">{{ scope.row.subscribe_info.expired_at===null ? '': scope.row.subscribe_info.expired_at.slice(0,10)}}</el-tag>

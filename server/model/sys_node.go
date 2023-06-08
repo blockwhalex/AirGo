@@ -135,11 +135,12 @@ type NodesWithTotal struct {
 	Total    int64  `json:"total"`
 }
 type NodeStatus struct {
-	ID         int       `json:"id"`
-	Name       string    `json:"name"`
-	Status     bool      `json:"status"`
-	LastTime   time.Time `json:"last_time"`
-	UserAmount int       `json:"user_amount"`
-	U          float64   `json:"u"`
-	D          float64   `json:"d"`
+	ID          int       `json:"id"`
+	Name        string    `json:"name"`
+	Status      bool      `json:"status"`
+	LastTime    time.Time `json:"last_time"`
+	UserAmount  int       `json:"user_amount"`
+	TrafficRate int       `json:"traffic_rate"`
+	U           float64   `json:"u"`
+	D           float64   `json:"d"`
 }

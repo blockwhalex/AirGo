@@ -93,7 +93,7 @@ func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
 // 获取 node status
 func GetNodesStatus() *[]model.NodeStatus {
 	var nodesIds []model.Node
-	global.DB.Model(&model.Node{}).Select("id", "name").Find(&nodesIds)
+	global.DB.Model(&model.Node{}).Select("id", "name", "traffic_rate").Find(&nodesIds)
 	var nodestatusArr []model.NodeStatus
 	for _, v := range nodesIds {
 		var nodeStatus = model.NodeStatus{}
@@ -101,6 +101,7 @@ func GetNodesStatus() *[]model.NodeStatus {
 		if !ok {
 			nodeStatus.ID = v.ID
 			nodeStatus.Name = v.Name
+			nodeStatus.TrafficRate = v.TrafficRate
 			nodeStatus.Status = false
 			nodeStatus.D = 0
 			nodeStatus.U = 0
@@ -108,6 +109,7 @@ func GetNodesStatus() *[]model.NodeStatus {
 		} else {
 			nodeStatus = vStatus.(model.NodeStatus)
 			nodeStatus.Name = v.Name
+			nodeStatus.TrafficRate = v.TrafficRate
 			if time.Now().Sub(nodeStatus.LastTime).Seconds() > 60 {
 				nodeStatus.UserAmount = 0
 				nodeStatus.Status = false

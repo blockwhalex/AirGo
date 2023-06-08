@@ -5,8 +5,11 @@
       <div class="home-card-item">
         <el-card class="box-card">
           <el-row :gutter="10" justify="space-around" align="middle" >
-            <el-col :xs="24" :sm="24" :md="5" :lg="5" :xl="5" style="margin-top: 20px;margin-bottom: 10px">
+            <el-col :xs="12" :sm="12" :md="5" :lg="5" :xl="5" style="margin-top: 20px;margin-bottom: 10px">
               {{ v.name }}
+            </el-col>
+            <el-col :xs="12" :sm="12" :md="5" :lg="5" :xl="5" style="margin-top: 20px;margin-bottom: 10px">
+              倍率：{{v.traffic_rate}}
             </el-col>
             <el-col :xs="12" :sm="12" :md="5" :lg="5" :xl="5" style="margin-top: 20px;margin-bottom: 10px">
               <el-button v-if="v.status" type="success" plain>在线</el-button>

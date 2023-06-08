@@ -28,7 +28,7 @@
       </div>
       <el-table :data="nodeManageData.nodes.node_list" height="100%" style="width: 100%;flex: 1;">
         <el-table-column fixed type="index" label="序号" width="60"/>
-        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="120"></el-table-column>
+        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="120" fixed></el-table-column>
         <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="120"></el-table-column>
         <el-table-column prop="port" label="节点端口" show-overflow-tooltip></el-table-column>
         <el-table-column prop="sort" label="类型" show-overflow-tooltip>

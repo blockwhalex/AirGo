@@ -2,7 +2,7 @@
 	<div class="layout-footer pb15">
 		<div class="layout-footer-warp">
 			<div class="mt5">
-       <span>{{themeConfig.globalTitle}}</span> | 版权所有
+        <el-link href="https://github.com/ppoonk/AirGo" type="warning"><span>Copyright©{{themeConfig.globalTitle}}</span></el-link>
       </div>
 		</div>
 	</div>

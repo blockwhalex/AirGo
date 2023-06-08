@@ -24,25 +24,25 @@
             </el-form-item>
 
             <el-form-item label="IP限流">
-              <el-col :span="2">
+              <el-col :span="4">
                 <el-input v-model.number="serverConfig.rate_limit_params.ip_role_param" type="number"/>
               </el-col>
-              <el-col :span="1" style="text-align: center">
+              <el-col :span="2" style="text-align: center">
                 <span>-</span>
               </el-col>
-              <el-col :span="21">
+              <el-col :span="18">
                 <span class="text-gray-500">请求/分钟</span>
               </el-col>
             </el-form-item>
 
             <el-form-item label="用户限流">
-              <el-col :span="2">
+              <el-col :span="4">
                 <el-input v-model.number="serverConfig.rate_limit_params.visit_param" type="number"/>
               </el-col>
-              <el-col :span="1" style="text-align: center">
+              <el-col :span="2" style="text-align: center">
                 <span>-</span>
               </el-col>
-              <el-col :span="21">
+              <el-col :span="18">
                 <span class="text-gray-500">请求/分钟</span>
               </el-col>
             </el-form-item>
@@ -50,13 +50,13 @@
 
             <el-divider></el-divider>
             <el-form-item label="通信密钥">
-              <el-col :span="4">
+              <el-col :span="12">
                 <el-input v-model="serverConfig.system.muKey" placeholder="务必前后端保持一致！"/>
               </el-col>
 
             </el-form-item>
             <el-form-item label="订阅名称">
-              <el-col :span="4">
+              <el-col :span="12">
                 <el-input v-model="serverConfig.system.sub_name"/>
               </el-col>
 
@@ -71,7 +71,7 @@
                 />
               </el-select>
             </el-form-item>
-
+            <el-divider></el-divider>
             <el-form-item>
               <el-button @click="onSubmit" type="primary">保存</el-button>
             </el-form-item>
@@ -122,6 +122,7 @@
               <el-input v-model="serverConfig.email.email_content" type="textarea"/>
               <el-tag class="ml-2" type="warning">*emailcode 字段不可删除！</el-tag>
             </el-form-item>
+            <el-divider></el-divider>
             <el-form-item>
               <el-button @click="onSubmit" type="primary">保存</el-button>
             </el-form-item>
@@ -133,14 +134,15 @@
         <el-tab-pane label="json web token">
           <el-form :model="serverConfig" label-width="100px">
             <el-form-item label="jwt签名">
-              <el-input v-model="serverConfig.jwt.signing_key" placeholder="oicq"/>
+              <el-input v-model="serverConfig.jwt.signing_key"/>
             </el-form-item>
             <el-form-item label="签发者">
-              <el-input v-model="serverConfig.jwt.issuer" placeholder="oicq"/>
+              <el-input v-model="serverConfig.jwt.issuer"/>
             </el-form-item>
             <el-form-item label="过期时间">
-              <el-input v-model="serverConfig.jwt.expires_time" placeholder="7d"/>
+              <el-input v-model="serverConfig.jwt.expires_time"/>
             </el-form-item>
+            <el-divider></el-divider>
             <el-form-item>
               <el-button @click="onSubmit" type="primary">保存</el-button>
             </el-form-item>

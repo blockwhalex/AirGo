@@ -18,7 +18,7 @@
 				<span class="login-right-warp-one"></span>
 				<span class="login-right-warp-two"></span>
 				<div class="login-right-warp-mian" >
-					<div class="login-right-warp-main-title">{{ getThemeConfig.globalTitle }} 欢迎您！</div>
+					<div class="login-right-warp-main-title">{{ getThemeConfig.globalTitle }}</div>
 					<div class="login-right-warp-main-form" >
 						<div v-if="!state.isScan">
 							<el-tabs v-model="state.tabsActiveName">
@@ -104,11 +104,11 @@ onMounted(() => {
 				span {
 					margin-left: 10px;
 					font-size: 28px;
-					color: #26a59a;
+					color: #E6E6FA;
 				}
 				.login-left-logo-text-msg {
 					font-size: 12px;
-					color: #32a99e;
+					color: #E6E6FA; //副标题颜色
 				}
 			}
 		}

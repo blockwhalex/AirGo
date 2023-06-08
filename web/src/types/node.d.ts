@@ -30,6 +30,7 @@ declare interface ServerStatusInfo {
     status:boolean;
     last_time: string;
     user_amount: number;
+    traffic_rate:number;
     u: number;
     d: number;
 }

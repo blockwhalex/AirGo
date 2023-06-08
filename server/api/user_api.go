@@ -55,16 +55,6 @@ func Login(c *gin.Context) {
 		response.Fail("用户登录参数错误"+err.Error(), nil, c)
 		return
 	}
-	//验证邮箱验证码
-	//if global.Theme.EnableEmailCode {
-	//	v, _ := global.LocalCache.Get(l.UserName + "emailcode")
-	//	fmt.Println("验证邮箱验证码:", v)
-	//	if l.EmailCode != v {
-	//		response.Fail("邮箱验证码错误", nil, c)
-	//		log.Println(err)
-	//		return
-	//	}
-	//}
 	//查询用户
 	user, err := service.Login(&l)
 	if err != nil {
@@ -212,11 +202,6 @@ func DeleteUser(ctx *gin.Context) {
 
 }
 
-// 查询用户
-func Finduser(ctx *gin.Context) {
-
-}
-
 // 修改密码
 func ChangeUserPassword(ctx *gin.Context) {
 	uID, _ := ctx.Get("uID")
@@ -289,6 +274,7 @@ func ResetSub(ctx *gin.Context) {
 	uIDInt := uID.(int)
 	var u = model.User{
 		ID:            uIDInt,
+		UUID:          uuid.NewV4(),
 		SubscribeInfo: model.SubscribeInfo{SubscribeUrl: encode_plugin.RandomString(8)}, //随机字符串订阅url
 	}
 	err := service.UpdateUser(&u)

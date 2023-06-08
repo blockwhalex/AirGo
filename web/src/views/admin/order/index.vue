@@ -4,7 +4,7 @@
       <div class="mb15">
         <el-input v-model="orderManageData.queryParams.search"  placeholder="请输入订单号" style="max-width: 180px"></el-input>
         <el-date-picker
-            size="default"
+            size="small"
             v-model="orderManageData.queryParams.date"
             type="datetimerange"
             :shortcuts="shortcuts"
@@ -22,9 +22,9 @@
         </el-button>
       </div>
       <el-table :data="orderManageData.allOrders.order_list" fit style="width: 100%;flex: 1;">
-        <el-table-column type="index" label="序号"/>
-        <el-table-column prop="id" label="订单ID"/>
-        <el-table-column prop="out_trade_no" label="订单号"/>
+        <el-table-column type="index" label="序号" fixed/>
+<!--        <el-table-column prop="id" label="订单ID" fixed/>-->
+        <el-table-column prop="out_trade_no" label="订单号" fixed/>
         <el-table-column prop="created_at" label="下单日期">
           <template #default="scope">
             <el-tag type="success">{{DateStrtoTime(scope.row.created_at)}}</el-tag>

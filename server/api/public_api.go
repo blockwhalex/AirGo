@@ -9,6 +9,7 @@ import (
 	"AirGo/utils/response"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"time"
 )
 
 // 主题配置
@@ -33,11 +34,15 @@ func GetThemeConfig(ctx *gin.Context) {
 
 // 邮箱验证码
 func GetMailCode(ctx *gin.Context) {
-
 	var u model.User
 	err := ctx.ShouldBind(&u)
 	if err != nil {
+		global.Logrus.Error("邮箱验证码参数错误", err.Error())
 		response.Fail("邮箱验证码参数错误"+err.Error(), nil, ctx)
+		return
+	}
+	if u.UserName == "" {
+		response.Fail("邮箱不能为空", nil, ctx)
 		return
 	}
 	_, ok := global.LocalCache.Get(u.UserName + "emailcode")
@@ -47,17 +52,15 @@ func GetMailCode(ctx *gin.Context) {
 	}
 	//用户是否存在且是否有效
 	user, err := service.FindUserByEmail(&u)
-	if err == gorm.ErrRecordNotFound || user == nil {
-		response.Fail("用户不存在"+err.Error(), nil, ctx)
-		return
-	} else if !user.Enable {
-		response.Fail("用户被封禁", nil, ctx)
+	if err != gorm.ErrRecordNotFound {
+		global.Logrus.Error("用户已存在", err.Error(), user.UserName)
+		response.Fail("用户已存在"+err.Error(), nil, ctx)
 		return
 	}
 	//生成验证码
 	randomStr := encode_plugin.RandomString(4) //4位随机数
 	//验证码存入local cache
-	global.LocalCache.Set(u.UserName+"emailcode", randomStr, 60000000000) //60秒过期
+	global.LocalCache.Set(u.UserName+"emailcode", randomStr, 60*time.Second) //60秒过期
 	//发送邮件
 	err = mail_plugin.SendEmail(global.EmailDialer, user.UserName, randomStr, global.Server.Email.EmailContent)
 	if err != nil {

@@ -19,8 +19,8 @@
 			</div>
 			<el-table :data="roleManageData.roles.role_list" v-loading="roleManageData.loading"
 				style="width: 100%">
-				<el-table-column type="index" label="序号" width="60" />
-				<el-table-column prop="role_name" label="角色名称" show-overflow-tooltip></el-table-column>
+				<el-table-column type="index" label="序号" width="60" fixed />
+				<el-table-column prop="role_name" label="角色名称" show-overflow-tooltip fixed></el-table-column>
 				<el-table-column prop="id" label="角色ID" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="status" label="角色状态" show-overflow-tooltip>
 					<template #default="scope">
