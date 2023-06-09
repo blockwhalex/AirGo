@@ -126,7 +126,7 @@ func InsertInto(db *gorm.DB) error {
 	}
 	//插入sys_dynamic-router_data表
 	DynamicRouteData := []model.DynamicRoute{
-		{ParentID: 0, Path: "/admin", Name: "admin", Component: "/layout/routerView/parent.vue", Meta: model.Meta{Title: "超级管理员", Icon: "iconfont icon-shouye_dongtaihui"}},     //id==1
+		{ParentID: 0, Path: "/admin", Name: "admin", Component: "/layout/routerView/parent.vue", Meta: model.Meta{Title: "超级管理员", Icon: "iconfont icon-shouye_dongtaihui"}},    //id==1
 		{ParentID: 1, Path: "/admin/menu", Name: "adminMenu", Component: "/admin/menu/index.vue", Meta: model.Meta{Title: "菜单管理", Icon: "iconfont icon-caidan"}},                //id==2
 		{ParentID: 1, Path: "/admin/role", Name: "adminRole", Component: "/admin/role/index.vue", Meta: model.Meta{Title: "角色管理", Icon: "iconfont icon-icon-"}},                 //id==3
 		{ParentID: 1, Path: "/admin/user", Name: "adminUser", Component: "/admin/user/index.vue", Meta: model.Meta{Title: "用户管理", Icon: "iconfont icon-gerenzhongxin"}},         //id==4
@@ -134,13 +134,10 @@ func InsertInto(db *gorm.DB) error {
 		{ParentID: 1, Path: "/admin/node", Name: "adminNode", Component: "/admin/node/index.vue", Meta: model.Meta{Title: "节点管理", Icon: "iconfont icon-shuxingtu"}},             //id==6
 		{ParentID: 1, Path: "/admin/shop", Name: "adminShop", Component: "/admin/shop/index.vue", Meta: model.Meta{Title: "商品管理", Icon: "iconfont icon-zhongduancanshuchaxun"}}, //id==7
 		{ParentID: 1, Path: "/admin/system", Name: "system", Component: "/admin/system/index.vue", Meta: model.Meta{Title: "系统设置", Icon: "iconfont icon-xitongshezhi"}},         //id==8
-
-		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "iconfont icon-shouye"}},
+		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "iconfont icon-shouye"}},                                     //id==9
 		{ParentID: 0, Path: "/shop", Name: "shop", Component: "/shop/index.vue", Meta: model.Meta{Title: "商店", Icon: "iconfont icon-zidingyibuju"}},
-
 		{ParentID: 0, Path: "/myOrder", Name: "myOrder", Component: "/myOrder/index.vue", Meta: model.Meta{Title: "我的订单", Icon: "iconfont icon--chaifenhang"}},
 		{ParentID: 0, Path: "/personal", Name: "personal", Component: "/personal/index.vue", Meta: model.Meta{Title: "个人信息", Icon: "iconfont icon-gerenzhongxin"}},
-
 		{ParentID: 0, Path: "/serverStatus", Name: "serverStatus", Component: "/serverStatus/index.vue", Meta: model.Meta{Title: "节点状态", Icon: "iconfont icon-putong"}},
 		{ParentID: 0, Path: "/gallery", Name: "gallery", Component: "/gallery/index.vue", Meta: model.Meta{Title: "无限图库", Icon: "iconfont icon-step"}},
 	}
@@ -271,10 +268,9 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/mod_mu/users/traffic", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/mod_mu/users/aliveip", V2: "POST"},
 
-		{Ptype: "p", V0: "1", V1: "/casbin/getPolicyByRoleIds", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/casbin/getPolicyByRoleIds", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/casbin/updateCasbinPolicy", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/casbin/updateCasbinPolicyNew", V2: "POST"},
-		{Ptype: "p", V0: "1", V1: "/casbin/getPolicy", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/casbin/getAllPolicy", V2: "GET"},
 
 		{Ptype: "p", V0: "1", V1: "/order/getOrderInfo", V2: "POST"},
@@ -303,10 +299,12 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "2", V1: "/user/resetUserPassword", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/user/getUserInfo", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/user/resetSub", V2: "GET"},
+		{Ptype: "p", V0: "2", V1: "/user/changeSubHost", V2: "POST"},
 
 		{Ptype: "p", V0: "2", V1: "/menu/getRouteList", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/menu/getRouteTree", V2: "GET"},
 
+		{Ptype: "p", V0: "2", V1: "/order/getOrderInfo", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/order/getOrderByUserID", V2: "POST"},
 
 		{Ptype: "p", V0: "2", V1: "/shop/preCreatePay", V2: "POST"},
@@ -314,8 +312,9 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "2", V1: "/shop/getAllEnabledGoods", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/shop/findGoods", V2: "POST"},
 
-		{Ptype: "p", V0: "2", V1: "/casbin/getPolicy", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/websocket/msg", V2: "GET"},
+		{Ptype: "p", V0: "2", V1: "/upload/newPictureUrl", V2: "GET"},
+		{Ptype: "p", V0: "2", V1: "/upload/getPictureList", V2: "POST"},
 	}
 	if err := global.DB.Create(&casbinRuleData).Error; err != nil {
 		return errors.New("casbin_rule表数据初始化失败!")
@@ -331,9 +330,62 @@ func InsertInto(db *gorm.DB) error {
 	//系统设置
 	settingData := model.Server{
 		ID: 1,
+		Email: model.Email{
+			EmailContent: text,
+		},
 	}
 	if err := global.DB.Create(&settingData).Error; err != nil {
 		return errors.New("server表数据初始化失败!")
 	}
 	return nil
 }
+
+// 默认邮件验证码样式
+const text = `
+<style>
+.cookieCard {
+  margin:auto;
+  width: 300px;
+  height: 200px;
+  background: linear-gradient(to right,rgb(137, 104, 255),rgb(175, 152, 255));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.cookieCard::before {
+  width: 150px;
+  height: 150px;
+  content: "";
+  background: linear-gradient(to right,rgb(142, 110, 255),rgb(208, 195, 255));
+  position: absolute;
+  z-index: 1;
+  border-radius: 50%;
+  right: -25%;
+  top: -25%;
+}
+.cookieHeading {
+  font-size: 1.5em;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.cookieDescription {
+  font-size: 0.9em;
+  z-index: 2;
+}
+</style>
+</head>
+<body>
+
+<div class="cookieCard">
+  <p class="cookieHeading">验证码</p>
+  <p class="cookieDescription">欢迎使用，请及时输入验证码</p>
+  <span style="font-size:30px">emailcode</span>
+</div>
+</body>
+`

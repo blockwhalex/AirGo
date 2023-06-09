@@ -2,7 +2,7 @@
 <template>
   <el-form size="large" class="login-content-form">
     <el-form-item >
-      <el-input text placeholder="用户名" v-model="loginData.user_name" clearable
+      <el-input text placeholder="邮箱" v-model="loginData.user_name" clearable
                 autocomplete="off">
         <template #prefix>
           <el-icon >
@@ -41,31 +41,42 @@
       </el-col>
       <el-col :span="1"></el-col>
       <el-col :span="10">
-        <el-button  type="primary" :disabled="state.isCountDown" @click="onGetEmailCode">
+        <el-button class="login-content-code" type="primary" :disabled="state.isCountDown" @click="onGetEmailCode">
           {{ state.isCountDown ? `${state.countDowdTime}s后重新获取` : "获取验证码" }}
         </el-button>
       </el-col>
     </el-form-item>
 
     <el-form-item>
-      <el-button v-if="!state.enableResetPassword" type="primary" class="login-content-submit" round @click="onSignIn">
-        <span>登 录</span>
-      </el-button>
-      <el-button v-if="!state.enableResetPassword" class="login-content-resetPassword" round @click="onResetPassword">
-        <span>重置密码</span>
-      </el-button>
-      <el-button v-if="state.enableResetPassword" @click="onSubmitResetPassword" class="login-content-resetPassword"
-                 round type="danger" plain>
-        <span>确认重置密码</span>
-      </el-button>
-      <el-button v-if="state.enableResetPassword" @click="state.enableResetPassword=false"
-                 class="login-content-resetPassword" round type="primary" plain>
-        <span>返回登录</span>
-      </el-button>
+      <el-col :span="11">
+        <el-button v-if="!state.enableResetPassword" type="primary" class="login-content-submit" round @click="onSignIn">
+          <span>登 录</span>
+        </el-button>
+      </el-col>
+      <el-col :span="2">
+      </el-col>
+      <el-col :span="11">
+        <el-button v-if="!state.enableResetPassword" class="login-content-resetPassword" round @click="onResetPassword">
+          <span>重置密码</span>
+        </el-button>
+      </el-col>
+
+
+      <el-col :span="11">
+        <el-button v-if="state.enableResetPassword" @click="onSubmitResetPassword" class="login-content-resetPassword"
+                   round type="danger">
+          <span>确认重置密码</span>
+        </el-button>
+      </el-col>
+      <el-col :span="2">
+      </el-col>
+      <el-col :span="11">
+        <el-button v-if="state.enableResetPassword" @click="state.enableResetPassword=false"
+                   class="login-content-resetPassword" round type="primary">
+          <span>返回登录</span>
+        </el-button>
+      </el-col>
     </el-form-item>
-    <div class="font12 mt30  login-msg">
-      * 建议使用谷歌、Microsoft Edge，360浏览器请使用极速模式
-    </div>
   </el-form>
 </template>
 
@@ -101,7 +112,6 @@ const publicApi = usePublicApi()
 const state = reactive({
   enableResetPassword: false,
   isShowPassword: false,
-  isShowEmailCode: false,
   isCountDown: false,
   countDowdTime: 60,
   loading: {
@@ -165,12 +175,9 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 };
 //获取邮箱验证码
 const onGetEmailCode = () => {
-  // publicApi.getEmailCodeApi(loginData.value).then((res)=>{
-  //   if (res.code===0){
-  //     state.isCountDown = true
-  //     handleTimeChange()
-  //   }
-  // })
+  if (loginData.value.user_name===''){
+    return
+  }
   state.isCountDown = true
   publicApi.getEmailCodeApi(loginData.value)
   handleTimeChange()
@@ -197,7 +204,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .login-content-form {
-  margin-top: 20px;
+  margin-top: 10px;
 
   @for $i from 1 through 4 {
     .login-animation#{$i} {
@@ -227,19 +234,15 @@ onMounted(() => {
   }
 
   .login-content-submit {
-    width: 50%;
+    width: 100%;
     letter-spacing: 2px;
     font-weight: 300;
   }
 
   .login-content-resetPassword {
-    width: 50%;
+    width: 100%;
     letter-spacing: 2px;
     font-weight: 300;
     margin-left: 0;
-  }
-
-  .login-msg {
-    color: var(--el-text-color-placeholder);
   }
 }</style>

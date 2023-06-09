@@ -18,6 +18,13 @@ export const useUserStore = defineStore('userInfo', {
             email_code: '',
         },
         //注册页面数据
+        email_suffix: 'qq.com',
+        registerReq: {
+            user_name: '',
+            password: '',
+            re_password: '',
+            email_code: '',
+        },
         registerData: {
             user_name: '',
             password: '',
@@ -26,13 +33,13 @@ export const useUserStore = defineStore('userInfo', {
         },
         //全局用户信息
         userInfos: {
-            created_at:'',
-            updated_at:'',
+            created_at: '',
+            updated_at: '',
             id: 0,
             uuid: 0,
             user_name: '',
             nick_name: '',
-            password:'',
+            password: '',
             avatar: '',
             phone: '',
             email: '',
@@ -57,9 +64,9 @@ export const useUserStore = defineStore('userInfo', {
         //用户管理页面数据
         userManageData: {
             loading: false,
-            users:{
+            users: {
                 total: 0,
-                user_list:[] as SysUser[],
+                user_list: [] as SysUser[],
             },
             params: {
                 search: '',
@@ -77,6 +84,12 @@ export const useUserStore = defineStore('userInfo', {
         },
     }),
     getters: {
+        userReq: (state) => {
+            state.registerReq.password = state.registerData.password
+            state.registerReq.re_password = state.registerData.re_password
+            state.registerReq.email_code = state.registerData.email_code
+            state.registerReq.user_name = state.registerData.user_name + '@' + state.email_suffix
+        },
         used: (state): number => {
             return +((state.userInfos.subscribe_info.t - state.userInfos.subscribe_info.u - state.userInfos.subscribe_info.d) / 1024 / 1024 / 1024).toFixed(2)
         },
@@ -123,10 +136,8 @@ export const useUserStore = defineStore('userInfo', {
     actions: {
         //注册
         async register(form?: object) {
-            const res = await userApi.registerApi(this.registerData)
-            if (res.code === 0) {
-                return true
-            }
+            const res = await userApi.registerApi(this.registerReq)
+            return res
         },
         //登录
         async userLogin(form?: any) {

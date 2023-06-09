@@ -138,7 +138,7 @@ onMounted(() => {
 			border: 1px solid var(--el-color-primary-light-3);
 			border-radius: 3px;
       width: 100%;
-			height: 500px;
+			//height: 500px;
 			position: relative;
 			overflow: hidden;
 			background-color: var(--el-color-white);
@@ -214,7 +214,7 @@ onMounted(() => {
 				}
 				.login-right-warp-main-form {
 					flex: 1;
-					padding: 0 50px 50px;
+					padding: 0 20px 20px;
 					.login-content-main-sacn {
 						position: absolute;
 						top: 0;

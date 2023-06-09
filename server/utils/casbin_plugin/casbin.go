@@ -84,6 +84,7 @@ func UpdateCasbinPolicyNew(casbinData *model.CasbinData) error {
 	success, err := global.Casbin.AddPolicies(rules)
 	if !success {
 		global.Logrus.Error("casbin添加失败 err", success, err)
+		//empty slice found
 		return errors.New("casbin添加失败")
 	}
 	err = global.Casbin.InvalidateCache()

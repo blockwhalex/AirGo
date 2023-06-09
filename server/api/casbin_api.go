@@ -41,6 +41,7 @@ func UpdateCasbinPolicyNew(ctx *gin.Context) {
 	//前端传过来的没有处理，只有method，从数据库查询完整的rules，再更新casbin
 	err = casbin_plugin.UpdateCasbinPolicyNew(&data)
 	if err != nil {
+		global.Logrus.Error("更新casbin权限错误", err)
 		response.Fail("更新casbin权限错误", err, ctx)
 		return
 	}
@@ -62,10 +63,10 @@ func GetPolicyByRoleIds(ctx *gin.Context) {
 	var casbinInfo model.CasbinInfo
 	err := ctx.ShouldBind(&casbinInfo)
 	if err != nil {
+		global.Logrus.Error("获取权限列表参数错误", err)
 		response.Fail("获取权限列表参数错误", nil, ctx)
 		return
 	}
 	res := casbin_plugin.GetPolicyPathByRoleId(&casbinInfo)
-
 	response.OK("获取权限列表成功", res, ctx)
 }

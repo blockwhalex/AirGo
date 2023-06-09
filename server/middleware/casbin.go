@@ -31,6 +31,7 @@ func Casbin() gin.HandlerFunc {
 		var u model.User
 		err := global.DB.Preload("RoleGroup").First(&u, uIdNew).Error
 		if err != nil {
+			global.Logrus.Error("Casbin,用户查询错误:", err)
 			response.Fail("用户查询错误", nil, c)
 			c.Abort()
 			return
@@ -44,10 +45,10 @@ func Casbin() gin.HandlerFunc {
 			//log.Println("casbin sub:", roleID) //casbin sub: 888
 			//log.Println("casbin obj:", obj)    // casbin obj: /user/getUserInfo
 			//log.Println("casbin act:", act)    //casbin act: GET
-
 			success, err := global.Casbin.Enforce(roleID, obj, act) // 判断策略中是否存在
 			if err != nil {
 				global.Logrus.Error("权限casbin error:", err)
+				response.Fail("权限错误"+err.Error(), nil, c)
 				c.Abort()
 				return
 			}
@@ -57,7 +58,8 @@ func Casbin() gin.HandlerFunc {
 			}
 		}
 		if !status {
-			response.Fail(obj+"权限不足", nil, c)
+			global.Logrus.Error("权限不足:", obj)
+			response.Fail("权限不足"+obj, nil, c)
 			c.Abort()
 			return
 		}

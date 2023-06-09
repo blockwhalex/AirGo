@@ -120,7 +120,7 @@
             </el-form-item>
             <el-form-item label="邮件内容格式">
               <el-input v-model="serverConfig.email.email_content" type="textarea"/>
-              <el-tag class="ml-2" type="warning">*emailcode 字段不可删除！</el-tag>
+              <el-tag class="ml-2" type="warning">*自定义邮件验证码内容样式，"emailcode"为验证码字段，不可删除！</el-tag>
             </el-form-item>
             <el-divider></el-divider>
             <el-form-item>

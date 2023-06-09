@@ -58,6 +58,11 @@ type UserAndRole struct {
 	RoleID int
 }
 
+// 用户校验邮箱
+type UserRegisterEmail struct {
+	UserName string `json:"user_name" binding:"required,email,max=40,min=8"` // 用户名
+}
+
 // 用户登录/重置密码 请求
 type UserLogin struct {
 	UserName  string `json:"user_name" binding:"required,email,max=40,min=8"` // 用户名
@@ -76,7 +81,7 @@ type UserRegister struct {
 // 新建用户/修改用户请求
 type NewUser struct {
 	User     User     `json:"user"      binding:"required"`
-	RoleList []string `json:"check_list" binding:"required"`
+	RoleList []string `json:"check_list" binding:"required"` //选中的角色
 }
 
 // 修改密码 请求

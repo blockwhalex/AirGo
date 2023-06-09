@@ -20,11 +20,11 @@
                 </el-col>
                 <el-col :span="24">
                   <el-row>
-                    <el-col :xs="24" :sm="8" class="personal-item mb6">
+                    <el-col :xs="24" :sm="12" class="personal-item mb6">
                       <div class="personal-item-label">昵称：</div>
                       <span>{{ userInfos.nick_name }}</span>
                     </el-col>
-                    <el-col :xs="24" :sm="16" class="personal-item mb6">
+                    <el-col :xs="24" :sm="12" class="personal-item mb6">
                       <div class="personal-item-label">身份：</div>
                       <span>{{ userInfos.nick_name }}</span>
                     </el-col>

@@ -14,7 +14,7 @@ func InitEmailDialer() *gomail.Dialer {
 	return d
 }
 
-func SendEmail(d *gomail.Dialer, toEmail, codeText, mailText string) error {
+func SendEmail(d *gomail.Dialer, toEmail, content, originalText string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", global.Server.Email.EmailFrom) // 发件人
 
@@ -22,10 +22,10 @@ func SendEmail(d *gomail.Dialer, toEmail, codeText, mailText string) error {
 	m.SetHeader("To", toEmail)                           // 收件人，可以多个收件人，但必须使用相同的 SMTP 连接
 
 	//是否发送验证码
-	if codeText != "" {
-		mailText = strings.Replace(codeText, "emailcode", mailText, -1)
+	if content != "" {
+		originalText = strings.Replace(originalText, "emailcode", content, -1)
 	}
-	m.SetBody("text/html", mailText)
+	m.SetBody("text/html", originalText)
 	return d.DialAndSend(m)
 
 	//m := gomail.NewMessage()

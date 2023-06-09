@@ -80,6 +80,8 @@ function savePicture() {
   uploadApi.newPictureUrlApi(state.galleryData).then((res)=>{
     if (res.code === 0) {
       ElMessage.success(res.msg)
+      state.galleryData.picUrl='' //清空输入框
+      state.galleryData.subject='' //清空输入框
     } else {
       ElMessage.error(res.msg)
     }

@@ -6,7 +6,6 @@ import (
 	"AirGo/service"
 	"AirGo/utils/response"
 	"fmt"
-	"io/ioutil"
 	"strconv"
 	"time"
 
@@ -129,6 +128,7 @@ func SSUsersTraffic(ctx *gin.Context) {
 
 // 上报用户的当前在线IP
 func SSUsersAliveIP(ctx *gin.Context) {
-	body, err := ioutil.ReadAll(ctx.Request.Body)
-	global.Logrus.Error("上报用户的当前在线IP body:", string(body), err)
+	//body:{\"data\":[{\"user_id\":1,\"ip\":\"39.67.5.148\"}]}"
+	//body, err := ioutil.ReadAll(ctx.Request.Body)
+	//global.Logrus.Error("上报用户的当前在线IP body:", string(body), err)
 }

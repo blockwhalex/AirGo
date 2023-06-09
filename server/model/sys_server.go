@@ -17,6 +17,7 @@ type Server struct {
 	RateLimitParams RateLimitParams `json:"rate_limit_params"  gorm:"embedded"`
 	//Mysql   Mysql   `json:"mysql"    gorm:"embedded"` // gorm
 }
+
 type Email struct {
 	EmailFrom     string `json:"email_from"`                                                // 发件人
 	EmailSecret   string `json:"email_secret"`                                              // 密钥
@@ -64,20 +65,3 @@ type RateLimitParams struct {
 	IPRoleParam int `json:"ip_role_param" gorm:"default:600"`
 	VisitParam  int `json:"visit_param"   gorm:"default:60"`
 }
-
-//// mysql配置
-//type Mysql struct {
-//	Path         string `json:"path"`           // 服务器地址:端口
-//	Port         string `json:"port"`           //端口
-//	Config       string `json:"config"`         // 高级配置
-//	Dbname       string `json:"dbname"`         // 数据库名
-//	Username     string `json:"username"`       // 数据库用户名
-//	Password     string `json:"password"`       // 数据库密码
-//	Prefix       string `json:"prefix"`         //全局表前缀，单独定义TableName则不生效
-//	Singular     bool   `json:"singular"`       //是否开启全局禁用复数，true表示开启
-//	Engine       string `json:"engine"`         //数据库引擎，默认InnoDB
-//	MaxIdleConns int    `json:"max_idle_conns"` // 空闲中的最大连接数
-//	MaxOpenConns int    `json:"max_open_conns"` // 打开到数据库的最大连接数
-//	LogMode      string `json:"log_mode"`       // 是否开启Gorm全局日志
-//	LogZap       bool   `json:"log_zap"`        // 是否通过zap写入日志文件
-//}

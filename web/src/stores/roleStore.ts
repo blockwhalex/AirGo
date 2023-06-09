@@ -34,8 +34,8 @@ export const useRoleStore = defineStore("roleStore", {
             submitTxt: '',
             casbinInfo: {    //当前角色Api
                 roleID: 0,
-                casbinItems: [],
-            } as CasbinInfo,
+                casbinItems: [''],
+            },
             allCasbinInfo: {    //全部api
                 roleID: 0,
                 casbinItems: [],
@@ -43,10 +43,10 @@ export const useRoleStore = defineStore("roleStore", {
         },
 
         //角色管理参数
-        roleManageData:{
-            roles:{
+        roleManageData: {
+            roles: {
                 total: 0,
-                role_list:[] as RowRoleType[],
+                role_list: [] as RowRoleType[],
             },
             loading: false,
             params: {
@@ -58,8 +58,8 @@ export const useRoleStore = defineStore("roleStore", {
     }),
     actions: {
         //params===undefined,角色列表,分页;否则查询全部
-        async getRoleList(params?:object) {
-            if (params!=undefined) {
+        async getRoleList(params?: object) {
+            if (params != undefined) {
                 const res: any = await roleApi.getRoleListApi(params)
                 this.roleManageData.roles = res.data
             } else {
@@ -71,6 +71,16 @@ export const useRoleStore = defineStore("roleStore", {
         //获取当前角色的权限
         async getPolicyByRoleIds() {
             const res = await roleApi.getPolicyByRoleIdsApi()
+          // this.dialogEditApi.casbinInfo = res.data
+            var casbinRes:CasbinInfo = res.data
+            if (casbinRes.casbinItems!==null){
+                var oldArr: string[] = []
+                casbinRes.casbinItems.forEach((item: CasbinItem) => {
+                    oldArr.push(item.path)
+                });
+                this.dialogEditApi.casbinInfo.casbinItems = oldArr
+                // console.log("oldArr:",oldArr)
+            }
         },
         //获取全部权限
         async getAllPolicy() {

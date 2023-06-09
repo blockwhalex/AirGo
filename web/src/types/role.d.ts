@@ -19,6 +19,10 @@ declare interface CasbinInfo{
 	roleID:number;
 	casbinItems:[];
 }
+declare interface CasbinItem{
+	method:string;
+	path:string;
+}
 
 //used
 interface SysRoleTableType extends TableType {
