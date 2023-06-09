@@ -58,17 +58,20 @@ func CompletedOrder(ctx *gin.Context) {
 	var order model.Orders
 	err := ctx.ShouldBind(&order)
 	if err != nil {
+		global.Logrus.Error("完成未支付订单参数错误:", err)
 		response.Fail("完成未支付订单参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	order.TradeStatus = "completed"   //更新数据库订单状态,自定义结束状态completed
 	err = service.UpdateOrder(&order) //更新数据库状态
 	if err != nil {
+		global.Logrus.Error("更新数据库状态错误:", err)
 		response.Fail("更新数据库状态错误"+err.Error(), nil, ctx)
 		return
 	}
 	err = service.UpdateUserSubscribe(&order) //更新用户订阅信息
 	if err != nil {
+		global.Logrus.Error("更新用户订阅信息错误:", err)
 		response.Fail("更新用户订阅信息错误"+err.Error(), nil, ctx)
 		return
 	}

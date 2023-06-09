@@ -113,6 +113,7 @@ func SSUsersTraffic(ctx *gin.Context) {
 	//插入流量统计统计
 	err = service.NewTrafficLog(&trafficLog)
 	if err != nil {
+		global.Logrus.Error("插入流量统计统计error:", err)
 		return
 	}
 	//更新用户流量信息
@@ -121,7 +122,7 @@ func SSUsersTraffic(ctx *gin.Context) {
 	}
 	err = service.UpdateUserTrafficInfo(userArr, userIds)
 	if err != nil {
-		global.Logrus.Error("更新用户流量信息err", err)
+		global.Logrus.Error("更新用户流量信息error:", err)
 		return
 	}
 }

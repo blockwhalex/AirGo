@@ -51,6 +51,7 @@ func GetAllRouteList(ctx *gin.Context) {
 	// 根据route Ids 查 route Slice
 	routeSlice, err := service.GetRouteSliceByRouteIds(nil)
 	if err != nil {
+		global.Logrus.Error("GetRouteSliceByRouteIds err", err)
 		response.Fail("GetRouteSliceByRouteIds err"+err.Error(), nil, ctx)
 		return
 	}
@@ -64,6 +65,7 @@ func GetAllRouteList(ctx *gin.Context) {
 func GetAllRouteTree(ctx *gin.Context) {
 	routeNodeSlice, err := service.GetRouteNodeByRouteIds(nil)
 	if err != nil {
+		global.Logrus.Error("GetRouteNodeByRouteIds err", err)
 		response.Fail("GetRouteNodeByRouteIds err"+err.Error(), nil, ctx)
 		return
 	}
@@ -79,11 +81,13 @@ func GetRouteTree(ctx *gin.Context) {
 	var roleIds = []int{roleId}
 	routeIds, err := service.GetRouteIdsByRoleIds(roleIds) //空
 	if err != nil {
+		global.Logrus.Error("GetRouteIdsByRoleIds err", err)
 		response.Fail("GetRouteIdsByRoleIds err"+err.Error(), nil, ctx)
 		return
 	}
 	routeNodeSlice, err := service.GetRouteNodeByRouteIds(routeIds)
 	if err != nil {
+		global.Logrus.Error("GetRouteNodeByRouteIds err", err)
 		response.Fail("GetRouteNodeByRouteIds err"+err.Error(), nil, ctx)
 		return
 	}
@@ -103,7 +107,7 @@ func NewDynamicRoute(ctx *gin.Context) {
 	// 查询动态路由是否存在
 	notExist := service.NotExistDynamicRoute(&route)
 	if !notExist {
-		response.Fail("动态路由已存在"+err.Error(), nil, ctx)
+		response.Fail("动态路由已存在", nil, ctx)
 		return
 	}
 	err = service.NewDynamicRoute(&route)
@@ -128,7 +132,7 @@ func DelDynamicRoute(ctx *gin.Context) {
 	// 查询动态路由是否存在
 	notExist := service.NotExistDynamicRoute(&route)
 	if notExist {
-		response.Fail("动态路由不存在"+err.Error(), nil, ctx)
+		response.Fail("动态路由不存在", nil, ctx)
 		return
 	}
 	err = service.DelDynamicRoute(&route)

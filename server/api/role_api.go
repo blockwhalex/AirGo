@@ -13,11 +13,13 @@ func GetRoleList(ctx *gin.Context) {
 	var roleParams model.PaginationParams
 	err := ctx.ShouldBind(&roleParams)
 	if err != nil {
+		global.Logrus.Error("角色列表参数错误", err.Error())
 		response.Fail("角色列表参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	res, err := service.GetRoleList(&roleParams)
 	if err != nil {
+		global.Logrus.Error("角色列表查询错误", err.Error())
 		response.Fail("角色列表查询错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -36,6 +38,7 @@ func ModifyRoleInfo(ctx *gin.Context) {
 	}
 	err = service.ModifyRoleInfo(&roleInfo)
 	if err != nil {
+		global.Logrus.Error("修改角色错误", err.Error())
 		response.Fail("修改角色错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -54,6 +57,7 @@ func AddRole(ctx *gin.Context) {
 	}
 	err = service.AddRole(&role)
 	if err != nil {
+		global.Logrus.Error("新建角色错误:", err.Error())
 		response.Fail("新建角色错误", err, ctx)
 		return
 	}
@@ -72,6 +76,7 @@ func DelRole(ctx *gin.Context) {
 	}
 	err = service.DelRole(role.ID)
 	if err != nil {
+		global.Logrus.Error("删除角色错误:", err.Error())
 		response.Fail("删除角色错误", err, ctx)
 		return
 	}

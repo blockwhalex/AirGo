@@ -27,17 +27,16 @@ func PreHandleOrder(ctx *gin.Context) *model.Orders {
 	var receiveOrder model.Orders
 	err := ctx.ShouldBind(&receiveOrder) //前端传过来 goods_id
 	if err != nil {
+		global.Logrus.Error("订单预处理参数错误", err.Error())
 		response.Fail("订单预处理参数错误"+err.Error(), nil, ctx)
 		return nil
 	}
 	//通过商品id查找商品
 	goods, err := service.FindGoodsByGoodsID(receiveOrder.GoodsID)
 	if err != nil {
+		global.Logrus.Error("通过商品id查找商品error:", err.Error())
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			//response.Fail("商品不存在"+err.Error(), nil, ctx)
-			return nil
-		} else {
-			//response.Fail("商品查询错误"+err.Error(), nil, ctx)
 			return nil
 		}
 	}
@@ -70,12 +69,14 @@ func GetOrderInfo(ctx *gin.Context) {
 func PreCreatePay(ctx *gin.Context) {
 	order := PreHandleOrder(ctx)
 	if order == nil {
+
 		response.Fail("获取订单错误", nil, ctx)
 		return
 	}
 	//创建系统订单
 	order, err := service.CreateOrder(order)
 	if err != nil {
+		global.Logrus.Error("创建系统订单error:", err.Error())
 		response.Fail("创建系统订单error:"+err.Error(), nil, ctx)
 		return
 	}
@@ -97,6 +98,7 @@ func Purchase(ctx *gin.Context) {
 	receiveOrder.UserID = uIDInt //确认user id
 	sysOrder, err := service.GetOrderByOrderID(&receiveOrder)
 	if err != nil {
+		global.Logrus.Error("根据订单号查询订单error:", err.Error())
 		if err == gorm.ErrRecordNotFound {
 			response.Fail("订单不存在"+err.Error(), nil, ctx)
 			return
@@ -204,6 +206,7 @@ func AlipayNotify(ctx *gin.Context) {
 func GetAllEnabledGoods(ctx *gin.Context) {
 	goodsArr, err := service.GetAllEnabledGoods()
 	if err != nil {
+		global.Logrus.Error("查询全部商品错误:", err.Error())
 		response.Fail("查询全部商品错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -214,6 +217,7 @@ func GetAllEnabledGoods(ctx *gin.Context) {
 func GetAllGoods(ctx *gin.Context) {
 	goodsArr, err := service.GetAllGoods()
 	if err != nil {
+		global.Logrus.Error("查询全部商品错误:", err.Error())
 		response.Fail("查询全部商品错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -232,6 +236,7 @@ func NewGoods(ctx *gin.Context) {
 	}
 	err = service.NewGoods(&goods)
 	if err != nil {
+		global.Logrus.Error("新建商品错误:", err.Error())
 		response.Fail("新建商品错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -243,11 +248,13 @@ func DeleteGoods(ctx *gin.Context) {
 	var goods model.Goods
 	err := ctx.ShouldBind(&goods)
 	if err != nil {
+		global.Logrus.Error("删除商品参数错误:", err.Error())
 		response.Fail("删除商品参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	err = service.DeleteGoods(&goods)
 	if err != nil {
+		global.Logrus.Error("删除商品错误:", err.Error())
 		response.Fail("删除商品错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -260,11 +267,13 @@ func UpdateGoods(ctx *gin.Context) {
 	var goods model.Goods
 	err := ctx.ShouldBind(&goods)
 	if err != nil {
+		global.Logrus.Error("更新商品参数错误:", err.Error())
 		response.Fail("更新商品参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	err = service.UpdateGoods(&goods)
 	if err != nil {
+		global.Logrus.Error("更新商品错误:", err.Error())
 		response.Fail("更新商品错误"+err.Error(), nil, ctx)
 		return
 	}

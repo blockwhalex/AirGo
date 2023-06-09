@@ -1,6 +1,7 @@
 package api
 
 import (
+	"AirGo/global"
 	"AirGo/model"
 	"AirGo/service"
 	"AirGo/utils/response"
@@ -11,6 +12,7 @@ import (
 func GetAllNode(ctx *gin.Context) {
 	nodes, err := service.GetAllNode()
 	if err != nil {
+		global.Logrus.Error("获取全部节点错误:", err)
 		response.Fail("获取全部节点错误", nil, ctx)
 		return
 	}
@@ -23,11 +25,13 @@ func NewNode(ctx *gin.Context) {
 	var node model.Node
 	err := ctx.ShouldBind(&node)
 	if err != nil {
+		global.Logrus.Error("新建节点参数错误:", err)
 		response.Fail("新建节点参数错误", nil, ctx)
 		return
 	}
 	err = service.NewNode(&node)
 	if err != nil {
+		global.Logrus.Error("新建节点错误:", err)
 		response.Fail("新建节点错误", nil, ctx)
 		return
 	}
@@ -39,11 +43,13 @@ func DeleteNode(ctx *gin.Context) {
 	var node model.Node
 	err := ctx.ShouldBind(&node)
 	if err != nil {
+		global.Logrus.Error("删除节点参数错误:", err)
 		response.Fail("删除节点参数错误", nil, ctx)
 		return
 	}
 	err = service.DeleteNode(&node)
 	if err != nil {
+		global.Logrus.Error("删除节点错误:", err)
 		response.Fail("删除节点错误", nil, ctx)
 		return
 	}
@@ -55,11 +61,13 @@ func UpdateNode(ctx *gin.Context) {
 	var node model.Node
 	err := ctx.ShouldBind(&node)
 	if err != nil {
+		global.Logrus.Error("更新节点参数错误:", err)
 		response.Fail("更新节点参数错误", nil, ctx)
 		return
 	}
 	err = service.UpdateNode(&node)
 	if err != nil {
+		global.Logrus.Error("更新节点错误:", err)
 		response.Fail("更新节点错误", nil, ctx)
 		return
 	}
@@ -72,6 +80,7 @@ func GetNodeTraffic(ctx *gin.Context) {
 	var trafficParams model.QueryParamsWithDate
 	err := ctx.ShouldBind(&trafficParams)
 	if err != nil {
+		global.Logrus.Error("更新节点错误:", err)
 		response.Fail("查询节点流量参数错误"+err.Error(), nil, ctx)
 		return
 	}

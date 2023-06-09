@@ -13,7 +13,8 @@ func UpdateThemeConfig(ctx *gin.Context) {
 	var theme model.Theme
 	err := ctx.ShouldBind(&theme)
 	if err != nil {
-		response.Fail("", nil, ctx)
+		global.Logrus.Error("主题设置参数错误:", err)
+		response.Fail("主题设置参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	err = service.UpdateThemeConfig(&theme)
@@ -29,6 +30,7 @@ func UpdateThemeConfig(ctx *gin.Context) {
 func GetSetting(ctx *gin.Context) {
 	res, err := service.GetSetting()
 	if err != nil {
+		global.Logrus.Error("系统设置获取错误:", err.Error())
 		response.Fail("系统设置获取错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -40,11 +42,13 @@ func UpdateSetting(ctx *gin.Context) {
 	var setting model.Server
 	err := ctx.ShouldBind(&setting)
 	if err != nil {
+		global.Logrus.Error("更改系统设置参数错误:", err.Error())
 		response.Fail("更改系统设置参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	err = service.UpdateSetting(&setting)
 	if err != nil {
+		global.Logrus.Error("更改系统设置错误:", err.Error())
 		response.Fail("更改系统设置错误"+err.Error(), nil, ctx)
 		return
 	}

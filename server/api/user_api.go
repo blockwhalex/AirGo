@@ -26,6 +26,7 @@ func Register(c *gin.Context) {
 	var u model.UserRegister
 	err := c.ShouldBind(&u)
 	if err != nil {
+		global.Logrus.Error("注册参数错误:", err.Error())
 		response.Fail("注册参数错误"+err.Error(), nil, c)
 		return
 	}
@@ -39,6 +40,7 @@ func Register(c *gin.Context) {
 	}
 	err = service.Register(&user)
 	if err != nil {
+		global.Logrus.Error("注册错误:", err.Error())
 		response.Fail("注册错误"+err.Error(), nil, c)
 		return
 	}
@@ -52,6 +54,7 @@ func Login(c *gin.Context) {
 	//key := c.ClientIP()
 
 	if err != nil {
+		global.Logrus.Error("用户登录参数错误:", err.Error())
 		response.Fail("用户登录参数错误"+err.Error(), nil, c)
 		return
 	}
@@ -91,11 +94,13 @@ func ChangeSubHost(ctx *gin.Context) {
 	var host model.SubHost
 	err := ctx.ShouldBind(&host)
 	if err != nil || len(host.Host) > 100 {
+		global.Logrus.Error("修改混淆参数错误:", err.Error())
 		response.Fail("修改混淆参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	err = service.ChangeSubHost(uIDInt, host.Host)
 	if err != nil {
+		global.Logrus.Error("修改混淆错误:", err.Error())
 		response.Fail("修改混淆错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -112,7 +117,8 @@ func GetUserInfo(ctx *gin.Context) {
 	uIDInt := uID.(int)
 	u, err := service.GetUserInfo(uIDInt)
 	if err != nil {
-		response.Fail("获取信息错误"+err.Error(), nil, ctx)
+		global.Logrus.Error("获取自身信息:", err.Error())
+		response.Fail("获取自身信息"+err.Error(), nil, ctx)
 		return
 	}
 	response.OK("获取信息成功", u, ctx)
@@ -124,10 +130,12 @@ func GetUserlist(ctx *gin.Context) {
 	var params model.PaginationParams
 	err := ctx.ShouldBind(&params)
 	if err != nil {
+		global.Logrus.Error("获取用户列表参数错误:", err.Error())
 		response.Fail("获取用户列表参数错误"+err.Error(), nil, ctx)
 	}
 	userList, err := service.GetUserlist(&params)
 	if err != nil {
+		global.Logrus.Error("获取用户列表错误:", err.Error())
 		response.Fail("获取用户列表错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -139,6 +147,7 @@ func NewUser(ctx *gin.Context) {
 	var u model.NewUser
 	err := ctx.ShouldBind(&u)
 	if err != nil {
+		global.Logrus.Error("新建用户参数错误:", err.Error())
 		response.Fail("新建用户参数错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -146,6 +155,7 @@ func NewUser(ctx *gin.Context) {
 	user.UUID = uuid.NewV4()
 	err = service.Register(&user)
 	if err != nil {
+		global.Logrus.Error("新建用户错误:", err.Error())
 		response.Fail("新建用户错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -157,6 +167,7 @@ func UpdateUser(ctx *gin.Context) {
 	var u model.NewUser
 	err := ctx.ShouldBind(&u)
 	if err != nil {
+		global.Logrus.Error("修改用户参数错误:", err.Error())
 		response.Fail("修改用户参数错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -183,18 +194,21 @@ func DeleteUser(ctx *gin.Context) {
 	var u model.User
 	err := ctx.ShouldBind(&u)
 	if err != nil {
+		global.Logrus.Error("删除用户参数错误 error:", err)
 		response.Fail("删除用户参数错误"+err.Error(), err.Error(), ctx)
 		return
 	}
 	//删除用户关联的角色
 	service.DeleteUserRoleGroup(&u)
 	if err != nil {
+		global.Logrus.Error("删除用户角色错误 error:", err)
 		response.Fail("删除用户角色错误"+err.Error(), nil, ctx)
 		return
 	}
 	// 删除用户
 	err = service.DeleteUser(&u)
 	if err != nil {
+		global.Logrus.Error("删除用户错误 error:", err)
 		response.Fail("删除用户错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -209,6 +223,7 @@ func ChangeUserPassword(ctx *gin.Context) {
 	var u model.UserChangePassword
 	err := ctx.ShouldBind(&u)
 	if err != nil {
+		global.Logrus.Error("修改密码参数错误 error:", err)
 		response.Fail("修改密码参数错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -220,6 +235,7 @@ func ChangeUserPassword(ctx *gin.Context) {
 	//
 	err = service.UpdateUser(&user)
 	if err != nil {
+		global.Logrus.Error("修改密码错误 error:", err)
 		response.Fail("修改密码错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -231,6 +247,7 @@ func ResetUserPassword(ctx *gin.Context) {
 	var u model.UserLogin
 	err := ctx.ShouldBind(&u)
 	if err != nil {
+		global.Logrus.Error("重置密码参数错误 error:", err)
 		response.Fail("重置密码参数错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -247,6 +264,7 @@ func ResetUserPassword(ctx *gin.Context) {
 	//
 	err = service.ResetUserPassword(&user)
 	if err != nil {
+		global.Logrus.Error("重置密码错误 error:", err)
 		response.Fail("重置密码错误"+err.Error(), nil, ctx)
 		return
 	}
@@ -279,6 +297,7 @@ func ResetSub(ctx *gin.Context) {
 	}
 	err := service.UpdateUser(&u)
 	if err != nil {
+		global.Logrus.Error("重置订阅错误 error:", err)
 		response.Fail("重置订阅错误"+err.Error(), nil, ctx)
 		return
 	}

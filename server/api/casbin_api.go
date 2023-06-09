@@ -16,13 +16,13 @@ func UpdateCasbinPolicy(ctx *gin.Context) {
 	var casbinInfo model.CasbinInfo
 	err := ctx.ShouldBind(&casbinInfo)
 	if err != nil {
-		response.Fail("更新casbin权限参数错误", err, ctx)
+		response.Fail("更新casbin权限参数error:", err, ctx)
 		return
 	}
 	//fmt.Println("更新casbin权限参:", casbinInfo)
 	err = casbin_plugin.UpdateCasbinPolicy(&casbinInfo)
 	if err != nil {
-		response.Fail("更新casbin权限错误", err, ctx)
+		response.Fail("更新casbin权限error:", err, ctx)
 		return
 	}
 	response.OK("更新casbin权限成功", nil, ctx)
@@ -34,15 +34,15 @@ func UpdateCasbinPolicyNew(ctx *gin.Context) {
 	var data model.CasbinData
 	err := ctx.ShouldBind(&data)
 	if err != nil {
-		global.Logrus.Error("更新casbin权限参数错误", err)
-		response.Fail("更新casbin权限参数错误", err, ctx)
+		global.Logrus.Error("更新casbin权限参数error:", err)
+		response.Fail("更新casbin权限参数error:", err, ctx)
 		return
 	}
 	//前端传过来的没有处理，只有method，从数据库查询完整的rules，再更新casbin
 	err = casbin_plugin.UpdateCasbinPolicyNew(&data)
 	if err != nil {
-		global.Logrus.Error("更新casbin权限错误", err)
-		response.Fail("更新casbin权限错误", err, ctx)
+		global.Logrus.Error("更新casbin权限error:", err)
+		response.Fail("更新casbin权限error:", err, ctx)
 		return
 	}
 	response.OK("更新casbin权限成功", nil, ctx)
