@@ -55,8 +55,8 @@ type System struct {
 type Pay struct {
 	ReturnURL    string `json:"return_url"`
 	AppID        string `json:"app_id"`
-	PrivateKey   string `json:"private_key"    gorm:"size:1000"`
-	AliPublicKey string `json:"ali_public_key" gorm:"size:1000"`
+	PrivateKey   string `json:"private_key"    gorm:"size:3000"`
+	AliPublicKey string `json:"ali_public_key" gorm:"size:3000"`
 	EncryptKey   string `json:"encrypt_key"`
 }
 
