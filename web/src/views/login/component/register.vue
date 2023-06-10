@@ -111,10 +111,10 @@ const onGetEmailCode = () => {
   if (registerData.value.user_name === '') {
     return
   }
-  state.isCountDown = true
   //console.log("userStore.userFormReq:",userStore.userFormReq)
   publicApi.getEmailCodeApi(userStore.userFormReq).then((res) => {
     if (res.code === 0) {
+      state.isCountDown = true
       ElMessage.success(res.msg)
       handleTimeChange()
     } else {
