@@ -84,11 +84,12 @@ export const useUserStore = defineStore('userInfo', {
         },
     }),
     getters: {
-        userReq: (state) => {
+        userFormReq:(state):object=>{
             state.registerReq.password = state.registerData.password
             state.registerReq.re_password = state.registerData.re_password
             state.registerReq.email_code = state.registerData.email_code
             state.registerReq.user_name = state.registerData.user_name + '@' + state.email_suffix
+            return  state.registerReq
         },
         used: (state): number => {
             return +((state.userInfos.subscribe_info.t - state.userInfos.subscribe_info.u - state.userInfos.subscribe_info.d) / 1024 / 1024 / 1024).toFixed(2)

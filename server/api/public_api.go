@@ -54,8 +54,7 @@ func GetMailCode(ctx *gin.Context) {
 	//用户是否存在且是否有效
 	user, err := service.FindUserByEmail(&model.User{UserName: u.UserName})
 	if err != gorm.ErrRecordNotFound {
-		global.Logrus.Error("用户已存在", err.Error(), user.UserName)
-		response.Fail("用户已存在"+err.Error(), nil, ctx)
+		response.Fail("用户已存在", nil, ctx)
 		return
 	}
 	//生成验证码

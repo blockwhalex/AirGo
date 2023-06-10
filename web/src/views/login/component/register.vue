@@ -112,8 +112,8 @@ const onGetEmailCode = () => {
     return
   }
   state.isCountDown = true
-  console.log("registerReq.value:", registerReq.value)
-  publicApi.getEmailCodeApi(registerReq.value)
+  console.log("userStore.userFormReq:",userStore.userFormReq)
+  publicApi.getEmailCodeApi(userStore.userFormReq)
   handleTimeChange()
 };
 //倒计时
