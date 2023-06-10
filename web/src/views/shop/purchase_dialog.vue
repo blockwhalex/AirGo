@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessageBox, ElMessage } from 'element-plus';
+import {ElMessage} from 'element-plus';
 //导入store
 import {storeToRefs} from 'pinia';
 import {useShopStore} from "/@/stores/shopStore";
@@ -53,12 +53,15 @@ const openDialog = () => {
 const emits = defineEmits(['openQRDialog'])
 
 //购买按钮
-const onPurchase = (params: object) => {
+const onPurchase = (params?: object) => {
   //api，传out_trade_no，pay_type
-  shopApi.purchaseApi({out_trade_no:tableData.value.currentOrder.out_trade_no,pay_type:tableData.value.currentOrder.pay_type}).then((res) => {
-    if (res.code === 0 && res.msg==="购买成功"){
+  shopApi.purchaseApi({
+    out_trade_no: tableData.value.currentOrder.out_trade_no,
+    pay_type: tableData.value.currentOrder.pay_type
+  }).then((res) => {
+    if (res.code === 0 && res.msg === "购买成功") {
       ElMessage.success("购买成功")
-      tableData.value.isShowPurchaseDialog =false
+      tableData.value.isShowPurchaseDialog = false
       return
 
     } else if (res.code === 0 && res.data != "") {
@@ -79,28 +82,6 @@ const onPurchase = (params: object) => {
   })
   //关闭弹窗
   tableData.value.isShowPurchaseDialog = false
-
-}
-//购买按钮
-const onPurchaseOld = () => {
-  shopApi.preCreatePayApi(tableData.value.currentOrder).then((res) => {
-    //console.log("alipayTradePreCreatePayApi res.data:", res.data)
-    if (res.code === 0 && res.data != "") {
-      //state.qrcodeData = res.data
-      tableData.value.QRtext = res.data
-      //手机端跳转支付页面
-      const ok = isMobile()
-      if (ok) {
-        window.location.href = tableData.value.QRtext;
-        return
-      } else {
-        //电脑端打开支付二维码弹窗
-        //openQRDialog()
-        // onInitQrcode()
-      }
-    }
-  }).catch(() => {
-  })
 }
 
 defineExpose({

@@ -54,7 +54,7 @@
       <el-col :span="1"></el-col>
       <el-col :span="10">
         <el-button class="login-content-code" type="primary" :disabled="state.isCountDown" @click="onGetEmailCode">
-          {{ state.isCountDown ? `${state.countDowdTime}s后重新获取` : "获取验证码" }}
+          {{ state.isCountDown ? `${state.countDownTime}s后重新获取` : "获取验证码" }}
         </el-button>
       </el-col>
     </el-form-item>
@@ -75,7 +75,7 @@ import {storeToRefs} from 'pinia';
 import {ElMessage} from 'element-plus';
 
 const userStore = useUserStore()
-const {registerData, email_suffix, registerReq} = storeToRefs(userStore)
+const {registerData, email_suffix} = storeToRefs(userStore)
 //theme store
 import {useThemeConfig} from '/@/stores/themeConfig';
 
@@ -89,7 +89,7 @@ const publicApi = usePublicApi()
 const state = reactive({
   isShowPassword: false,
   isCountDown: false,
-  countDowdTime: 60,
+  countDownTime: 60,
   loading: {
     signIn: false,
   },
@@ -112,18 +112,25 @@ const onGetEmailCode = () => {
     return
   }
   state.isCountDown = true
-  console.log("userStore.userFormReq:",userStore.userFormReq)
-  publicApi.getEmailCodeApi(userStore.userFormReq)
-  handleTimeChange()
+  //console.log("userStore.userFormReq:",userStore.userFormReq)
+  publicApi.getEmailCodeApi(userStore.userFormReq).then((res) => {
+    if (res.code === 0) {
+      ElMessage.success(res.msg)
+      handleTimeChange()
+    } else {
+
+    }
+  })
+
 };
 //倒计时
 const handleTimeChange = () => {
-  if (state.countDowdTime <= 0) {
+  if (state.countDownTime <= 0) {
     state.isCountDown = false;
-    state.countDowdTime = 60;
+    state.countDownTime = 60;
   } else {
     setTimeout(() => {
-      state.countDowdTime--;
+      state.countDownTime--;
       handleTimeChange();
     }, 1000);
   }
@@ -150,6 +157,7 @@ const handleTimeChange = () => {
     width: 100%;
     padding: 0;
   }
+
   .login-content-submit {
     width: 100%;
     letter-spacing: 2px;

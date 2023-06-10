@@ -1,9 +1,9 @@
 import service from "/@/utils/request";
 
-export function useOrderApi(){
+export function useOrderApi() {
     return {
         //获取订单详情(下单时）
-        getOrderInfoApi:(data?:object)=>{
+        getOrderInfoApi: (data?: object) => {
             return service({
                 url: '/order/getOrderInfo',
                 method: 'POST',
@@ -11,7 +11,7 @@ export function useOrderApi(){
             })
         },
         //获取全部订单
-        getAllOrderApi:(data?:object)=>{
+        getAllOrderApi: (data?: object) => {
             return service({
                 url: '/order/getAllOrder',
                 method: 'POST',
@@ -19,7 +19,7 @@ export function useOrderApi(){
             })
         },
         //获取用户订单
-        getOrderApi:(data?:object)=>{
+        getOrderApi: (data?: object) => {
             return service({
                 url: '/order/getOrderByUserID',
                 method: 'POST',
@@ -27,7 +27,7 @@ export function useOrderApi(){
             })
         },
         //完成未支付订单
-        completedOrderApi:(data?:object)=>{
+        completedOrderApi: (data?: object) => {
             return service({
                 url: '/order/completedOrder',
                 method: 'POST',
@@ -35,7 +35,7 @@ export function useOrderApi(){
             })
         },
         //获取订单统计
-        getMonthOrderStatisticsApi:(data?:object)=>{
+        getMonthOrderStatisticsApi: (data?: object) => {
             return service({
                 url: '/order/getMonthOrderStatistics',
                 method: 'POST',

@@ -2,7 +2,8 @@
   <div class="container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
       <div class="mb15">
-        <el-input  v-model="nodeManageData.params.search" size="default" placeholder="请输入名称" style="max-width: 180px"></el-input>
+        <el-input v-model="nodeManageData.params.search" size="default" placeholder="请输入名称"
+                  style="max-width: 180px"></el-input>
         <el-date-picker
             size="default"
             v-model="nodeManageData.params.date"
@@ -13,7 +14,7 @@
             end-placeholder="结束日期"
             value-format="YYYY-MM-DD HH:mm:ss"
         />
-        <el-button  @click="nodeStore.getNodeWithTraffic()" size="default" type="primary" class="ml10">
+        <el-button @click="nodeStore.getNodeWithTraffic()" size="default" type="primary" class="ml10">
           <el-icon>
             <ele-Search/>
           </el-icon>
@@ -21,7 +22,7 @@
         </el-button>
         <el-button size="default" type="success" class="ml10" @click="onOpenEditNode('add')">
           <el-icon>
-            <ele-FolderAdd />
+            <ele-FolderAdd/>
           </el-icon>
           新增节点
         </el-button>
@@ -75,7 +76,7 @@
           :total="nodeManageData.nodes.total"
       />
     </el-card>
-    <nodeDialog ref="nodeDialogRef" @refresh="nodeStore.getNodeWithTraffic()"/>
+    <NodeDialog ref="nodeDialogRef" @refresh="nodeStore.getNodeWithTraffic()"/>
   </div>
 </template>
 
@@ -85,14 +86,16 @@ import {defineAsyncComponent, onMounted, ref} from "vue";
 
 import {storeToRefs} from "pinia";
 //导入弹出层
-const nodeDialog = defineAsyncComponent(() => import('/@/views/admin/node/dialog.vue'))
+const NodeDialog = defineAsyncComponent(() => import('/@/views/admin/node/dialog.vue'))
 const nodeDialogRef = ref()
 //node store
 import {useNodeStore} from "/@/stores/node";
+
 const nodeStore = useNodeStore()
 const {nodeManageData} = storeToRefs(nodeStore)
 //user store
 import {useUserStore} from "/@/stores/userStore";
+
 const userStore = useUserStore()
 const {userInfos} = storeToRefs(userStore)
 //时间范围
@@ -126,13 +129,8 @@ const shortcuts = [
   },
 ]
 
-//新建节点
-function onOpenAddNode(type: string) {
-  nodeDialogRef.value.openDialog(type)
-}
-
-//修改节点
-function onOpenEditNode(type: string, row: Object) {
+//修改||新建节点
+function onOpenEditNode(type: string, row?: Object) {
   nodeDialogRef.value.openDialog(type, row)
 }
 
@@ -142,8 +140,6 @@ function onRowDel(row: Object) {
   setTimeout(() => {
     nodeStore.getNodeWithTraffic()
   }, 2000);
-
-
 }
 
 // 分页改变
@@ -157,11 +153,6 @@ const onHandleCurrentChange = (val: number) => {
   nodeStore.getNodeWithTraffic()
 };
 
-//查询节点
-function onSearch() {
-  nodeStore.getNodeWithTraffic()
-}
-
 onMounted(() => {
   nodeStore.getNodeWithTraffic()
 });
@@ -174,6 +165,7 @@ onMounted(() => {
     flex-direction: column;
     flex: 1;
     overflow: auto;
+
     .el-table {
       flex: 1;
     }

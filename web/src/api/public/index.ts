@@ -1,5 +1,6 @@
 import service from "/@/utils/request";
-export function usePublicApi(){
+
+export function usePublicApi() {
     return {
         //从服务器获取主题配置
         getThemeConfigApi: (params?: object) => {
@@ -10,7 +11,7 @@ export function usePublicApi(){
             })
         },
         //获取邮箱验证码
-        getEmailCodeApi:(data?:object)=>{
+        getEmailCodeApi: (data?: object) => {
             return service({
                 url: '/public/getEmailCode',
                 method: 'POST',

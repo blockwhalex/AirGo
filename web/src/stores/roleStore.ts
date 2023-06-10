@@ -71,9 +71,9 @@ export const useRoleStore = defineStore("roleStore", {
         //获取当前角色的权限
         async getPolicyByRoleIds() {
             const res = await roleApi.getPolicyByRoleIdsApi()
-          // this.dialogEditApi.casbinInfo = res.data
-            var casbinRes:CasbinInfo = res.data
-            if (casbinRes.casbinItems!==null){
+            // this.dialogEditApi.casbinInfo = res.data
+            var casbinRes: CasbinInfo = res.data
+            if (casbinRes.casbinItems !== null) {
                 var oldArr: string[] = []
                 casbinRes.casbinItems.forEach((item: CasbinItem) => {
                     oldArr.push(item.path)
@@ -96,7 +96,7 @@ export const useRoleStore = defineStore("roleStore", {
             if (res.code === 0) {
                 ElMessage.success(res.msg)
             } else {
-                ElMessage.error(res.msg)
+
             }
             return true
         }

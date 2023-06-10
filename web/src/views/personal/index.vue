@@ -72,17 +72,17 @@
 <script setup lang="ts" name="personal">
 import {ref, computed, defineAsyncComponent} from 'vue';
 //时间
-import { formatAxis } from '/@/utils/formatTime';
+import {formatAxis} from '/@/utils/formatTime';
 // 引入image-conversion
-import * as imageConversion from 'image-conversion' 
+import * as imageConversion from 'image-conversion'
 //user store
-import { useUserStore } from "/@/stores/userStore";
-import { storeToRefs } from 'pinia';
-const userInfo=useUserStore()
-const {userInfos, changePasswordDialog} = storeToRefs(userInfo)
+import {useUserStore} from "/@/stores/userStore";
+import {storeToRefs} from 'pinia';
+
+const userInfo = useUserStore()
+const {userInfos} = storeToRefs(userInfo)
 //引入组件
 const ChangePasswordDialog = defineAsyncComponent(() => import('/@/views/personal/change_password_dialog.vue'));
-const UserDialog = defineAsyncComponent(() => import('/@/views/admin/user/dialog.vue'));
 const changePasswordDialogRef = ref()
 
 //打开修改密码弹窗
@@ -91,185 +91,216 @@ const onOpenPWDialog = () => {
 }
 
 //图片超过4M就压缩
- function beforeUpload (file:any) { return new Promise((resolve, reject) => {
-        let isLt2M = file.size / 1024 / 1024 < 4 // 判定图片大小是否小于4MB
-        if (isLt2M) {
-          resolve(file)
-        }
-      //  console.log(file) // 压缩到400KB,这里的400就是要压缩的大小,可自定义
-        imageConversion.compressAccurately(file, 400).then(res => { // console.log(res)
-         resolve(res)
-        })
-      })
+function beforeUpload(file: any) {
+  return new Promise((resolve, reject) => {
+    let isLt2M = file.size / 1024 / 1024 < 4 // 判定图片大小是否小于4MB
+    if (isLt2M) {
+      resolve(file)
     }
+    //  console.log(file) // 压缩到400KB,这里的400就是要压缩的大小,可自定义
+    imageConversion.compressAccurately(file, 400).then(res => { // console.log(res)
+      resolve(res)
+    })
+  })
+}
 
 
 // 当前时间提示语
 const currentTime = computed(() => {
-	return formatAxis(new Date());
+  return formatAxis(new Date());
 });
 </script>
 
 <style scoped lang="scss">
 @import '../../theme/mixins/index.scss';
+
 .personal {
-	.personal-user {
-		height: 130px;
-		display: flex;
-		align-items: center;
-		.personal-user-left {
-			width: 100px;
-			height: 130px;
-			border-radius: 3px;
-			:deep(.el-upload) {
-				height: 100%;
-			}
-			.personal-user-left-upload {
-				img {
-					width: 100%;
-					height: 100%;
-					border-radius: 3px;
-				}
-				&:hover {
-					img {
-						animation: logoAnimation 0.3s ease-in-out;
-					}
-				}
-			}
-		}
-		.personal-user-right {
-			flex: 1;
-			padding: 0 15px;
-			.personal-title {
-				font-size: 18px;
-				@include text-ellipsis(1);
-			}
-			.personal-item {
-				display: flex;
-				align-items: center;
-				font-size: 13px;
-				.personal-item-label {
-					color: var(--el-text-color-secondary);
-					@include text-ellipsis(1);
-				}
-				.personal-item-value {
-					@include text-ellipsis(1);
-				}
-			}
-		}
-	}
-	.personal-info {
-		.personal-info-more {
-			float: right;
-			color: var(--el-text-color-secondary);
-			font-size: 13px;
-			&:hover {
-				color: var(--el-color-primary);
-				cursor: pointer;
-			}
-		}
-		.personal-info-box {
-			height: 130px;
-			overflow: hidden;
-			.personal-info-ul {
-				list-style: none;
-				.personal-info-li {
-					font-size: 13px;
-					padding-bottom: 10px;
-					.personal-info-li-title {
-						display: inline-block;
-						@include text-ellipsis(1);
-						color: var(--el-text-color-secondary);
-						text-decoration: none;
-					}
-					& a:hover {
-						color: var(--el-color-primary);
-						cursor: pointer;
-					}
-				}
-			}
-		}
-	}
-	.personal-recommend-row {
-		.personal-recommend-col {
-			.personal-recommend {
-				position: relative;
-				height: 100px;
-				border-radius: 3px;
-				overflow: hidden;
-				cursor: pointer;
-				&:hover {
-					i {
-						right: 0px !important;
-						bottom: 0px !important;
-						transition: all ease 0.3s;
-					}
-				}
-				i {
-					position: absolute;
-					right: -10px;
-					bottom: -10px;
-					font-size: 70px;
-					transform: rotate(-30deg);
-					transition: all ease 0.3s;
-				}
-				.personal-recommend-auto {
-					padding: 15px;
-					position: absolute;
-					left: 0;
-					top: 5%;
-					color: var(--next-color-white);
-					.personal-recommend-msg {
-						font-size: 12px;
-						margin-top: 10px;
-					}
-				}
-			}
-		}
-	}
-	.personal-edit {
-		.personal-edit-title {
-			position: relative;
-			padding-left: 10px;
-			color: var(--el-text-color-regular);
-			&::after {
-				content: '';
-				width: 2px;
-				height: 10px;
-				position: absolute;
-				left: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				background: var(--el-color-primary);
-			}
-		}
-		.personal-edit-safe-box {
-			border-bottom: 1px solid var(--el-border-color-light, #ebeef5);
-			padding: 15px 0;
-			.personal-edit-safe-item {
-				width: 100%;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				.personal-edit-safe-item-left {
-					flex: 1;
-					overflow: hidden;
-					.personal-edit-safe-item-left-label {
-						color: var(--el-text-color-regular);
-						margin-bottom: 5px;
-					}
-					.personal-edit-safe-item-left-value {
-						color: var(--el-text-color-secondary);
-						@include text-ellipsis(1);
-						margin-right: 15px;
-					}
-				}
-			}
-			&:last-of-type {
-				padding-bottom: 0;
-				border-bottom: none;
-			}
-		}
-	}
+  .personal-user {
+    height: 130px;
+    display: flex;
+    align-items: center;
+
+    .personal-user-left {
+      width: 100px;
+      height: 130px;
+      border-radius: 3px;
+
+      :deep(.el-upload) {
+        height: 100%;
+      }
+
+      .personal-user-left-upload {
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 3px;
+        }
+
+        &:hover {
+          img {
+            animation: logoAnimation 0.3s ease-in-out;
+          }
+        }
+      }
+    }
+
+    .personal-user-right {
+      flex: 1;
+      padding: 0 15px;
+
+      .personal-title {
+        font-size: 18px;
+        @include text-ellipsis(1);
+      }
+
+      .personal-item {
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+
+        .personal-item-label {
+          color: var(--el-text-color-secondary);
+          @include text-ellipsis(1);
+        }
+
+        .personal-item-value {
+          @include text-ellipsis(1);
+        }
+      }
+    }
+  }
+
+  .personal-info {
+    .personal-info-more {
+      float: right;
+      color: var(--el-text-color-secondary);
+      font-size: 13px;
+
+      &:hover {
+        color: var(--el-color-primary);
+        cursor: pointer;
+      }
+    }
+
+    .personal-info-box {
+      height: 130px;
+      overflow: hidden;
+
+      .personal-info-ul {
+        list-style: none;
+
+        .personal-info-li {
+          font-size: 13px;
+          padding-bottom: 10px;
+
+          .personal-info-li-title {
+            display: inline-block;
+            @include text-ellipsis(1);
+            color: var(--el-text-color-secondary);
+            text-decoration: none;
+          }
+
+          & a:hover {
+            color: var(--el-color-primary);
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+
+  .personal-recommend-row {
+    .personal-recommend-col {
+      .personal-recommend {
+        position: relative;
+        height: 100px;
+        border-radius: 3px;
+        overflow: hidden;
+        cursor: pointer;
+
+        &:hover {
+          i {
+            right: 0px !important;
+            bottom: 0px !important;
+            transition: all ease 0.3s;
+          }
+        }
+
+        i {
+          position: absolute;
+          right: -10px;
+          bottom: -10px;
+          font-size: 70px;
+          transform: rotate(-30deg);
+          transition: all ease 0.3s;
+        }
+
+        .personal-recommend-auto {
+          padding: 15px;
+          position: absolute;
+          left: 0;
+          top: 5%;
+          color: var(--next-color-white);
+
+          .personal-recommend-msg {
+            font-size: 12px;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  .personal-edit {
+    .personal-edit-title {
+      position: relative;
+      padding-left: 10px;
+      color: var(--el-text-color-regular);
+
+      &::after {
+        content: '';
+        width: 2px;
+        height: 10px;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--el-color-primary);
+      }
+    }
+
+    .personal-edit-safe-box {
+      border-bottom: 1px solid var(--el-border-color-light, #ebeef5);
+      padding: 15px 0;
+
+      .personal-edit-safe-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .personal-edit-safe-item-left {
+          flex: 1;
+          overflow: hidden;
+
+          .personal-edit-safe-item-left-label {
+            color: var(--el-text-color-regular);
+            margin-bottom: 5px;
+          }
+
+          .personal-edit-safe-item-left-value {
+            color: var(--el-text-color-secondary);
+            @include text-ellipsis(1);
+            margin-right: 15px;
+          }
+        }
+      }
+
+      &:last-of-type {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+  }
 }
 </style>

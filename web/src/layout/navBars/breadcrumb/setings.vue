@@ -479,7 +479,7 @@ const {copyText} = commonFunction();
 const {getLightColor, getDarkColor} = useChangeColor();
 const state = reactive({
   isMobile: false,
-  isDrawer:false,  //是否打开主题setting侧窗
+  isDrawer: false,  //是否打开主题setting侧窗
 });
 
 // 获取布局配置信息
@@ -628,7 +628,7 @@ const initLayoutChangeFun = () => {
   onBgColorPickerChange('columnsMenuBarColor');
 };
 //保存
-const onSubmit=()=>{
+const onSubmit = () => {
   //请求服务器修改theme
   storesThemeConfig.updateThemeConfig(getThemeConfig.value)
   state.isDrawer = false;

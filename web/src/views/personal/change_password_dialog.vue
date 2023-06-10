@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <el-dialog v-model="changePasswordDialog.isShowChangePasswordDialog" title="修改密码" width="500px">
       <el-form ref="userDialogFormRef" size="default" label-width="90px">
         <el-form-item label="新密码">
@@ -22,25 +22,26 @@
 <script lang="ts" setup>
 import {ElMessage} from "element-plus";
 //user store
-import { useUserStore } from "/@/stores/userStore";
-import { storeToRefs } from 'pinia';
-const userStore=useUserStore()
-const {registerData,changePasswordDialog} =storeToRefs(userStore)
+import {useUserStore} from "/@/stores/userStore";
+import {storeToRefs} from 'pinia';
+
+const userStore = useUserStore()
+const {registerData, changePasswordDialog} = storeToRefs(userStore)
 
 // 打开弹窗
-const openDialog =() => {
-  changePasswordDialog.value.isShowChangePasswordDialog=true
+const openDialog = () => {
+  changePasswordDialog.value.isShowChangePasswordDialog = true
 };
 
 // 关闭弹窗
 const closeDialog = () => {
-  changePasswordDialog.value.isShowChangePasswordDialog=false
+  changePasswordDialog.value.isShowChangePasswordDialog = false
 };
 
 // 提交
 const onSubmit = () => {
-  userStore.changePassword().then((res)=>{
-    if (res.code===0){
+  userStore.changePassword().then((res) => {
+    if (res.code === 0) {
       ElMessage.success(res.msg)
     } else {
       ElMessage.error(res.msg)

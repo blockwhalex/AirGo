@@ -7,7 +7,7 @@
       <iframe name="if1" src="https://telegraph-image.pages.dev/" height="800px" width="100%"></iframe>
     </div>
 
-    <div >
+    <div>
       <el-input class="input1" v-model="state.galleryData.picUrl" placeholder="粘贴上方url"/>
       <el-input class="input2" v-model="state.galleryData.subject" placeholder="备注"/>
       <el-button class="button" color="#626aef" @click="savePicture" round>保 存</el-button>
@@ -19,20 +19,20 @@
         align-center
     >
       <el-input style="width: 200px" v-model="state.galleryDialogData.params.search" placeholder="输入图片备注"/>
-      <el-button color="#626aef" @click="getPictureList(state.galleryDialogData.params)"  >查询</el-button>
-      <el-table :data="state.galleryDialogData.galleryList"  height="500px" stripe>
+      <el-button color="#626aef" @click="getPictureList(state.galleryDialogData.params)">查询</el-button>
+      <el-table :data="state.galleryDialogData.galleryList" height="500px" stripe>
         <el-table-column property="picture_url" label="预览" width="120">
-        <template #default="scope">
-          <div style="display: flex; align-items: center">
-            <el-image
-                style="width: 100px; height: 100px"
-                :src="scope.row.picture_url"
-                fit="cover"
-            />
-          </div>
-        </template>
+          <template #default="scope">
+            <div style="display: flex; align-items: center">
+              <el-image
+                  style="width: 100px; height: 100px"
+                  :src="scope.row.picture_url"
+                  fit="cover"
+              />
+            </div>
+          </template>
         </el-table-column>
-        <el-table-column property="subject" label="备注" width="100" />
+        <el-table-column property="subject" label="备注" width="100"/>
         <el-table-column property="picture_url" label="操作">
           <template #default="scope">
             <div>
@@ -52,53 +52,57 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus';
+import {ElMessage} from 'element-plus';
 import {onMounted, reactive} from 'vue';
 //api
 import {useUploadApi} from "/@/api/upload/index"
+
 const uploadApi = useUploadApi()
 //复制剪切板
 import commonFunction from '/@/utils/commonFunction';
-const { copyText } = commonFunction();
+
+const {copyText} = commonFunction();
 
 const state = reactive({
-  galleryData:{
+  galleryData: {
     picUrl: '',
-    subject:'',
+    subject: '',
   },
-  galleryDialogData:{
-    isShowDialog:false,
-    galleryList:[] as UploadPicture[],
-    params:{
-      search:'',
+  galleryDialogData: {
+    isShowDialog: false,
+    galleryList: [] as UploadPicture[],
+    params: {
+      search: '',
     }
   },
 
 })
 
 function savePicture() {
-  uploadApi.newPictureUrlApi(state.galleryData).then((res)=>{
+  uploadApi.newPictureUrlApi(state.galleryData).then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
-      state.galleryData.picUrl='' //清空输入框
-      state.galleryData.subject='' //清空输入框
+      state.galleryData.picUrl = '' //清空输入框
+      state.galleryData.subject = '' //清空输入框
     } else {
-      ElMessage.error(res.msg)
+
     }
   }).catch()
 }
-function openDialog(){
+
+function openDialog() {
   state.galleryDialogData.isShowDialog = true
   getPictureList()
 
 }
-function getPictureList(params?:object){
-  uploadApi.getPictureListApi(params).then((res)=>{
+
+function getPictureList(params?: object) {
+  uploadApi.getPictureListApi(params).then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
-      state.galleryDialogData.galleryList=res.data
+      state.galleryDialogData.galleryList = res.data
     } else {
-      ElMessage.error(res.msg)
+
     }
   }).catch()
 
@@ -111,7 +115,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.img{
+.img {
   height: 40px;
   position: absolute;
   right: 20px;
@@ -134,7 +138,7 @@ onMounted(() => {
   transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
 }
 
-.input1{
+.input1 {
   width: 280px;
   height: 32px;
   position: absolute;
@@ -142,7 +146,8 @@ onMounted(() => {
   top: 70%;
   transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
 }
-.input2{
+
+.input2 {
   width: 280px;
   height: 32px;
   position: absolute;
@@ -150,6 +155,7 @@ onMounted(() => {
   top: 75%;
   transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
 }
+
 //:deep(.el-input__wrapper) { //el-input__inner
 //  background: rgba(0, 0, 0, 0.2); /*调整inner的背景色，透明*/
 //  border: 0;

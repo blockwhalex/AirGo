@@ -11,7 +11,7 @@
           </el-col>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
             <el-form-item label="关联角色">
-              <el-checkbox-group v-model="userManageData.dialog.checkList">
+              <el-checkbox-group v-model="userManageData.dialog.check_list">
                 <el-checkbox :label="v.role_name" v-for="(v,index) in roleManageData.roles.role_list"
                              :key="index"></el-checkbox>
               </el-checkbox-group>
@@ -41,8 +41,8 @@
   </div>
 </template>
 
-<script setup lang="ts" name="systemUserDialog">
-import {reactive, ref} from 'vue';
+<script setup lang="ts">
+import {ref} from 'vue';
 //user store
 import {useUserStore} from '/@/stores/userStore'
 
@@ -61,28 +61,6 @@ const emit = defineEmits(['refresh']);
 
 // 定义变量内容
 const userDialogFormRef = ref();
-const state = reactive({
-  ruleForm: {
-    userName: '', // 账户名称
-    userNickname: '', // 用户昵称
-    roleSign: '', // 关联角色
-    department: [] as string[], // 部门
-    phone: '', // 手机号
-    email: '', // 邮箱
-    sex: '', // 性别
-    password: '', // 账户密码
-    overdueTime: '', // 账户过期
-    status: true, // 用户状态
-    describe: '', // 用户描述
-  },
-  deptData: [] as DeptTreeType[], // 部门数据
-  dialog: {
-    isShowDialog: false,
-    type: '',
-    title: '',
-    submitTxt: '',
-  },
-});
 
 // 打开弹窗
 const openDialog = (type: string, row: SysUser) => {

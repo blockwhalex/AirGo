@@ -1,21 +1,21 @@
 <!-- eslint-disable no-console -->
 <template>
   <el-form size="large" class="login-content-form">
-    <el-form-item >
+    <el-form-item>
       <el-input text placeholder="邮箱" v-model="loginData.user_name" clearable
                 autocomplete="off">
         <template #prefix>
-          <el-icon >
+          <el-icon>
             <ele-User/>
           </el-icon>
         </template>
       </el-input>
     </el-form-item>
-    <el-form-item >
+    <el-form-item>
       <el-input :type="state.isShowPassword ? 'text' : 'password'" placeholder="密码"
                 v-model="loginData.password" autocomplete="off">
         <template #prefix>
-          <el-icon >
+          <el-icon>
             <ele-Unlock/>
           </el-icon>
         </template>
@@ -33,7 +33,7 @@
         <el-input text maxlength="4" placeholder="请输入验证码" v-model="loginData.email_code" clearable
                   autocomplete="off">
           <template #prefix>
-            <el-icon >
+            <el-icon>
               <ele-Position/>
             </el-icon>
           </template>
@@ -42,14 +42,15 @@
       <el-col :span="1"></el-col>
       <el-col :span="10">
         <el-button class="login-content-code" type="primary" :disabled="state.isCountDown" @click="onGetEmailCode">
-          {{ state.isCountDown ? `${state.countDowdTime}s后重新获取` : "获取验证码" }}
+          {{ state.isCountDown ? `${state.countDownTime}s后重新获取` : "获取验证码" }}
         </el-button>
       </el-col>
     </el-form-item>
 
     <el-form-item>
       <el-col :span="11">
-        <el-button v-if="!state.enableResetPassword" type="primary" class="login-content-submit" round @click="onSignIn">
+        <el-button v-if="!state.enableResetPassword" type="primary" class="login-content-submit" round
+                   @click="onSignIn">
           <span>登 录</span>
         </el-button>
       </el-col>
@@ -81,8 +82,8 @@
 </template>
 
 <script setup lang="ts" name="loginAccount">
-import {reactive, ref, computed, onMounted} from 'vue';
-import {ElMessage, FormInstance, FormRules} from 'element-plus';
+import {reactive, computed, onMounted} from 'vue';
+import {ElMessage} from 'element-plus';
 import {Session} from '/@/utils/storage';
 import {formatAxis} from '/@/utils/formatTime';
 import {NextLoading} from '/@/utils/loading';
@@ -113,7 +114,7 @@ const state = reactive({
   enableResetPassword: false,
   isShowPassword: false,
   isCountDown: false,
-  countDowdTime: 60,
+  countDownTime: 60,
   loading: {
     signIn: false,
   },
@@ -133,12 +134,12 @@ const onSubmitResetPassword = () => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
     } else {
-      ElMessage.error(res.msg)
+
     }
   })
 }
 // 登录
-const onSignIn = async (formEl: FormInstance | undefined) => {
+const onSignIn = async () => {
   //state.loading.signIn = true;
   await userStore.userLogin(loginData.value)
   //添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
@@ -175,7 +176,7 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 };
 //获取邮箱验证码
 const onGetEmailCode = () => {
-  if (loginData.value.user_name===''){
+  if (loginData.value.user_name === '') {
     return
   }
   state.isCountDown = true
@@ -184,12 +185,12 @@ const onGetEmailCode = () => {
 };
 //倒计时
 const handleTimeChange = () => {
-  if (state.countDowdTime <= 0) {
+  if (state.countDownTime <= 0) {
     state.isCountDown = false;
-    state.countDowdTime = 60;
+    state.countDownTime = 60;
   } else {
     setTimeout(() => {
-      state.countDowdTime--;
+      state.countDownTime--;
       handleTimeChange();
     }, 1000);
   }

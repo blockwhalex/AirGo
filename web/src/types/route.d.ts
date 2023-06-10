@@ -1,14 +1,14 @@
 //路由信息
 declare interface Route {
-    created_at:string;
-    updated_at:string;
+    created_at: string;
+    updated_at: string;
     id: number;
     parent_id: number;
     path: string;
     name: string;
     component: string; // 对应前端文件路径
     children: Route[];
-    roles:[];
+    roles: [];
     meta: {
         title: string;
         isLink: string; //是否超链接菜单,开启外链条件，`1、isLink: 链接地址不为空 2、isIframe:false`
@@ -19,8 +19,9 @@ declare interface Route {
         icon: string;
     }
 }
+
 // 路由列表 used
-declare interface RoutesListState{
+declare interface RoutesListState {
     routesList: Route[];
     isColumnsMenuHover: Boolean;
     isColumnsNavHover: Boolean;
@@ -32,6 +33,7 @@ declare interface RoutesTree {
     title: string,
     children?: RoutesTree[],
 }
+
 // 路由缓存列表
 declare interface KeepAliveNamesState {
     keepAliveNames: string[];

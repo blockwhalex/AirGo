@@ -41,8 +41,8 @@ export const useShopStore = defineStore("shopStore", {
             //当前支付商品
             currentGoods: {
                 id: 0, //不能覆盖
-                created_at:"",
-                updated_at:"",
+                created_at: "",
+                updated_at: "",
                 subject: "",
                 total_amount: "",
                 product_code: "",
@@ -50,7 +50,7 @@ export const useShopStore = defineStore("shopStore", {
                 expiration_date: 0,
                 checked_nodes: [0],
                 nodes: [],
-                status:false,
+                status: false,
             } as Goods,
             //当前商品订单
             currentOrder: {
@@ -86,7 +86,7 @@ export const useShopStore = defineStore("shopStore", {
             if (res.code === 0) {
                 ElMessage.success(res.msg)
             } else {
-                ElMessage.error(res.msg)
+
             }
         },
         //修改商品
@@ -95,7 +95,7 @@ export const useShopStore = defineStore("shopStore", {
             if (res.code === 0) {
                 ElMessage.success(res.msg)
             } else {
-                ElMessage.error(res.msg)
+
             }
         },
         //删除商品
@@ -104,7 +104,7 @@ export const useShopStore = defineStore("shopStore", {
             if (res.code === 0) {
                 ElMessage.success(res.msg)
             } else {
-                ElMessage.error(res.msg)
+
             }
 
         },

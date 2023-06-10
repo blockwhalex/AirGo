@@ -2,8 +2,8 @@
   <div class="container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
       <el-button type="info" plain>只显示最近10次订单</el-button>
-      <el-table :data="orderPersonal.allOrders.order_list" stripe fit  height="100%" style="width: 100%;">
-        <el-table-column prop="subject"  label="商品标题" show-overflow-tooltip/>
+      <el-table :data="orderPersonal.allOrders.order_list" stripe fit height="100%" style="width: 100%;">
+        <el-table-column prop="subject" label="商品标题" show-overflow-tooltip/>
         <el-table-column prop="total_amount" label="金额" show-overflow-tooltip width="40px"/>
         <el-table-column prop="trade_status" label="状态" show-overflow-tooltip width="90px">
           <template #default="scope">
@@ -16,17 +16,15 @@
             <el-tag type="danger" v-else>未知状态</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="60px" >
+        <el-table-column label="操作" width="60px">
           <template #default="scope">
-            <el-button v-if="scope.row.trade_status == 'WAIT_BUYER_PAY' || scope.row.trade_status == 'created'" size="small" text type="primary"
+            <el-button v-if="scope.row.trade_status === 'WAIT_BUYER_PAY' || scope.row.trade_status === 'created'"
+                       size="small" text type="primary"
                        @click="toPay(scope.row)">去支付
             </el-button>
           </template>
         </el-table-column>
       </el-table>
-<!--      <el-pagination background v-model:current-page="orderPersonal.queryParams.page_num" v-model:page-size="orderPersonal.queryParams.page_size"-->
-<!--                     :page-sizes="[10, 20, 30, 40]" layout="sizes, prev, pager, next" :total="orderPersonal.total"-->
-<!--                     @size-change="onHandleSizeChange" @current-change="onHandleCurrentChange"/>-->
     </el-card>
     <!-- 引入确认支付弹窗组件 -->
     <PurchaseDialog ref="PurchaseDialogRef" @openQRDialog="openQRDialog"></PurchaseDialog>
@@ -51,10 +49,10 @@ const shopStore = useShopStore()
 const {tableData} = storeToRefs(shopStore)
 //引入弹窗组件
 
-const PurchaseDialog = defineAsyncComponent(()=>import('/@/views/shop/purchase_dialog.vue'))
-const QRDialog = defineAsyncComponent(()=>import('/@/views/shop/QR_dialog.vue'))
-const PurchaseDialogRef=ref()
-const QRDialogRef=ref()
+const PurchaseDialog = defineAsyncComponent(() => import('/@/views/shop/purchase_dialog.vue'))
+const QRDialog = defineAsyncComponent(() => import('/@/views/shop/QR_dialog.vue'))
+const PurchaseDialogRef = ref()
+const QRDialogRef = ref()
 
 
 onMounted(() => {
@@ -62,7 +60,7 @@ onMounted(() => {
 })
 
 //去支付流程
-const toPay=(row: Order)=>{
+const toPay = (row: Order) => {
   //当前订单存入pinia
   tableData.value.currentOrder = row
   tableData.value.QRtext = row.qr_code
@@ -88,16 +86,6 @@ const openQRDialog = () => {
   //调用子组件打开弹窗
   QRDialogRef.value.openDialog()
 }
-// 分页改变
-const onHandleSizeChange = (val: number) => {
-  orderPersonal.value.queryParams.page_size = val;
-  //getTableData();
-};
-// 分页改变
-const onHandleCurrentChange = (val: number) => {
-  orderPersonal.value.queryParams.page_num = val;
-  //getTableData();
-};
 
 </script>
 
@@ -108,6 +96,7 @@ const onHandleCurrentChange = (val: number) => {
     flex-direction: column;
     flex: 1;
     overflow: auto;
+
     .el-table {
       flex: 1;
     }

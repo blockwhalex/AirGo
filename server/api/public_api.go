@@ -42,10 +42,10 @@ func GetMailCode(ctx *gin.Context) {
 		response.Fail("邮箱验证码参数错误"+err.Error(), nil, ctx)
 		return
 	}
-	if u.UserName == "" {
-		response.Fail("邮箱不能为空", nil, ctx)
-		return
-	}
+	//if u.UserName == "" {
+	//	response.Fail("邮箱不能为空", nil, ctx)
+	//	return
+	//}
 	_, ok := global.LocalCache.Get(u.UserName + "emailcode")
 	if ok {
 		response.Fail("邮箱验证码获取频繁", nil, ctx)
@@ -63,7 +63,7 @@ func GetMailCode(ctx *gin.Context) {
 	wg.Add(3)
 	//验证码存入local cache
 	go func(wg *sync.WaitGroup) {
-		global.LocalCache.Set(u.UserName+"emailcode", randomStr, 60*time.Second) //60秒过期
+		global.LocalCache.Set(u.UserName+"emailcode", randomStr, 60*time.Second) //过期
 		wg.Done()
 	}(&wg)
 	//发送邮件

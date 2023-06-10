@@ -3,17 +3,17 @@ declare interface Order {
     updated_at: string;
     id: number;
     userID: number;
-    user_name:string;
+    user_name: string;
     user: any;
 
-    out_trade_no:string;
+    out_trade_no: string;
     goods_id: number;
     subject: string;
-    price:string;
-    pay_type:string;
-   // status:string;
+    price: string;
+    pay_type: string;
+    // status:string;
 
-    qr_code:string;
+    qr_code: string;
     trade_no: string;
     buyer_logon_id: string;
     trade_status: string;
@@ -21,7 +21,8 @@ declare interface Order {
     receipt_amount: string;
     buyer_pay_amount: string;
 }
-declare interface OrdersWithTotal{
-    total_amount:number;
-    total:number;
+
+declare interface OrdersWithTotal {
+    total_amount: number;
+    total: number;
 }

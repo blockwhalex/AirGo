@@ -1,66 +1,66 @@
 import request from '/@/utils/request';
 
 
-export function useShopApi(){
+export function useShopApi() {
     return {
-        preCreatePayApi:(data?:object)=>{
+        preCreatePayApi: (data?: object) => {
             return request({
-                url:"/shop/preCreatePay",
-                method:"post",
+                url: "/shop/preCreatePay",
+                method: "post",
                 data
             })
         },
-        alipayTradePreCreatePayApi:(data?:object)=>{
+        alipayTradePreCreatePayApi: (data?: object) => {
             return request({
-                url:"/shop/alipayTradePreCreatePay",
-                method:"post",
+                url: "/shop/alipayTradePreCreatePay",
+                method: "post",
                 data
             })
         },
         //发起支付
-        purchaseApi:(data?:object)=>{
+        purchaseApi: (data?: object) => {
             return request({
-                url:"/shop/purchase",
-                method:"post",
+                url: "/shop/purchase",
+                method: "post",
                 data
             })
         },
         //获取全部商品
-        getAllEnabledGoodsApi:()=>{
+        getAllEnabledGoodsApi: () => {
             return request({
-                url:"/shop/getAllEnabledGoods",
-                method:"get",
+                url: "/shop/getAllEnabledGoods",
+                method: "get",
             })
         },
         //获取全部商品
-        getAllGoodsApi:()=>{
+        getAllGoodsApi: () => {
             return request({
-                url:"/shop/getAllGoods",
-                method:"get",
+                url: "/shop/getAllGoods",
+                method: "get",
             })
         },
         //添加商品
-        newGoodsApi:(data?:object)=>{
+        newGoodsApi: (data?: object) => {
             return request({
-                url:"/shop/newGoods",
-                method:"post",
+                url: "/shop/newGoods",
+                method: "post",
                 data
             })
 
         },
         //修改商品
-        updateGoodsApi:(data?:object)=>{
+        updateGoodsApi: (data?: object) => {
             return request({
-                url:"/shop/updateGoods",
-                method:"post",
+                url: "/shop/updateGoods",
+                method: "post",
                 data
             })
         },
         //删除商品
-        deleteGoodsApi:(data?:object)=>{
+        deleteGoodsApi: (data?: object) => {
             return request({
-                url:"/shop/deleteGoods",
-                method:"post",
+                url: "/shop/deleteGoods",
+                method: "post",
                 data
             })
         }

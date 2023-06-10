@@ -7,7 +7,7 @@ declare interface Server {
     captcha: Captcha;
     pay: Pay;
     email: Email;
-    rate_limit_params:RateLimitParams;
+    rate_limit_params: RateLimitParams;
 }
 
 declare interface Jwt {

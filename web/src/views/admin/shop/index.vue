@@ -1,86 +1,89 @@
 <template>
-    <div class="container layout-padding">
-        <el-card shadow="hover" class="layout-padding-auto">
-            <div class="system-user-search mb15">
-                <el-button size="default" type="success" class="ml10" @click="onOpenAddGoods">
-                    <el-icon>
-                        <ele-FolderAdd />
-                    </el-icon>
-                    新增套餐
-                </el-button>
-            </div>
-            <el-table :data="goodsList" height="100%" style="width: 100%;flex: 1;">
-                <el-table-column type="index" label="序号" width="60" fixed/>
-                <el-table-column prop="subject" label="套餐名称" show-overflow-tooltip  width="120" fixed></el-table-column>
-                <el-table-column prop="total_amount" label="套餐价格(元)" show-overflow-tooltip  width="100"></el-table-column>
-                <el-table-column prop="total_bandwidth" label="总流量(GB)" show-overflow-tooltip  width="100"></el-table-column>
-                <el-table-column prop="expiration_date" label="有效期(天)" show-overflow-tooltip ></el-table-column>
-                <el-table-column prop="status" label="是否启用" show-overflow-tooltip >
-                              <template #default="scope">
-                                <el-tag class="ml-2"  v-if="scope.row.status" type="success" >启用</el-tag>
-                                <el-tag class="ml-2" v-if="!scope.row.status" type="danger" >禁用</el-tag>
-                              </template>
-                </el-table-column>
-                <el-table-column label="操作" width="100">
-                    <template #default="scope">
-                        <el-button size="small" text type="primary"
-                            @click="onOpenEditGoods(scope.row)">修改</el-button>
-                        <el-button size="small" text type="primary"
-                            @click="onRowDel(scope.row)">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            </el-card>
-            <!-- 引入弹窗组件 -->
-            <shopDialog ref="shopDialogRef" @refresh="shopStore.getAllGoods()"></shopDialog>
-    </div>
+  <div class="container layout-padding">
+    <el-card shadow="hover" class="layout-padding-auto">
+      <div class="system-user-search mb15">
+        <el-button size="default" type="success" class="ml10" @click="onOpenAddGoods">
+          <el-icon>
+            <ele-FolderAdd/>
+          </el-icon>
+          新增套餐
+        </el-button>
+      </div>
+      <el-table :data="goodsList" height="100%" style="width: 100%;flex: 1;">
+        <el-table-column type="index" label="序号" width="60" fixed/>
+        <el-table-column prop="subject" label="套餐名称" show-overflow-tooltip width="120" fixed></el-table-column>
+        <el-table-column prop="total_amount" label="套餐价格(元)" show-overflow-tooltip width="100"></el-table-column>
+        <el-table-column prop="total_bandwidth" label="总流量(GB)" show-overflow-tooltip width="100"></el-table-column>
+        <el-table-column prop="expiration_date" label="有效期(天)" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="status" label="是否启用" show-overflow-tooltip>
+          <template #default="scope">
+            <el-tag class="ml-2" v-if="scope.row.status" type="success">启用</el-tag>
+            <el-tag class="ml-2" v-if="!scope.row.status" type="danger">禁用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="100">
+          <template #default="scope">
+            <el-button size="small" text type="primary"
+                       @click="onOpenEditGoods(scope.row)">修改
+            </el-button>
+            <el-button size="small" text type="primary"
+                       @click="onRowDel(scope.row)">删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+    <!-- 引入弹窗组件 -->
+    <ShopDialog ref="shopDialogRef" @refresh="shopStore.getAllGoods()"></ShopDialog>
+  </div>
 </template>
 
 <script setup lang="ts">
 
 
-import { defineAsyncComponent, onMounted,ref } from 'vue';
-import { storeToRefs } from 'pinia';
+import {defineAsyncComponent, onMounted, ref} from 'vue';
+import {storeToRefs} from 'pinia';
 //shop store
-import { useShopStore } from "/@/stores/shopStore";
+import {useShopStore} from "/@/stores/shopStore";
+
 const shopStore = useShopStore()
-const { goodsList, goodsManageData } = storeToRefs(shopStore)
+const {goodsList, goodsManageData} = storeToRefs(shopStore)
 //node store
-import { useNodeStore } from "/@/stores/node";
+import {useNodeStore} from "/@/stores/node";
+
 const nodeStore = useNodeStore()
 
 //引入弹窗组件
-const shopDialog=defineAsyncComponent(()=>import('/@/views/admin/shop/dialog.vue'))
-const shopDialogRef=ref()
+const ShopDialog = defineAsyncComponent(() => import('/@/views/admin/shop/dialog.vue'))
+const shopDialogRef = ref()
 
 
 //修改套餐
 const onOpenEditGoods = (row: Goods) => {
-    //打开tanc
-    shopDialogRef.value.openDialog('edit',row)
+  shopDialogRef.value.openDialog('edit', row)
 }
 //删除套餐
 const onRowDel = (row: Goods) => {
-    goodsManageData.value.currentGoods=row
-    shopStore.deleteGoods(row)
-    //延迟2秒
-    setTimeout(()=>{
-        shopStore.getAllGoods()
-    },2000)
+  goodsManageData.value.currentGoods = row
+  shopStore.deleteGoods(row)
+  //延迟2秒
+  setTimeout(() => {
+    shopStore.getAllGoods()
+  }, 2000)
 }
 //添加套餐
 const onOpenAddGoods = () => {
-    //打开tanc
-    shopDialogRef.value.openDialog('add')
-    //延迟2秒重新获取数据
-    setTimeout(()=>{
-        shopStore.getAllGoods()
-    },2000)
+  //打开tanc
+  shopDialogRef.value.openDialog('add')
+  //延迟2秒重新获取数据
+  setTimeout(() => {
+    shopStore.getAllGoods()
+  }, 2000)
 }
 //加载时
 onMounted(() => {
-    shopStore.getAllGoods() //获取全部商品
-    nodeStore.getAllNode()  //获取全部节点
+  shopStore.getAllGoods() //获取全部商品
+  nodeStore.getAllNode()  //获取全部节点
 });
 
 
@@ -93,6 +96,7 @@ onMounted(() => {
     flex-direction: column;
     flex: 1;
     overflow: auto;
+
     .el-table {
       flex: 1;
     }

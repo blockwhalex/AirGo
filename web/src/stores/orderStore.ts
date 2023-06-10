@@ -14,9 +14,9 @@ export const useOrderStore = defineStore("orderStore", {
                 date: [],
             } as QueryParams,
             allOrders: {
-                order_list: [],
+                order_list: [] as Order[],
                 total: 0,
-            } as OrdersWithTotal,
+            },
         },
         //个人订单数据
         orderPersonal: {
@@ -27,9 +27,9 @@ export const useOrderStore = defineStore("orderStore", {
                 date: [],
             } as QueryParams,
             allOrders: {
-                order_list: [],
+                order_list: [] as Order[],
                 total: 0,
-            } as OrdersWithTotal,
+            },
         },
     }),
     actions: {

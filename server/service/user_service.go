@@ -20,7 +20,7 @@ func Register(u *model.User) error {
 		return errors.New("用户已存在")
 	}
 	//默认角色
-	u.RoleGroup = []model.Role{{ID: 2}} //id=2,普通用户
+	//u.RoleGroup = []model.Role{{ID: 2}} //id=2,普通用户
 	//默认套餐
 	return SaveUser(NewUserSubscribe(u))
 }

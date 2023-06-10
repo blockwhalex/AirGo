@@ -39,9 +39,7 @@ const orderStore = useOrderStore()
 import {useShopApi} from '/@/api/shop/index'
 
 const shopApi = useShopApi()
-import {useOrderApi} from '/@/api/order/index'
 
-const orderApi = useOrderApi()
 //变量
 const state = reactive({
   isShowSubmitOrderDialog: false,
@@ -57,7 +55,7 @@ const openDialog = (id: number) => {
       tableData.value.currentOrder = res.data
 
     } else {
-      ElMessage.error(res.msg)
+
     }
   }).catch()
 
@@ -77,7 +75,7 @@ const onSubmitOrder = () => {
       emits('openPurchaseDialog')
 
     } else {
-      ElMessage.error("提交订单错误" + res.msg)
+
       //关闭弹窗
       state.isShowSubmitOrderDialog = false
     }

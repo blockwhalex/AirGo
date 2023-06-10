@@ -30,6 +30,21 @@ func Register(c *gin.Context) {
 		response.Fail("注册参数错误"+err.Error(), nil, c)
 		return
 	}
+	//校验邮箱验证码
+	if global.Server.System.EnableEmailCode {
+		cacheEmail, ok := global.LocalCache.Get(u.UserName + "emailcode")
+		global.LocalCache.Delete(u.UserName + "emailcode")
+		if ok {
+			if cacheEmail != u.EmailCode {
+				response.Fail("邮箱验证码校验错误", nil, c)
+				return
+			}
+		} else {
+			//cache获取验证码失败,原因：1超时 2系统错误
+			response.Fail("邮箱验证码超时，请重新获取", nil, c)
+			return
+		}
+	}
 
 	var user = model.User{
 		UUID:      uuid.NewV4(),

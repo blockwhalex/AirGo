@@ -84,12 +84,12 @@ export const useUserStore = defineStore('userInfo', {
         },
     }),
     getters: {
-        userFormReq:(state):object=>{
+        userFormReq: (state): object => {
             state.registerReq.password = state.registerData.password
             state.registerReq.re_password = state.registerData.re_password
             state.registerReq.email_code = state.registerData.email_code
             state.registerReq.user_name = state.registerData.user_name + '@' + state.email_suffix
-            return  state.registerReq
+            return state.registerReq
         },
         used: (state): number => {
             return +((state.userInfos.subscribe_info.t - state.userInfos.subscribe_info.u - state.userInfos.subscribe_info.d) / 1024 / 1024 / 1024).toFixed(2)
@@ -137,7 +137,7 @@ export const useUserStore = defineStore('userInfo', {
     actions: {
         //注册
         async register(form?: object) {
-            const res = await userApi.registerApi(this.registerReq)
+            const res = await userApi.registerApi(this.userFormReq)
             return res
         },
         //登录
@@ -154,7 +154,7 @@ export const useUserStore = defineStore('userInfo', {
         //修改混淆
         async changeHost() {
             const res = await userApi.changeHostApi(this.homeTableData)
-            this.getUserInfo()
+            await this.getUserInfo()
             this.homeTableData.host = ''
         },
         //获取自身信息

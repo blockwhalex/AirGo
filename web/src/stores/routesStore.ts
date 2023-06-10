@@ -1,6 +1,7 @@
 //路由-store
-import { defineStore } from "pinia";
-import { useMenuApi } from "/@/api/menu/index";
+import {defineStore} from "pinia";
+import {useMenuApi} from "/@/api/menu/index";
+
 const menuApi = useMenuApi()
 
 export const useRoutesStore = defineStore("routesStore", {

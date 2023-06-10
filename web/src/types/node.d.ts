@@ -26,11 +26,11 @@ declare interface NodeInfo {
 
 declare interface ServerStatusInfo {
     id: number;
-    name:string;
-    status:boolean;
+    name: string;
+    status: boolean;
     last_time: string;
     user_amount: number;
-    traffic_rate:number;
+    traffic_rate: number;
     u: number;
     d: number;
 }

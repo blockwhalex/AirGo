@@ -1,104 +1,98 @@
 <template>
-    <div>
-        <el-row :gutter="15" class="home-card-one mb15">
-            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-for="(v, k) in goodsList" :key="k">
-                <div class="home-card-item">
-                    <el-card class="box-card">
-                        <template #header>
-                            <div class="card-header">
-                                <div class="block">
-                                </div>
-                                <el-tag size="large" type="success">{{ v.subject }}</el-tag>
-                            </div>
-                        </template>
-                        <div style="margin-bottom: 10px">
-                            <el-tag style="width: 70px" type="warning">套餐流量</el-tag><span>{{ v.total_bandwidth }}GB</span>
-                        </div>
-                        <div style="margin-top: 10px;margin-bottom: 10px">
-                            <el-tag style="width: 70px" type="warning">有效期(天)</el-tag><span>{{ v.expiration_date }}</span>
-                        </div>
-                        <div style="margin-top: 10px;margin-bottom: 10px">
-                            <el-tag style="width: 70px" type="warning">价格(元)</el-tag><span>{{ v.total_amount }}</span>
-                        </div>
-                        <el-tag  type="info">有效期内不清零、不重置，长期有效</el-tag>
-                        <div style="margin-top: 10px;margin-bottom: 10px">
-                            <el-button @click="openSubmitOrderDialog(v.id)" type="primary">立即购买</el-button>
-                        </div>
-
-                    </el-card>
+  <div>
+    <el-row :gutter="15" class="home-card-one mb15">
+      <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-for="(v, k) in goodsList" :key="k">
+        <div class="home-card-item">
+          <el-card class="box-card">
+            <template #header>
+              <div class="card-header">
+                <div class="block">
                 </div>
-                   
-            </el-col>
-        </el-row>
-        <!--引入提交订单弹窗-->
-      <SubmitOrderDialog ref="SubmitOrderDialogRef" @openPurchaseDialog="openPurchaseDialog"></SubmitOrderDialog>
-        <!-- 引入确认支付弹窗组件 -->
-        <PurchaseDialog ref="PurchaseDialogRef" @openQRDialog="openQRDialog" ></PurchaseDialog>
-        <!-- 引入二维码弹窗 -->
-        <QRDialog ref="QRDialogRef" ></QRDialog>
+                <el-tag size="large" type="success">{{ v.subject }}</el-tag>
+              </div>
+            </template>
+            <div style="margin-bottom: 10px">
+              <el-tag style="width: 70px" type="warning">套餐流量</el-tag>
+              <span>{{ v.total_bandwidth }}GB</span>
+            </div>
+            <div style="margin-top: 10px;margin-bottom: 10px">
+              <el-tag style="width: 70px" type="warning">有效期(天)</el-tag>
+              <span>{{ v.expiration_date }}</span>
+            </div>
+            <div style="margin-top: 10px;margin-bottom: 10px">
+              <el-tag style="width: 70px" type="warning">价格(元)</el-tag>
+              <span>{{ v.total_amount }}</span>
+            </div>
+            <el-tag type="info">有效期内不清零、不重置，长期有效</el-tag>
+            <div style="margin-top: 10px;margin-bottom: 10px">
+              <el-button @click="openSubmitOrderDialog(v.id)" type="primary">立即购买</el-button>
+            </div>
 
-    </div>
-    
+          </el-card>
+        </div>
+
+      </el-col>
+    </el-row>
+    <!--引入提交订单弹窗-->
+    <SubmitOrderDialog ref="SubmitOrderDialogRef" @openPurchaseDialog="openPurchaseDialog"></SubmitOrderDialog>
+    <!-- 引入确认支付弹窗组件 -->
+    <PurchaseDialog ref="PurchaseDialogRef" @openQRDialog="openQRDialog"></PurchaseDialog>
+    <!-- 引入二维码弹窗 -->
+    <QRDialog ref="QRDialogRef"></QRDialog>
+
+  </div>
+
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, reactive, ref } from 'vue';
-//导入api
-import { useShopApi } from "../../api/shop/index";
-const shopApi = useShopApi()
-//导入二维码 js
-import QRCode from 'qrcodejs2-fixes';
-
-//判断移动端
-import { isMobile } from "/@/utils/other";
-// 定义二维码变量内容
-const qrcodeRef = ref();
+import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
 //导入store
-import { storeToRefs } from 'pinia';
-import { useShopStore } from "/@/stores/shopStore";
+import {storeToRefs} from 'pinia';
+import {useShopStore} from "/@/stores/shopStore";
+
 const shopStore = useShopStore()
-const { goodsList ,tableData} = storeToRefs(shopStore)
+const {goodsList, tableData} = storeToRefs(shopStore)
 //引入弹窗组件
-const SubmitOrderDialog =defineAsyncComponent(()=>import('/@/views/shop/submit_order_dialog.vue'))
-const PurchaseDialog = defineAsyncComponent(()=>import('/@/views/shop/purchase_dialog.vue'))
-const QRDialog = defineAsyncComponent(()=>import('/@/views/shop/QR_dialog.vue'))
-const PurchaseDialogRef=ref()
-const QRDialogRef=ref()
-const SubmitOrderDialogRef=ref()
+const SubmitOrderDialog = defineAsyncComponent(() => import('/@/views/shop/submit_order_dialog.vue'))
+const PurchaseDialog = defineAsyncComponent(() => import('/@/views/shop/purchase_dialog.vue'))
+const QRDialog = defineAsyncComponent(() => import('/@/views/shop/QR_dialog.vue'))
+const PurchaseDialogRef = ref()
+const QRDialogRef = ref()
+const SubmitOrderDialogRef = ref()
 
 //加载时获取全部已启用商品
 onMounted(() => {
-    shopStore.getAllEnabledGoods()
+  shopStore.getAllEnabledGoods()
 })
 //打开提交订单弹窗,传goods_id
-const openSubmitOrderDialog=(id:number)=>{
- // tableData.value.currentGoods=v
+const openSubmitOrderDialog = (id: number) => {
+  // tableData.value.currentGoods=v
 
   SubmitOrderDialogRef.value.openDialog(id)
 }
 //打开确认支付弹窗
-const openPurchaseDialog=(goods:Goods)=>{
-    //调用子组件打开弹窗
-    PurchaseDialogRef.value.openDialog()
+const openPurchaseDialog = (goods: Goods) => {
+  //调用子组件打开弹窗
+  PurchaseDialogRef.value.openDialog()
 }
 //打开二维码弹窗
-const openQRDialog=()=>{
-    //调用子组件打开弹窗
-    QRDialogRef.value.openDialog()
+const openQRDialog = () => {
+  //调用子组件打开弹窗
+  QRDialogRef.value.openDialog()
 }
 
 </script>
 
 <style scoped>
 .home-card-item {
-    width: 100%;
-    height: 100%;
-    border-radius: 4px;
-    transition: all ease 0.3s;
-    padding: 20px;
-    overflow: hidden;
-    background: var(--el-color-white);
-    color: var(--el-text-color-primary);
-    border: 1px solid var(--next-border-color-light);
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  transition: all ease 0.3s;
+  padding: 20px;
+  overflow: hidden;
+  background: var(--el-color-white);
+  color: var(--el-text-color-primary);
+  border: 1px solid var(--next-border-color-light);
 }
 </style>

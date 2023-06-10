@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from 'vue-router';
+import {RouteRecordRaw} from 'vue-router';
 
 /**
  * 建议：路由 path 路径与文件夹名称相同，找文件可浏览器地址找，方便定位文件位置
@@ -18,16 +18,16 @@ import { RouteRecordRaw } from 'vue-router';
 
 // 扩展 RouteMeta 接口
 declare module 'vue-router' {
-	interface RouteMeta {
-		title?: string;
-		isLink?: string;
-		isHide?: boolean;
-		isKeepAlive?: boolean;
-		isAffix?: boolean;
-		isIframe?: boolean;
-		roles?: string[];
-		icon?: string;
-	}
+    interface RouteMeta {
+        title?: string;
+        isLink?: string;
+        isHide?: boolean;
+        isKeepAlive?: boolean;
+        isAffix?: boolean;
+        isIframe?: boolean;
+        roles?: string[];
+        icon?: string;
+    }
 }
 
 /**
@@ -38,18 +38,16 @@ declare module 'vue-router' {
  * @returns 返回路由菜单数据
  */
 export const dynamicRoutes: Array<RouteRecordRaw> = [
-	{
-		path: '/',
-		name: '/',
-		component: () => import('/@/layout/index.vue'),
-		redirect: '/home',
-		meta: {
-			isKeepAlive: true,
-		},
-		children: [
-
-		],
-	},
+    {
+        path: '/',
+        name: '/',
+        component: () => import('/@/layout/index.vue'),
+        redirect: '/home',
+        meta: {
+            isKeepAlive: true,
+        },
+        children: [],
+    },
 ];
 
 /**
@@ -57,24 +55,24 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
  * @link 参考：https://next.router.vuejs.org/zh/guide/essentials/history-mode.html#netlify
  */
 export const notFoundAndNoPower = [
-	{
-		path: '/:path(.*)*',
-		name: 'notFound',
-		component: () => import('/@/views/error/404.vue'),
-		meta: {
-			title: '找不到此页面',
-			isHide: true,
-		},
-	},
-	{
-		path: '/401',
-		name: 'noPower',
-		component: () => import('/@/views/error/401.vue'),
-		meta: {
-			title: '没有权限',
-			isHide: true,
-		},
-	},
+    {
+        path: '/:path(.*)*',
+        name: 'notFound',
+        component: () => import('/@/views/error/404.vue'),
+        meta: {
+            title: '找不到此页面',
+            isHide: true,
+        },
+    },
+    {
+        path: '/401',
+        name: 'noPower',
+        component: () => import('/@/views/error/401.vue'),
+        meta: {
+            title: '没有权限',
+            isHide: true,
+        },
+    },
 ];
 
 /**
@@ -84,12 +82,12 @@ export const notFoundAndNoPower = [
  * @returns 返回路由菜单数据
  */
 export const staticRoutes: Array<RouteRecordRaw> = [
-	{
-		path: '/login',
-		name: 'login',
-		component: () => import('/src/views/login/index.vue'),
-		meta: {
-			title: '登录',
-		},
-	},
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import('/src/views/login/index.vue'),
+        meta: {
+            title: '登录',
+        },
+    },
 ];

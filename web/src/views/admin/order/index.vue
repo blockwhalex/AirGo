@@ -2,7 +2,8 @@
   <div class="container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
       <div class="mb15">
-        <el-input v-model="orderManageData.queryParams.search"  placeholder="请输入订单号" style="max-width: 180px"></el-input>
+        <el-input v-model="orderManageData.queryParams.search" placeholder="请输入订单号"
+                  style="max-width: 180px"></el-input>
         <el-date-picker
             size="small"
             v-model="orderManageData.queryParams.date"
@@ -23,11 +24,11 @@
       </div>
       <el-table :data="orderManageData.allOrders.order_list" fit style="width: 100%;flex: 1;">
         <el-table-column type="index" label="序号" fixed/>
-<!--        <el-table-column prop="id" label="订单ID" fixed/>-->
+        <!--        <el-table-column prop="id" label="订单ID" fixed/>-->
         <el-table-column prop="out_trade_no" label="订单号" fixed/>
         <el-table-column prop="created_at" label="下单日期">
           <template #default="scope">
-            <el-tag type="success">{{DateStrtoTime(scope.row.created_at)}}</el-tag>
+            <el-tag type="success">{{ DateStrtoTime(scope.row.created_at) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="user_name" label="用户"/>
@@ -48,7 +49,8 @@
         </el-table-column>
         <el-table-column label="操作" width="100">
           <template #default="scope">
-            <el-button v-if="scope.row.trade_status != 'TRADE_SUCCESS'" size="small" text type="primary"
+            <el-button v-if="scope.row.trade_status === 'WAIT_BUYER_PAY' || scope.row.trade_status ==='created'"
+                       size="small" text type="primary"
                        @click="onCompleteOrder(scope.row)">完成
             </el-button>
           </template>
@@ -60,7 +62,7 @@
                      :page-sizes="[10, 20, 30]"
                      v-model:current-page="orderManageData.queryParams.page_num"
                      v-model:page-size="orderManageData.queryParams.page_size"
-                      :total="orderManageData.allOrders.total"
+                     :total="orderManageData.allOrders.total"
                      @size-change="onHandleSizeChange"
                      @current-change="onHandleCurrentChange">
       </el-pagination>
@@ -69,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus';
+import {ElMessage} from 'element-plus';
 //store
 import {onMounted} from "vue";
 import {useOrderStore} from "/@/stores/orderStore";
@@ -90,11 +92,11 @@ onMounted(() => {
 })
 //完成未支付订单
 const onCompleteOrder = (row: Order) => {
-  orderStore.completedOrder(row).then((res)=>{
+  orderStore.completedOrder(row).then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
     } else {
-      ElMessage.error(res.msg)
+
     }
   })
 
@@ -149,6 +151,7 @@ const shortcuts = [
     flex-direction: column;
     flex: 1;
     overflow: auto;
+
     .el-table {
       flex: 1;
     }

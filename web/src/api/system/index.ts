@@ -11,7 +11,7 @@ export function useSystemApi() {
         //     })
         // },
         //设置主题
-        updateThemeConfigApi:(data?: object)=>{
+        updateThemeConfigApi: (data?: object) => {
             return service({
                 url: "system/updateThemeConfig",
                 method: "post",
@@ -19,14 +19,14 @@ export function useSystemApi() {
             })
         },
         //获取系统设置
-         getServerConfig:()=> {
-             return service({
-                 url: "system/getSetting",
-                 method: "get",
-             })
+        getServerConfig: () => {
+            return service({
+                url: "system/getSetting",
+                method: "get",
+            })
         },
         //修改系统设置
-        updateServerConfig:(data?: object)=> {
+        updateServerConfig: (data?: object) => {
             return service({
                 url: "system/updateSetting",
                 method: "post",

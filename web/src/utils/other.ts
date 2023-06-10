@@ -1,12 +1,12 @@
-import { nextTick, defineAsyncComponent } from 'vue';
-import type { App } from 'vue';
+import {nextTick, defineAsyncComponent} from 'vue';
+import type {App} from 'vue';
 import * as svg from '@element-plus/icons-vue';
 import router from '/@/router/index';
 import pinia from '/@/stores/index';
-import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
-import { Local } from '/@/utils/storage';
-import { verifyUrl } from '/@/utils/toolsValidate';
+import {storeToRefs} from 'pinia';
+import {useThemeConfig} from '/@/stores/themeConfig';
+import {Local} from '/@/utils/storage';
+import {verifyUrl} from '/@/utils/toolsValidate';
 
 // 引入组件
 const SvgIcon = defineAsyncComponent(() => import('/@/components/svgIcon/index.vue'));
@@ -17,11 +17,11 @@ const SvgIcon = defineAsyncComponent(() => import('/@/components/svgIcon/index.v
  * @description 使用：https://element-plus.gitee.io/zh-CN/component/icon.html
  */
 export function elSvg(app: App) {
-	const icons = svg as any;
-	for (const i in icons) {
-		app.component(`ele-${icons[i].name}`, icons[i]);
-	}
-	app.component('SvgIcon', SvgIcon);
+    const icons = svg as any;
+    for (const i in icons) {
+        app.component(`ele-${icons[i].name}`, icons[i]);
+    }
+    app.component('SvgIcon', SvgIcon);
 }
 
 /**
@@ -29,19 +29,19 @@ export function elSvg(app: App) {
  * @method const title = useTitle(); ==> title()
  */
 export function useTitle() {
-	const stores = useThemeConfig(pinia);
-	const { themeConfig } = storeToRefs(stores);
-	nextTick(() => {
-		let webTitle = '';
-		let globalTitle: string = themeConfig.value.globalTitle;
-		const { path, meta } = router.currentRoute.value;
-		if (path === '/login') {
-			webTitle = <string>meta.title;
-		} else {
-			webTitle = setTagsViewNameI18n(router.currentRoute.value);
-		}
-		document.title = `${webTitle} - ${globalTitle}` || globalTitle;
-	});
+    const stores = useThemeConfig(pinia);
+    const {themeConfig} = storeToRefs(stores);
+    nextTick(() => {
+        let webTitle = '';
+        let globalTitle: string = themeConfig.value.globalTitle;
+        const {path, meta} = router.currentRoute.value;
+        if (path === '/login') {
+            webTitle = <string>meta.title;
+        } else {
+            webTitle = setTagsViewNameI18n(router.currentRoute.value);
+        }
+        document.title = `${webTitle} - ${globalTitle}` || globalTitle;
+    });
 }
 
 /**
@@ -50,16 +50,16 @@ export function useTitle() {
  * @returns 返回当前 tagsViewName 名称
  */
 export function setTagsViewNameI18n(item: any) {
-	let tagsViewName: string = '';
-	const { query, params, meta } = item;
-	if (query?.tagsViewName || params?.tagsViewName) {
-		// 非国际化
-		tagsViewName = query?.tagsViewName || params?.tagsViewName;
-	} else {
-		// 非自定义 tagsView 名称
-		tagsViewName = meta.title;
-	}
-	return tagsViewName;
+    let tagsViewName: string = '';
+    const {query, params, meta} = item;
+    if (query?.tagsViewName || params?.tagsViewName) {
+        // 非国际化
+        tagsViewName = query?.tagsViewName || params?.tagsViewName;
+    } else {
+        // 非自定义 tagsView 名称
+        tagsViewName = meta.title;
+    }
+    return tagsViewName;
 }
 
 /**
@@ -69,21 +69,21 @@ export function setTagsViewNameI18n(item: any) {
  * @description data-xxx 属性用于存储页面或应用程序的私有自定义数据
  */
 export const lazyImg = (el: string, arr: EmptyArrayType) => {
-	const io = new IntersectionObserver((res) => {
-		res.forEach((v: any) => {
-			if (v.isIntersecting) {
-				const { img, key } = v.target.dataset;
-				v.target.src = img;
-				v.target.onload = () => {
-					io.unobserve(v.target);
-					arr[key]['loading'] = false;
-				};
-			}
-		});
-	});
-	nextTick(() => {
-		document.querySelectorAll(el).forEach((img) => io.observe(img));
-	});
+    const io = new IntersectionObserver((res) => {
+        res.forEach((v: any) => {
+            if (v.isIntersecting) {
+                const {img, key} = v.target.dataset;
+                v.target.src = img;
+                v.target.onload = () => {
+                    io.unobserve(v.target);
+                    arr[key]['loading'] = false;
+                };
+            }
+        });
+    });
+    nextTick(() => {
+        document.querySelectorAll(el).forEach((img) => io.observe(img));
+    });
 };
 
 /**
@@ -91,9 +91,9 @@ export const lazyImg = (el: string, arr: EmptyArrayType) => {
  * @returns 返回 `window.localStorage` 中读取的缓存值 `globalComponentSize`
  */
 export const globalComponentSize = (): string => {
-	const stores = useThemeConfig(pinia);
-	const { themeConfig } = storeToRefs(stores);
-	return Local.get('themeConfig')?.globalComponentSize || themeConfig.value?.globalComponentSize;
+    const stores = useThemeConfig(pinia);
+    const {themeConfig} = storeToRefs(stores);
+    return Local.get('themeConfig')?.globalComponentSize || themeConfig.value?.globalComponentSize;
 };
 
 /**
@@ -102,35 +102,35 @@ export const globalComponentSize = (): string => {
  * @returns 克隆后的对象
  */
 export function deepClone(obj: EmptyObjectType) {
-	let newObj: EmptyObjectType;
-	try {
-		newObj = obj.push ? [] : {};
-	} catch (error) {
-		newObj = {};
-	}
-	for (let attr in obj) {
-		if (obj[attr] && typeof obj[attr] === 'object') {
-			newObj[attr] = deepClone(obj[attr]);
-		} else {
-			newObj[attr] = obj[attr];
-		}
-	}
-	return newObj;
+    let newObj: EmptyObjectType;
+    try {
+        newObj = obj.push ? [] : {};
+    } catch (error) {
+        newObj = {};
+    }
+    for (let attr in obj) {
+        if (obj[attr] && typeof obj[attr] === 'object') {
+            newObj[attr] = deepClone(obj[attr]);
+        } else {
+            newObj[attr] = obj[attr];
+        }
+    }
+    return newObj;
 }
 
 /**
  * 判断是否是移动端
  */
 export function isMobile() {
-	if (
-		navigator.userAgent.match(
-			/('phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone')/i
-		)
-	) {
-		return true;
-	} else {
-		return false;
-	}
+    if (
+        navigator.userAgent.match(
+            /('phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone')/i
+        )
+    ) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -140,18 +140,18 @@ export function isMobile() {
  * @returns 删除空值后的数组对象
  */
 export function handleEmpty(list: EmptyArrayType) {
-	const arr = [];
-	for (const i in list) {
-		const d = [];
-		for (const j in list[i]) {
-			d.push(list[i][j]);
-		}
-		const leng = d.filter((item) => item === '').length;
-		if (leng !== d.length) {
-			arr.push(list[i]);
-		}
-	}
-	return arr;
+    const arr = [];
+    for (const i in list) {
+        const d = [];
+        for (const j in list[i]) {
+            d.push(list[i][j]);
+        }
+        const leng = d.filter((item) => item === '').length;
+        if (leng !== d.length) {
+            arr.push(list[i]);
+        }
+    }
+    return arr;
 }
 
 /**
@@ -159,10 +159,10 @@ export function handleEmpty(list: EmptyArrayType) {
  * @param val 当前点击项菜单
  */
 export function handleOpenLink(val: RouteItem) {
-	const { origin, pathname } = window.location;
-	router.push(val.path);
-	if (verifyUrl(<string>val.meta?.isLink)) window.open(val.meta?.isLink);
-	else window.open(`${origin}${pathname}#${val.meta?.isLink}`);
+    const {origin, pathname} = window.location;
+    router.push(val.path);
+    if (verifyUrl(<string>val.meta?.isLink)) window.open(val.meta?.isLink);
+    else window.open(`${origin}${pathname}#${val.meta?.isLink}`);
 }
 
 /**
@@ -177,33 +177,33 @@ export function handleOpenLink(val: RouteItem) {
  * @method handleEmpty 判断数组对象中所有属性是否为空，为空则删除当前行对象
  */
 const other = {
-	elSvg: (app: App) => {
-		elSvg(app);
-	},
-	useTitle: () => {
-		useTitle();
-	},
-	setTagsViewNameI18n(route: RouteToFrom) {
-		return setTagsViewNameI18n(route);
-	},
-	lazyImg: (el: string, arr: EmptyArrayType) => {
-		lazyImg(el, arr);
-	},
-	globalComponentSize: () => {
-		return globalComponentSize();
-	},
-	deepClone: (obj: EmptyObjectType) => {
-		return deepClone(obj);
-	},
-	isMobile: () => {
-		return isMobile();
-	},
-	handleEmpty: (list: EmptyArrayType) => {
-		return handleEmpty(list);
-	},
-	handleOpenLink: (val: RouteItem) => {
-		handleOpenLink(val);
-	},
+    elSvg: (app: App) => {
+        elSvg(app);
+    },
+    useTitle: () => {
+        useTitle();
+    },
+    setTagsViewNameI18n(route: RouteToFrom) {
+        return setTagsViewNameI18n(route);
+    },
+    lazyImg: (el: string, arr: EmptyArrayType) => {
+        lazyImg(el, arr);
+    },
+    globalComponentSize: () => {
+        return globalComponentSize();
+    },
+    deepClone: (obj: EmptyObjectType) => {
+        return deepClone(obj);
+    },
+    isMobile: () => {
+        return isMobile();
+    },
+    handleEmpty: (list: EmptyArrayType) => {
+        return handleEmpty(list);
+    },
+    handleOpenLink: (val: RouteItem) => {
+        handleOpenLink(val);
+    },
 };
 
 // 统一批量导出

@@ -1,41 +1,41 @@
 import service from "/@/utils/request";
 
-export function useNodeApi(){
+export function useNodeApi() {
     return {
-        getAllNodeApi:()=>{
+        getAllNodeApi: () => {
             return service({
                 url: '/node/getAllNode',
                 method: 'get',
             })
 
         },
-        getNodeWithTrafficApi:(data?:object)=>{
+        getNodeWithTrafficApi: (data?: object) => {
             return service({
                 url: '/node/getTraffic',
-				method: 'post',
+                method: 'post',
                 data
             })
 
         },
-        newNodeApi:(data?:object)=>{
+        newNodeApi: (data?: object) => {
             return service({
                 url: '/node/newNode',
-				method: 'post',
+                method: 'post',
                 data
             })
 
         },
-        updateNodeApi:(data?:object)=>{
+        updateNodeApi: (data?: object) => {
             return service({
                 url: '/node/updateNode',
-				method: 'post',
+                method: 'post',
                 data
             })
         },
-        deleteNodeApi:(data?:object)=>{
+        deleteNodeApi: (data?: object) => {
             return service({
                 url: '/node/deleteNode',
-				method: 'post',
+                method: 'post',
                 data
             })
         },
