@@ -65,7 +65,7 @@ service.interceptors.response.use(
         }
     },
     (error) => {
-        console.log("响应错误")
+        //console.log("响应错误")
         // 对响应错误做点什么
         if (error.message.indexOf('timeout') != -1) {
             ElMessage.error('网络超时');

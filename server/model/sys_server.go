@@ -2,7 +2,7 @@ package model
 
 import "time"
 
-// 全局配置
+// Server 全局配置
 type Server struct {
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
@@ -51,7 +51,7 @@ type System struct {
 	DefaultGoods    string `json:"default_goods"`                          //新用户默认套餐
 }
 
-// 支付相关配置
+// Pay 支付相关配置
 type Pay struct {
 	ReturnURL    string `json:"return_url"`
 	AppID        string `json:"app_id"`
@@ -60,7 +60,7 @@ type Pay struct {
 	EncryptKey   string `json:"encrypt_key"`
 }
 
-// 限流参数
+// RateLimitParams 限流参数
 type RateLimitParams struct {
 	IPRoleParam int `json:"ip_role_param" gorm:"default:600"`
 	VisitParam  int `json:"visit_param"   gorm:"default:60"`

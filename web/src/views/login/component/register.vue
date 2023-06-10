@@ -74,8 +74,8 @@ import {useUserStore} from "/@/stores/userStore";
 import {storeToRefs} from 'pinia';
 import {ElMessage} from 'element-plus';
 
-const userInfo = useUserStore()
-const {registerData, email_suffix, registerReq} = storeToRefs(userInfo)
+const userStore = useUserStore()
+const {registerData, email_suffix, registerReq} = storeToRefs(userStore)
 //theme store
 import {useThemeConfig} from '/@/stores/themeConfig';
 
@@ -97,7 +97,7 @@ const state = reactive({
 
 //注册
 const onRegister = () => {
-  userInfo.register().then((res) => {
+  userStore.register().then((res) => {
     if (res.code === 0) {
       ElMessage.success('注册成功，前往登录...')
       setTimeout(() => {
@@ -112,6 +112,7 @@ const onGetEmailCode = () => {
     return
   }
   state.isCountDown = true
+  console.log("registerReq.value:", registerReq.value)
   publicApi.getEmailCodeApi(registerReq.value)
   handleTimeChange()
 };
@@ -149,7 +150,6 @@ const handleTimeChange = () => {
     width: 100%;
     padding: 0;
   }
-
   .login-content-submit {
     width: 100%;
     letter-spacing: 2px;
