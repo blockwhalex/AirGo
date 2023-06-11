@@ -19,7 +19,7 @@ func InitRouter() {
 	// 正式发布模式
 	gin.SetMode(gin.ReleaseMode) //ReleaseMode TestMode DebugMode
 	Router := gin.Default()
-	Router.Use(middleware.Cors()) //不开启跨域验证码出错
+	Router.Use(middleware.Cors(), middleware.Recovery()) //不开启跨域验证码出错
 	RouterGroup := Router.Group("/")
 
 	//公共路由

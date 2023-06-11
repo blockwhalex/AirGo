@@ -45,15 +45,10 @@ func Register(c *gin.Context) {
 			return
 		}
 	}
-
-	var user = model.User{
-		UUID:      uuid.NewV4(),
-		UserName:  u.UserName,
-		NickName:  u.UserName,
-		Password:  encode_plugin.BcryptEncode(u.Password),
-		RoleGroup: []model.Role{{ID: 2}}, //默认角色
-	}
-	err = service.Register(&user)
+	err = service.Register(&model.User{
+		UserName: u.UserName,
+		Password: u.Password,
+	})
 	if err != nil {
 		global.Logrus.Error("注册错误:", err.Error())
 		response.Fail("注册错误"+err.Error(), nil, c)
@@ -268,6 +263,7 @@ func ResetUserPassword(ctx *gin.Context) {
 	}
 	//校验邮箱验证码
 	emailcode, _ := global.LocalCache.Get(u.UserName + "emailcode")
+	global.LocalCache.Delete(u.UserName + "emailcode")
 	if emailcode != u.EmailCode {
 		response.Fail("邮箱验证码错误", nil, ctx)
 		return

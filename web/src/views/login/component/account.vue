@@ -180,8 +180,16 @@ const onGetEmailCode = () => {
     return
   }
   state.isCountDown = true
-  publicApi.getEmailCodeApi(loginData.value)
-  handleTimeChange()
+  publicApi.getEmailCodeApi(loginData.value).then((res) => {
+    if (res.code === 0) {
+      state.isCountDown = true
+      ElMessage.success(res.msg)
+      handleTimeChange()
+    } else {
+
+    }
+  })
+
 };
 //倒计时
 const handleTimeChange = () => {

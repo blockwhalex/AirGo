@@ -14,7 +14,7 @@ func InitAlipayClient() (*alipay.Client, error) {
 	//false时用开发网关，https://openapi.alipaydev.com/gateway.do；true时用正式环境网关，https://openapi.alipay.com/gateway.do
 	client, err := alipay.New(global.Server.Pay.AppID, global.Server.Pay.PrivateKey, true)
 	if err != nil {
-		fmt.Println("初始化支付宝失败, 错误信息为", err)
+		//fmt.Println("初始化支付宝失败, 错误信息为", err)
 		//os.Exit(-1)
 		return nil, err
 	}

@@ -28,7 +28,6 @@ func GetThemeConfig(ctx *gin.Context) {
 	//}
 	//global.LocalCache.SetNoExpire("theme", theme)
 	//response.OK("主题获取成功", theme, ctx)
-
 	response.OK("主题获取成功", global.Theme, ctx)
 
 }

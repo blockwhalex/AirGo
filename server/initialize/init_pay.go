@@ -8,9 +8,8 @@ import (
 func InitAlipayClient() {
 	client, err := alipay_plugin.InitAlipayClient()
 	if err != nil {
-		global.Logrus.Error("alipay client error:", err)
+		global.Logrus.Error("init alipay client error:", err)
 		return
 	}
-
 	global.AlipayClient = client
 }

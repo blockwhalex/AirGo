@@ -9,6 +9,7 @@ import (
 	"AirGo/model"
 	encode_plugin "AirGo/utils/encode_plugin"
 	"errors"
+	uuid "github.com/satori/go.uuid"
 )
 
 // 注册
@@ -18,11 +19,18 @@ func Register(u *model.User) error {
 	err := global.DB.Where(&model.User{UserName: u.UserName}).First(&user).Error
 	if err == nil {
 		return errors.New("用户已存在")
+	} else if err == gorm.ErrRecordNotFound {
+		var newUser = model.User{
+			UUID:      uuid.NewV4(),
+			UserName:  u.UserName,
+			NickName:  u.UserName,
+			Password:  encode_plugin.BcryptEncode(u.Password),
+			RoleGroup: []model.Role{{ID: 2}}, //默认角色
+		}
+		return CreateUser(NewUserSubscribe(&newUser))
+	} else {
+		return err
 	}
-	//默认角色
-	//u.RoleGroup = []model.Role{{ID: 2}} //id=2,普通用户
-	//默认套餐
-	return SaveUser(NewUserSubscribe(u))
 }
 
 // 新注册用户分配套餐
@@ -171,11 +179,6 @@ func GetUserlist(params *model.PaginationParams) (*model.UsersWithTotal, error) 
 	return &userArr, err
 }
 
-// 新建用户
-func NewUser(u *model.User) {
-
-}
-
 // 更新用户信息
 func UpdateUser(u *model.User) error {
 	return global.DB.Updates(&u).Error
@@ -184,14 +187,14 @@ func SaveUser(u *model.User) error {
 	return global.DB.Save(&u).Error
 }
 
+// 创建用户
+func CreateUser(u *model.User) error {
+	return global.DB.Create(&u).Error
+}
+
 // 删除用户
 func DeleteUser(u *model.User) error {
 	return global.DB.Delete(&u).Error
-}
-
-// 查询用户
-func FindUser(u *model.User) {
-
 }
 
 // 重置用户密码
