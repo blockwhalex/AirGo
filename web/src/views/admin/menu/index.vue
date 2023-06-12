@@ -32,24 +32,13 @@
             <span>{{ scope.row.component }}</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="排序" show-overflow-tooltip width="80">
-          <template #default="scope">
-            {{ scope.$index }}
-          </template>
-        </el-table-column> -->
         <el-table-column label="菜单ID" show-overflow-tooltip width="80">
           <template #default="scope">
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <!--				<el-table-column label="类型" show-overflow-tooltip width="80">-->
-        <!--					<template #default="scope">-->
-        <!--						<el-tag type="success" size="small">{{ scope.row.xx }}菜单</el-tag>-->
-        <!--					</template>-->
-        <!--				</el-table-column>-->
         <el-table-column label="操作" show-overflow-tooltip width="140">
           <template #default="scope">
-            <el-button size="small" text type="primary" @click="onOpenAddMenu('add')">新增</el-button>
             <el-button size="small" text type="primary"
                        @click="onOpenEditMenu('edit', scope.row)">修改
             </el-button>

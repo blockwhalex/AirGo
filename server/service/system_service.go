@@ -15,7 +15,7 @@ func GetThemeConfig() (*model.Theme, error) {
 
 func UpdateThemeConfig(theme *model.Theme) error {
 	global.Theme = *theme
-	return global.DB.Debug().Model(&model.Theme{ID: 1}).Save(&theme).Error
+	return global.DB.Model(&model.Theme{ID: 1}).Save(&theme).Error
 }
 
 // 获取系统配置

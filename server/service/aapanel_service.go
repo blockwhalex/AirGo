@@ -50,6 +50,10 @@ func SSNodeInfo(nodeID int) (model.SSNodeInfo, error) {
 		nodeInfo.Server = node.Address + ":" + node.Port + "|host=" + node.Host
 	}
 	nodeInfo.SSType = "ss-panel-v3-mod_Uim"
+	//判断是否中转---服务器IP;端口;2;ws;;path=/index|host=伪装地址|server=中转IP|outside_port=中转端口
+	if node.EnableTransfer {
+		nodeInfo.Server = nodeInfo.Server + "|server=" + node.TransferAddress + "|outside_port=" + node.TransferPort
+	}
 	return nodeInfo, nil
 
 }

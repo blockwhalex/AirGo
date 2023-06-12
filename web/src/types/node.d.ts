@@ -10,8 +10,11 @@ declare interface NodeInfo {
     nodespeed_limit: number;  //限速
     traffic_rate: number;     //倍率
     status: boolean;          //节点状态，true启用，flase禁用
-    total_up: number;
-    total_down: number;
+    enable_transfer: boolean; //是否启用中转
+    transfer_address: string; //中转ip
+    transfer_port: string;    //中转port
+    total_up: number;         //
+    total_down: number;       //
     //vmess参数
     v: string;
     aid: string;

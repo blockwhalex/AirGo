@@ -19,24 +19,24 @@
       </div>
       <el-table :data="userManageData.users.user_list" fit style="width: 100%;flex: 1;">
         <!--				<el-table-column type="index" label="序号" width="60" />-->
-        <el-table-column prop="id" label="账户ID" show-overflow-tooltip fixed></el-table-column>
-        <el-table-column prop="user_name" label="账户名称" show-overflow-tooltip fixed></el-table-column>
-        <el-table-column prop="subscribe_info.expired_at" label="订阅到期时间" show-overflow-tooltip>
+        <el-table-column prop="id" label="账户ID" show-overflow-tooltip fixed width="60"></el-table-column>
+        <el-table-column prop="user_name" label="账户名称" show-overflow-tooltip fixed width="150"></el-table-column>
+        <el-table-column prop="subscribe_info.expired_at" label="订阅到期时间" show-overflow-tooltip width="150">
           <template #default="scope">
-            <el-tag type="success">
-              {{ scope.row.subscribe_info.expired_at === null ? '' : scope.row.subscribe_info.expired_at.slice(0, 10) }}
+            <el-tag type="info">
+              {{DateStrtoTime(scope.row.subscribe_info.expired_at)}}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="subscribe_info.goods_id" label="订购商品ID" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="subscribe_info.goods_id" label="商品ID" show-overflow-tooltip width="60"></el-table-column>
         <el-table-column prop="subscribe_info.t" label="总流量(GB)" show-overflow-tooltip>
           <template #default="scope">
-            <el-tag type="success">{{ scope.row.subscribe_info.t / 1024 / 1024 / 1024 }}</el-tag>
+            <el-tag type="info">{{ scope.row.subscribe_info.t / 1024 / 1024 / 1024 }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="已用流量(GB)" show-overflow-tooltip>
           <template #default="scope">
-            <el-tag type="success">
+            <el-tag type="info">
               {{ (scope.row.subscribe_info.d + scope.row.subscribe_info.u) / 1024 / 1024 / 1024 }}
             </el-tag>
           </template>
@@ -44,7 +44,7 @@
         <el-table-column prop="enable" label="用户状态" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.enable">启用</el-tag>
-            <el-tag type="info" v-else>禁用</el-tag>
+            <el-tag type="danger" v-else>禁用</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="100">
@@ -83,6 +83,7 @@ const UserDialog = defineAsyncComponent(() => import('/@/views/admin/user/dialog
 //store
 import {storeToRefs} from 'pinia';
 import {useUserStore} from '/@/stores/userStore'
+import {DateStrtoTime} from "../../../utils/formatTime";
 
 const userStore = useUserStore()
 const {userManageData} = storeToRefs(userStore)

@@ -5,7 +5,13 @@
         <el-row :gutter="35">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="账户邮箱">
-              <el-input v-model="userManageData.dialog.userForm.user_name" placeholder="请输入账户名称"
+              <el-input v-model="userManageData.dialog.userForm.user_name" placeholder="请输入账户邮箱"
+                        clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="账户密码">
+              <el-input v-model="userManageData.dialog.userForm.password" placeholder="请输入" type="password"
                         clearable></el-input>
             </el-form-item>
           </el-col>
@@ -18,22 +24,79 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-            <el-form-item label="账户密码">
-              <el-input v-model="userManageData.dialog.userForm.password" placeholder="请输入" type="password"
-                        clearable></el-input>
+            <el-form-item label="用户状态">
+              <el-switch v-model="userManageData.dialog.userForm.enable" inline-prompt active-text="开启"
+                         inactive-text="关闭"></el-switch>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-            <el-form-item label="用户状态">
-              <!--							<el-switch v-model="userManageData.dialog.userForm.enable" inline-prompt :active-value="1" :inactive-value="0" ></el-switch>-->
-              <el-switch v-model="userManageData.dialog.userForm.enable" inline-prompt></el-switch>
+            <el-form-item label="分配套餐">
+              <el-select v-model="userManageData.dialog.userForm.subscribe_info.goods_id" class="m-2"
+                         placeholder="选择套餐">
+                <el-option
+                    v-for="item in goodsList"
+                    :key="item.id"
+                    :label="item.subject"
+                    :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="到期时间">
+              <el-date-picker
+                  v-model="userManageData.dialog.userForm.subscribe_info.expired_at"
+                  type="datetime"
+                  placeholder="选择到期时间"
+                  size="default"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="总流量">
+              <el-row :gutter="0">
+                <el-col :span="12">
+                  <el-input v-model.number="state.subParams.t" type="number"/>
+                </el-col>
+                <el-col :span="2" style="text-align: center"><span>-</span></el-col>
+                <el-col :span="10">
+                  <span>GB</span>
+                </el-col>
+              </el-row>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="限速">
+              <el-row :gutter="0">
+                <el-col :span="12">
+                  <el-input v-model.number="userManageData.dialog.userForm.subscribe_info.node_speedlimit" type="number"/>
+                </el-col>
+                <el-col :span="2" style="text-align: center"><span>-</span></el-col>
+                <el-col :span="10">
+                  <span>Mbps</span>
+                </el-col>
+              </el-row>
+
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="连接数">
+              <el-row :gutter="0">
+                <el-col :span="12">
+                  <el-input v-model.number="userManageData.dialog.userForm.subscribe_info.node_connector" type="number"/>
+                </el-col>
+                <el-col :span="2" style="text-align: center"><span>-</span></el-col>
+                <el-col :span="10">
+                  <span>个</span>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <template #footer>
 				<span class="dialog-footer">
-					<el-button @click="onCancel" size="default">取 消</el-button>
+					<el-button @click="closeDialog" size="default">取 消</el-button>
 					<el-button type="primary" @click="onSubmit" size="default">{{ userManageData.dialog.submitTxt }}</el-button>
 				</span>
       </template>
@@ -42,7 +105,16 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
+import {ref, reactive} from 'vue';
+import {ElMessage} from "element-plus";
+
+const state = reactive({
+  subParams: {
+    t: 0,
+    u: 0,
+    d: 0,
+  }
+})
 //user store
 import {useUserStore} from '/@/stores/userStore'
 
@@ -55,6 +127,10 @@ import {useRoleStore} from '/@/stores/roleStore'
 
 const roleStore = useRoleStore()
 const {roleManageData} = storeToRefs(roleStore)
+//shop store
+import {useShopStore} from "/@/stores/shopStore";
+const shopStore = useShopStore()
+const {goodsList} = storeToRefs(shopStore)
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
@@ -64,11 +140,21 @@ const userDialogFormRef = ref();
 
 // 打开弹窗
 const openDialog = (type: string, row: SysUser) => {
-
+  userManageData.value.dialog.isShowDialog = true;
+  shopStore.getAllGoods() //获取全部套餐
   if (type === 'edit') {
-    userManageData.value.dialog.userForm = row;
     userManageData.value.dialog.title = '修改用户';
     userManageData.value.dialog.submitTxt = '修 改';
+    userManageData.value.dialog.userForm = JSON.parse(JSON.stringify(row)) //深拷贝,防止修改时间导致报错
+    //计算流量
+    state.subParams.t=userManageData.value.dialog.userForm.subscribe_info.t/1024/1024/1024
+    //计算用户的角色
+    let currentUserRoleIds:string[]=[]
+    userManageData.value.dialog.userForm.role_group.forEach((item:any)=>{
+      currentUserRoleIds.push(item.role_name)
+    })
+    userManageData.value.dialog.check_list=currentUserRoleIds
+    console.log("currentUserRoleIds",currentUserRoleIds)
   } else {
     userManageData.value.dialog.title = '新增用户';
     userManageData.value.dialog.submitTxt = '新 增';
@@ -77,9 +163,7 @@ const openDialog = (type: string, row: SysUser) => {
     // 	userDialogFormRef.value.resetFields();
     // });
   }
-  userManageData.value.dialog.isShowDialog = true;
 //打开时加载全部角色，用来设置用户角色
-  //配置参数，不分页
   roleManageData.value.params.page_num = 0
   roleManageData.value.params.page_size = 10000
   roleStore.getRoleList()
@@ -88,25 +172,28 @@ const openDialog = (type: string, row: SysUser) => {
 const closeDialog = () => {
   userManageData.value.dialog.isShowDialog = false;
 };
-// 取消
-const onCancel = () => {
-  closeDialog();
-};
 // 提交
 const onSubmit = () => {
   if (userManageData.value.dialog.title === '新增用户') {
     userStore.newUser()
   } else {
-    userStore.updateUser()
+    //计算流量
+    if (state.subParams.t !== 0) {
+      userManageData.value.dialog.userForm.subscribe_info.t = state.subParams.t*1024*1024*1024
+    }
+    userStore.updateUser().then((res)=>{
+      if (res.code===0){
+        ElMessage.success(res.msg)
+      } else {
+        ElMessage.error(res.msg)
+      }
+    })
   }
-  // emit('refresh');
-  closeDialog();
   setTimeout(() => {
     userStore.getUserList()
   }, 1000)
-
+  closeDialog();
 };
-
 // 暴露变量
 defineExpose({
   openDialog,

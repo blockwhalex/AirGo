@@ -12,6 +12,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// sspanel 响应模板
+//
+//	{
+//		"ret": 1,
+//		"data": {
+//			"node_group": 0,        //节点群组
+//			"node_class": 0,        //节点等级
+//			"node_speedlimit": 0,   //节点限速/Mbps
+//			"traffic_rate": 1,      //倍率
+//			"mu_only": 1,           //只启用单端口多用户
+//			"sort": 11,             //类型sort==11V2Ray sort==15>V2Ray vless  sort==12>V2Ray中转    sort==0>Shadowsocks   sort==1>VPN/Radius基础   sort==2>SSH   sort==5>Anyconnect   sort==9>Shadowsocks 单端口多用户   sort==10>Shadowsocks中转  sort==13>Shadowsocks V2Ray-Plugin&Obfs  sort==14>Trojan
+//			"server": "plmoknijb.f3322.net;5566;0;ws;;path=/;host=tms.dingtalk.com",
+//			"type": "ss-panel-v3-mod_Uim" //显示与隐藏
+//		}
+//	}
+//
 // 当前节点设置
 func SSNodeInfo(ctx *gin.Context) {
 	//验证key

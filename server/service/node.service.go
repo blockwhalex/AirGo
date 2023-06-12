@@ -74,7 +74,7 @@ func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
 			return model.NodesWithTotal{}
 		}
 	} else {
-		err := global.DB.Debug().Model(&model.Node{}).Count(&nodeArr.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
+		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
 		if err != nil {
 			global.Logrus.Error("查询节点流量error:", err.Error())
 			return model.NodesWithTotal{}

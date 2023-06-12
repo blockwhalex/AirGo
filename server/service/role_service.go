@@ -63,7 +63,7 @@ func AddRole(role *model.Role) error {
 func DelRole(id int) error {
 	var role model.Role
 	//查询全部关联并删除
-	err := global.DB.Debug().Where("id = ?", id).Preload("Menus").Find(&role).Error
+	err := global.DB.Where("id = ?", id).Preload("Menus").Find(&role).Error
 	if err != nil {
 		return err
 	}
@@ -77,10 +77,10 @@ func DelRole(id int) error {
 func UpdateUserRoleGroup(roles []string, user *model.User) error {
 	var roleArr []model.Role
 	global.DB.Where("role_name in ?", roles).Find(&roleArr)
-	return global.DB.Debug().Model(&user).Association("RoleGroup").Replace(roleArr)
+	return global.DB.Model(&user).Association("RoleGroup").Replace(roleArr)
 }
 
 // 删除用户关联的角色组
 func DeleteUserRoleGroup(user *model.User) error {
-	return global.DB.Debug().Model(&model.User{ID: user.ID}).Association("RoleGroup").Replace(nil)
+	return global.DB.Model(&model.User{ID: user.ID}).Association("RoleGroup").Replace(nil)
 }

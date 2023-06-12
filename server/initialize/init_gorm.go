@@ -178,6 +178,7 @@ func InsertInto(db *gorm.DB) error {
 		{RoleID: 1, DynamicRouteID: 12},
 		{RoleID: 1, DynamicRouteID: 13},
 		{RoleID: 1, DynamicRouteID: 14},
+		{RoleID: 1, DynamicRouteID: 15},
 
 		{RoleID: 2, DynamicRouteID: 9},
 		{RoleID: 2, DynamicRouteID: 10},

@@ -83,7 +83,7 @@ func FindUsersByGoods(goods *[]model.Goods) (*[]model.SSUsers, error) {
 // 查询订单属于哪个用户
 func FindUsersByOrderID(outTradeNo string) (*model.User, error) {
 	var order model.Orders
-	err := global.DB.Debug().Where("out_trade_no = ?", outTradeNo).Preload("User").Find(&order).Error
+	err := global.DB.Where("out_trade_no = ?", outTradeNo).Preload("User").Find(&order).Error
 	return &order.User, err
 }
 
@@ -124,8 +124,10 @@ func HandleUserSubscribe(u *model.User, goods *model.Goods) *model.User {
 	u.SubscribeInfo.GoodsID = goods.ID //当前订购的套餐
 	u.SubscribeInfo.SubStatus = true   //订阅状态
 	t := time.Now().AddDate(0, 0, goods.ExpirationDate)
-	u.SubscribeInfo.ExpiredAt = &t                      //过期时间
-	u.SubscribeInfo.NodeConnector = goods.NodeConnector //连接客户端数
+	u.SubscribeInfo.ExpiredAt = &t //过期时间
+	if goods.NodeConnector != 0 {
+		u.SubscribeInfo.NodeConnector = goods.NodeConnector //连接客户端数
+	}
 	return u
 }
 
@@ -158,7 +160,7 @@ func ChangeSubHost(uID int, host string) error {
 	var u model.User
 	u.ID = uID
 	u.SubscribeInfo.Host = host
-	return global.DB.Debug().Updates(&u).Error
+	return global.DB.Updates(&u).Error
 }
 
 // 获取自身信息
@@ -172,9 +174,9 @@ func GetUserlist(params *model.PaginationParams) (*model.UsersWithTotal, error) 
 	var userArr model.UsersWithTotal
 	var err error
 	if params.Search != "" {
-		err = global.DB.Model(&model.User{}).Where("user_name like ?", ("%" + params.Search + "%")).Count(&userArr.Total).Limit(params.PageSize).Offset((params.PageNum - 1) * params.PageSize).Find(&userArr.UserList).Error
+		err = global.DB.Model(&model.User{}).Where("user_name like ?", ("%" + params.Search + "%")).Count(&userArr.Total).Limit(params.PageSize).Offset((params.PageNum - 1) * params.PageSize).Preload("RoleGroup").Find(&userArr.UserList).Error
 	} else {
-		err = global.DB.Model(&model.User{}).Count(&userArr.Total).Limit(params.PageSize).Offset((params.PageNum - 1) * params.PageSize).Find(&userArr.UserList).Error
+		err = global.DB.Model(&model.User{}).Count(&userArr.Total).Limit(params.PageSize).Offset((params.PageNum - 1) * params.PageSize).Preload("RoleGroup").Find(&userArr.UserList).Error
 	}
 	return &userArr, err
 }

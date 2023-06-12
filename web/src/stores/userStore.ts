@@ -44,7 +44,7 @@ export const useUserStore = defineStore('userInfo', {
             phone: '',
             email: '',
             enable: true,
-            user_role: [],	//角色组
+            role_group: [] as RowRoleType[],	//角色组
             orders: [],      //订单
             subscribe_info: { //附加订阅信息
                 expired_at: '',
@@ -79,7 +79,7 @@ export const useUserStore = defineStore('userInfo', {
                 title: '',
                 submitTxt: '',
                 userForm: {} as SysUser,
-                check_list: [], //选中的角色
+                check_list: [''], //选中的角色
             },
         },
     }),
@@ -186,6 +186,7 @@ export const useUserStore = defineStore('userInfo', {
                 user: this.userManageData.dialog.userForm,
                 check_list: this.userManageData.dialog.check_list
             })
+            return res
         },
         //删除用户
         async deleteUser(params?: object) {

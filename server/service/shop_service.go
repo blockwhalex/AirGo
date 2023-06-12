@@ -66,11 +66,11 @@ func NewGoods(goods *model.Goods) error {
 // 删除商品
 func DeleteGoods(goods *model.Goods) error {
 	//删除关联
-	err := global.DB.Debug().Model(&model.Goods{ID: goods.ID}).Association("Nodes").Replace(nil)
+	err := global.DB.Model(&model.Goods{ID: goods.ID}).Association("Nodes").Replace(nil)
 	if err != nil {
 		return err
 	}
-	err = global.DB.Debug().Where(&model.Goods{ID: goods.ID}).Delete(&model.Goods{}).Error
+	err = global.DB.Where(&model.Goods{ID: goods.ID}).Delete(&model.Goods{}).Error
 	return err
 
 }

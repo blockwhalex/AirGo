@@ -10,7 +10,7 @@ declare interface SysUser {
     phone: string;
     email: string;
     enable: boolean;
-    user_role: [];	//角色组
+    role_group: RowRoleType[];	//角色组
     orders: [];      //订单
     subscribe_info: { //附加订阅信息
         host: string;

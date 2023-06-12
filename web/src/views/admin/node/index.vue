@@ -32,7 +32,7 @@
         <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="120" fixed></el-table-column>
         <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="120"></el-table-column>
         <el-table-column prop="port" label="节点端口" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="sort" label="类型" show-overflow-tooltip>
+        <el-table-column prop="sort" label="协议类型" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.sort ===11">vmess</el-tag>
             <el-tag type="success" v-if="scope.row.sort ===15">vless</el-tag>
@@ -49,10 +49,16 @@
             <el-tag type="warning">{{ scope.row.total_down / 1024 / 1024 / 1024 }}</el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="enable_transfer" label="节点类型" show-overflow-tooltip>
+          <template #default="scope">
+            <el-tag type="primary" v-if="scope.row.enable_transfer">中转</el-tag>
+            <el-tag type="success" v-else>直连</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="节点状态" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.status">启用</el-tag>
-            <el-tag type="info" v-else>禁用</el-tag>
+            <el-tag type="danger" v-else>禁用</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="100">

@@ -69,9 +69,20 @@
       <el-form-item label="节点倍率">
         <el-input type="number" v-model="dialogData.nodeInfo.traffic_rate" placeholder="1"/>
       </el-form-item>
+      <el-form-item label="启用中转">
+        <el-switch
+            size="small"
+            v-model="dialogData.nodeInfo.enable_transfer"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+        />
+      </el-form-item>
+      <el-form-item label="中转ip" v-if="dialogData.nodeInfo.enable_transfer">
+        <el-input v-model="dialogData.nodeInfo.transfer_address" placeholder=""/>
+      </el-form-item>
+      <el-form-item label="中转端口" v-if="dialogData.nodeInfo.enable_transfer">
+        <el-input v-model="dialogData.nodeInfo.transfer_port" placeholder=""/>
+      </el-form-item>
     </el-form>
-
-
     <template #footer>
             <span class="dialog-footer">
                 <el-button @click="dialogData.isShowDialog = false">取消</el-button>

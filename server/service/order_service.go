@@ -8,13 +8,13 @@ import (
 )
 
 func CreateOrder(order *model.Orders) (*model.Orders, error) {
-	err := global.DB.Debug().Create(&order).Error
+	err := global.DB.Create(&order).Error
 	return order, err
 }
 
 // 更新数据库订单 by OutTradeNo
 func UpdateOrder(order *model.Orders) error {
-	err := global.DB.Debug().Save(&order).Error
+	err := global.DB.Save(&order).Error
 	return err
 }
 
@@ -71,6 +71,6 @@ func GetOrderByUserID(userID int, orderParams *model.PaginationParams) (*[]model
 // 获取用户订单
 func GetOrderByOrderID(order *model.Orders) (*model.Orders, error) {
 	var queryOrder model.Orders
-	err := global.DB.Debug().Where(&model.Orders{OutTradeNo: order.OutTradeNo, UserID: order.UserID}).First(&queryOrder).Error
+	err := global.DB.Where(&model.Orders{OutTradeNo: order.OutTradeNo, UserID: order.UserID}).First(&queryOrder).Error
 	return &queryOrder, err
 }
