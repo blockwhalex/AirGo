@@ -49,11 +49,11 @@ func SSNodeInfo(nodeID int) (model.SSNodeInfo, error) {
 		}
 		nodeInfo.Server = node.Address + ":" + node.Port + "|host=" + node.Host
 	}
-	nodeInfo.SSType = "ss-panel-v3-mod_Uim"
-	//判断是否中转---服务器IP;端口;2;ws;;path=/index|host=伪装地址|server=中转IP|outside_port=中转端口
-	if node.EnableTransfer {
-		nodeInfo.Server = nodeInfo.Server + "|server=" + node.TransferAddress + "|outside_port=" + node.TransferPort
-	}
+	//nodeInfo.SSType = "ss-panel-v3-mod_Uim"
+	////判断是否中转---服务器IP;端口;2;ws;;path=/index|host=伪装地址|server=中转IP|outside_port=中转端口
+	//if node.EnableTransfer {
+	//	nodeInfo.Server = nodeInfo.Server + "|server=" + node.TransferAddress + "|outside_port=" + node.TransferPort
+	//}
 	return nodeInfo, nil
 
 }
@@ -62,14 +62,14 @@ func SSNodeInfo(nodeID int) (model.SSNodeInfo, error) {
 func GetUserSub(url string, subType string) string {
 	//查找用户
 	var u model.User
-	err := global.DB.Where("subscribe_url = ? and sub_status = 1", url).First(&u).Error
+	err := global.DB.Where("subscribe_url = ? and sub_status = 1 and d + u < t", url).First(&u).Error
 	if err != nil {
 		return ""
 	}
 	//剩余流量检测
-	if (u.SubscribeInfo.U + u.SubscribeInfo.D) > u.SubscribeInfo.T {
-		return ""
-	}
+	//if (u.SubscribeInfo.U + u.SubscribeInfo.D) > u.SubscribeInfo.T {
+	//	return ""
+	//}
 	//根据goodsID 查找具体的节点
 	var goods model.Goods
 	err = global.DB.Where("id = ?", u.SubscribeInfo.GoodsID).Preload("Nodes").Find(&goods).Error
@@ -78,9 +78,9 @@ func GetUserSub(url string, subType string) string {
 	expiredBd1 := (float64(u.SubscribeInfo.T - u.SubscribeInfo.U - u.SubscribeInfo.D)) / 1024 / 1024 / 1024
 	expiredBd2 := strconv.FormatFloat(expiredBd1, 'f', 2, 64)
 	name := "到期时间:" + expiredTime + "  |  剩余流量:" + expiredBd2 + "GB"
-	var SubscribeStatus = model.Node{
+	var firstSubNode = model.Node{
 		Name:    name,
-		Address: "分享反差女友套餐5折",
+		Address: global.Server.System.SubName,
 		Port:    "6666",
 		Aid:     "0",
 		Net:     "ws",
@@ -90,7 +90,7 @@ func GetUserSub(url string, subType string) string {
 	//插入计算剩余天数，流量
 	goods.Nodes = append(goods.Nodes, model.Node{})
 	copy(goods.Nodes[1:], goods.Nodes[0:])
-	goods.Nodes[0] = SubscribeStatus
+	goods.Nodes[0] = firstSubNode
 	//根据subType生成不同客户端订阅 1:v2rayng 2:clash 3 shadowrocket 4 Quantumult X
 	switch subType {
 	case "1":
@@ -98,9 +98,11 @@ func GetUserSub(url string, subType string) string {
 	case "2":
 		return ClashSubscribe(&goods.Nodes, u.UUID.String(), u.SubscribeInfo.Host)
 	case "3":
-		return ShadowRocketSubscribe(&goods.Nodes, u.UUID.String(), u.SubscribeInfo.Host, name)
+		//return ShadowRocketSubscribe(&goods.Nodes, u.UUID.String(), u.SubscribeInfo.Host, name)
+		return V2rayNGSubscribe(&goods.Nodes, u.UUID.String(), u.SubscribeInfo.Host)
 	case "4":
-		return QxSubscribe(&goods.Nodes, u.UUID.String(), u.SubscribeInfo.Host)
+		//return QxSubscribe(&goods.Nodes, u.UUID.String(), u.SubscribeInfo.Host)
+		return V2rayNGSubscribe(&goods.Nodes, u.UUID.String(), u.SubscribeInfo.Host)
 	}
 	return ""
 }
@@ -249,8 +251,13 @@ func V2rayNGVmess(node model.Node, uuid, host string) string {
 	var vmess model.Vmess
 	vmess.V = node.V
 	vmess.Name = node.Name
-	vmess.Address = node.Address
-	vmess.Port = node.Port
+	if node.EnableTransfer {
+		vmess.Address = node.TransferAddress
+		vmess.Port = node.TransferPort
+	} else {
+		vmess.Address = node.Address
+		vmess.Port = node.Port
+	}
 	vmess.Uuid = uuid
 	vmess.Aid = node.Aid
 	vmess.Net = node.Net
@@ -270,8 +277,15 @@ func V2rayNGVmess(node model.Node, uuid, host string) string {
 func V2rayNGVless(node model.Node, uuid, host string) string {
 	path := url.QueryEscape(node.Path)
 	name := url.QueryEscape(node.Name)
-	//str := "vless://" + uuid + "@" + node.Address + ":" + node.Port + "?encryption=" + node.Scy + "&type=" + node.Net + "&security=" + node.Tls + "&host=" + host + "&path=" + path + "&headerType=" + node.Disguisetype
-	str := "vless://" + uuid + "@" + node.Address + ":" + node.Port + "?encryption=" + node.Scy + "&type=" + node.Net + "&security=" + node.Tls + "&host=" + host + "&path=" + path
+	var address, port string
+	if node.EnableTransfer {
+		address = node.TransferAddress
+		port = node.TransferPort
+	} else {
+		address = node.Address
+		port = node.Port
+	}
+	str := "vless://" + uuid + "@" + address + ":" + port + "?encryption=" + node.Scy + "&type=" + node.Net + "&security=" + node.Tls + "&host=" + host + "&path=" + path
 	if node.Tls == "tls" || node.Tls == "reality" {
 		return str + "&sni=" + node.Sni + "#" + name
 	}
@@ -282,7 +296,15 @@ func V2rayNGVless(node model.Node, uuid, host string) string {
 func V2rayNGTrojan(node model.Node, uuid, host string) string {
 	path := url.QueryEscape(node.Path)
 	name := url.QueryEscape(node.Name)
-	str := "trojan://" + uuid + "@" + node.Address + ":" + node.Port + "?security=" + node.Tls + "&headerType=" + node.Disguisetype + "&type=" + node.Net + "&path=" + path + "&host=" + host
+	var address, port string
+	if node.EnableTransfer {
+		address = node.TransferAddress
+		port = node.TransferPort
+	} else {
+		address = node.Address
+		port = node.Port
+	}
+	str := "trojan://" + uuid + "@" + address + ":" + port + "?security=" + node.Tls + "&headerType=" + node.Disguisetype + "&type=" + node.Net + "&path=" + path + "&host=" + host
 	if node.Tls == "tls" || node.Tls == "reality" {
 		return str + "&sni=" + node.Sni + "#" + name
 	}
@@ -298,9 +320,14 @@ func ClashVmess(v model.Node, uuid, host string) model.ClashProxy {
 	case 15:
 		proxy.Type = "vless"
 	}
+	if v.EnableTransfer {
+		proxy.Server = v.TransferAddress
+		proxy.Port = v.TransferPort
+	} else {
+		proxy.Server = v.Address
+		proxy.Port = v.Port
+	}
 	proxy.Name = v.Name
-	proxy.Server = v.Address
-	proxy.Port = v.Port
 	proxy.Uuid = uuid
 	proxy.Alterid = v.Aid
 	proxy.Cipher = "auto"
@@ -321,11 +348,16 @@ func ClashVmess(v model.Node, uuid, host string) model.ClashProxy {
 // generate  Clash trojan
 func ClashTrojan(v model.Node, uuid, host string) model.ClashProxy {
 	var proxy model.ClashProxy
+	if v.EnableTransfer {
+		proxy.Server = v.TransferAddress
+		proxy.Port = v.TransferPort
+	} else {
+		proxy.Server = v.Address
+		proxy.Port = v.Port
+	}
 	proxy.Type = "trojan"
 	proxy.Password = uuid
 	proxy.Name = v.Name
-	proxy.Server = v.Address
-	proxy.Port = v.Port
 	proxy.Uuid = uuid
 	proxy.Alterid = v.Aid
 	proxy.Cipher = "auto"
@@ -346,7 +378,15 @@ func ClashTrojan(v model.Node, uuid, host string) model.ClashProxy {
 // generate ShadowRocket vmess
 func ShadowRocketVmess(node model.Node, uuid, host string) string {
 	//nameStr:="chacha20-poly1305:"
-	name := node.Scy + ":" + uuid + "@" + node.Address + ":" + node.Port
+	var address, port string
+	if node.EnableTransfer {
+		address = node.TransferAddress
+		port = node.TransferPort
+	} else {
+		address = node.Address
+		port = node.Port
+	}
+	name := node.Scy + ":" + uuid + "@" + address + ":" + port
 	nameStr := base64.StdEncoding.EncodeToString([]byte(name))
 	netType := "websocket"
 	switch node.Net {

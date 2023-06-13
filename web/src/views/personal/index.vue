@@ -8,16 +8,12 @@
             <div class="personal-user-left">
               <el-upload class="h400 personal-user-left-upload" accept=".bmg,.png,.jpg"
                          action="https://jsonplaceholder.typicode.com/posts/" multiple :limit="1">
-                <img
-                    src="https://img2.baidu.com/it/u=1978192862,2048448374&fm=253&fmt=auto&app=138&f=JPEG?w=504&h=500"/>
+                <img :src="userInfos.avatar"/>
               </el-upload>
             </div>
             <div class="personal-user-right">
               <el-row>
-                <el-col :span="24" class="personal-title mb18">{{
-                    currentTime
-                  }}，生活变的再糟糕，也不妨碍我变得更好！
-                </el-col>
+                <el-col :span="24" class="personal-title mb18">{{currentTime }}</el-col>
                 <el-col :span="24">
                   <el-row>
                     <el-col :xs="24" :sm="12" class="personal-item mb6">

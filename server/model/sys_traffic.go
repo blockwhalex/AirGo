@@ -2,6 +2,7 @@ package model
 
 import "time"
 
+// sspanel 上报用户的流量使用情况
 type TrafficInfo struct {
 	UserID int `json:"user_id" gorm:"column:user_id"`
 	U      int `json:"u" gorm:"column:u"` //bit

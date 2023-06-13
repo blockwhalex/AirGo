@@ -48,11 +48,6 @@ func UpdateNode(node *model.Node) error {
 	return global.DB.Save(&node).Error
 }
 
-// 插入节点流量统计
-func NewTrafficLog(t *model.TrafficLog) error {
-	return global.DB.Create(&t).Error
-}
-
 // 查询节点流量
 func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
 	//var nodeArr []model.Node
@@ -120,4 +115,16 @@ func GetNodesStatus() *[]model.NodeStatus {
 		}
 	}
 	return &nodestatusArr
+}
+
+// 插入节点流量统计
+func NewTrafficLog(t *model.TrafficLog) error {
+	return global.DB.Create(&t).Error
+}
+
+// 定时清理数据库(traffic)
+func CleanDBTraffic() error {
+	y, m, _ := time.Now().Date()
+	startTime := time.Date(y, m-2, 1, 0, 0, 0, 0, time.Local)
+	return global.DB.Where("created_at < ?", startTime).Delete(&model.TrafficLog{}).Error
 }

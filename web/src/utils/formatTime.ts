@@ -4,7 +4,9 @@ export function DateStrtoTime(strTime: string) {
     if (!strTime) {
         return '';
     }
-    strTime = strTime.slice(0, strTime.indexOf("."))
+  if (strTime.indexOf(".") !== -1){
+      strTime = strTime.slice(0, strTime.indexOf("."))
+  }
     strTime = strTime.replace(/T/g, ' ');
     return strTime;
 }

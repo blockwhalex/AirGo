@@ -33,12 +33,11 @@ import (
 //c.Stop()  // 停止调度，但正在运行的作业不会被停止
 
 func InitCrontab() {
-	global.Logrus.Info("用户流量有效期定时任务")
 	UserCrontab()
+	CleanDBTraffic()
 }
 
-//用户流量，有效期 任务
-
+// 用户流量，有效期 任务
 func UserCrontab() {
 	c := cron.New()
 	_, err := c.AddFunc("*/2 * * * *", func() {
@@ -50,7 +49,22 @@ func UserCrontab() {
 	if err != nil {
 		return
 	}
+	global.Logrus.Info("用户流量有效期定时任务")
 	c.Start()
 }
 
-// casbin 更新
+// 定时清理数据库(traffic)
+func CleanDBTraffic() {
+	c := cron.New()
+	_, err := c.AddFunc("1 1 1 * *", func() {
+		err := service.CleanDBTraffic()
+		if err != nil {
+			global.Logrus.Error("service.UserExpiryCheck error:", err)
+		}
+	})
+	if err != nil {
+		return
+	}
+	global.Logrus.Info("清理数据库(traffic)定时任务")
+	c.Start()
+}
