@@ -28,6 +28,10 @@
               <el-switch v-model="userManageData.dialog.userForm.enable" inline-prompt active-text="开启"
                          inactive-text="关闭"></el-switch>
             </el-form-item>
+            <el-form-item label="订阅状态">
+              <el-switch v-model="userManageData.dialog.userForm.subscribe_info.sub_status" inline-prompt active-text="开启"
+                         inactive-text="关闭"></el-switch>
+            </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="分配套餐">

@@ -182,8 +182,7 @@ func UpdateUser(ctx *gin.Context) {
 		return
 	}
 	var user = u.User
-
-	//err = service.UpdateUser(&user)
+	//判断订阅状态
 	err = service.SaveUser(&user)
 	if err != nil {
 		global.Logrus.Error("修改用户错误 error:", err)

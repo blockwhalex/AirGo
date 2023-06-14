@@ -21,6 +21,18 @@
         <!--				<el-table-column type="index" label="序号" width="60" />-->
         <el-table-column prop="id" label="账户ID" show-overflow-tooltip fixed width="60"></el-table-column>
         <el-table-column prop="user_name" label="账户名称" show-overflow-tooltip fixed width="150"></el-table-column>
+        <el-table-column prop="enable" label="用户状态" show-overflow-tooltip width="80">
+          <template #default="scope">
+            <el-tag type="success" v-if="scope.row.enable">启用</el-tag>
+            <el-tag type="danger" v-else>禁用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="enable" label="订阅状态" show-overflow-tooltip width="80">
+          <template #default="scope">
+            <el-tag type="success" v-if="scope.row.enable">启用</el-tag>
+            <el-tag type="danger" v-else>禁用</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="subscribe_info.expired_at" label="订阅到期时间" show-overflow-tooltip width="150">
           <template #default="scope">
             <el-tag type="info">
@@ -41,12 +53,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="enable" label="用户状态" show-overflow-tooltip>
-          <template #default="scope">
-            <el-tag type="success" v-if="scope.row.enable">启用</el-tag>
-            <el-tag type="danger" v-else>禁用</el-tag>
-          </template>
-        </el-table-column>
+
         <el-table-column label="操作" width="100">
           <template #default="scope">
             <el-button size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"

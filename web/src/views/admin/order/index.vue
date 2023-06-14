@@ -25,17 +25,17 @@
       <el-table :data="orderManageData.allOrders.order_list" fit style="width: 100%;flex: 1;">
         <el-table-column type="index" label="序号" fixed/>
         <!--        <el-table-column prop="id" label="订单ID" fixed/>-->
-        <el-table-column prop="out_trade_no" label="订单号" fixed/>
-        <el-table-column prop="created_at" label="下单日期">
+        <el-table-column prop="out_trade_no" label="订单号" fixed width="200"/>
+        <el-table-column prop="created_at" label="下单日期" width="150">
           <template #default="scope">
             <el-tag type="success">{{ DateStrtoTime(scope.row.created_at) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="user_name" label="用户"/>
-        <el-table-column prop="goods_id" label="商品ID" show-overflow-tooltip/>
-        <el-table-column prop="subject" label="商品标题" show-overflow-tooltip/>
-        <el-table-column prop="total_amount" label="订单金额" show-overflow-tooltip/>
-        <el-table-column prop="receipt_amount" label="实收金额" show-overflow-tooltip/>
+        <el-table-column prop="user_name" label="用户" width="120"/>
+        <el-table-column prop="goods_id" label="商品ID" show-overflow-tooltip width="60"/>
+        <el-table-column prop="subject" label="商品标题" show-overflow-tooltip width="200"/>
+        <el-table-column prop="total_amount" label="订单金额" show-overflow-tooltip width="80"/>
+        <el-table-column prop="receipt_amount" label="实收金额" show-overflow-tooltip width="80"/>
         <el-table-column prop="trade_status" label="交易状态" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.trade_status==='TRADE_SUCCESS'">支付成功</el-tag>

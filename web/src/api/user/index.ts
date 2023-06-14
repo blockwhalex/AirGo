@@ -106,7 +106,6 @@ export function useUserApi() {
             return request({
                 url: '/user/resetSub',
                 method: 'get',
-
             });
         },
     };

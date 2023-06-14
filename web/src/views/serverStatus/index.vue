@@ -5,26 +5,26 @@
         <div class="home-card-item">
           <el-card class="box-card">
             <el-row :gutter="10" justify="space-around" align="middle">
-              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
-                {{ v.name }}
+              <el-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4" style="margin-bottom: 10px">
+                <el-tag type="warning">{{ v.name }}</el-tag>
               </el-col>
-              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
+              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 10px;margin-bottom: 10px">
                 倍率：{{ v.traffic_rate }}
               </el-col>
-              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
-                <el-button v-if="v.status" type="success" plain>在线</el-button>
-                <el-button v-else type="info" plain>离线</el-button>
+<!--              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">-->
+<!--                <el-button v-if="v.status" type="success" plain>在线</el-button>-->
+<!--                <el-button v-else type="info" plain>离线</el-button>-->
+<!--              </el-col>-->
+              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 10px;margin-bottom: 10px">
+                在线：{{ v.user_amount }}
               </el-col>
-              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
-                {{ v.user_amount }}人在线
-              </el-col>
-              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
+              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 10px;margin-bottom: 10px">
                 <el-icon color="#409EFC">
                   <Top/>
                 </el-icon>
                 <span>{{ v.u }}MB/s</span>
               </el-col>
-              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">
+              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 10px;margin-bottom: 10px">
                 <el-icon color="#409EFC">
                   <Bottom/>
                 </el-icon>
@@ -53,7 +53,10 @@ const {serverStatusData} = storeToRefs(nodeStore)
 
 //var ws = new WebSocket("ws://localhost/ws",[token]);
 const token = Session.get('token')
-let ws = new WebSocket('ws://'+import.meta.env.VITE_API_URL+'websocket/msg', token);
+const wsUrl:string = import.meta.env.VITE_API_URL
+const url =wsUrl.slice(wsUrl.indexOf('//')+2,wsUrl.length)
+//console.log("url:",url)
+let ws = new WebSocket('ws://'+url+'websocket/msg', token);
 let interval = null;//计时器
 //监听是否连接成功
 function initWS() {
@@ -101,7 +104,7 @@ onUnmounted(() => {
   height: 100%;
   border-radius: 4px;
   transition: all ease 0.3s;
-  padding: 20px;
+  padding: 10px;
   overflow: hidden;
   background: var(--el-color-white);
   color: var(--el-text-color-primary);

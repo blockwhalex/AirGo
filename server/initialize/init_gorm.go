@@ -216,7 +216,7 @@ func InsertInto(db *gorm.DB) error {
 	}
 	// 插入casbin_rule
 	casbinRuleData := []gormadapter.CasbinRule{
-		{Ptype: "p", V0: "1", V1: "/public/getThemeConfig", V2: "GET"},
+		//{Ptype: "p", V0: "1", V1: "/public/getThemeConfig", V2: "GET"},
 
 		{Ptype: "p", V0: "1", V1: "/user/register", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/user/login", V2: "POST"},
@@ -225,7 +225,7 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/user/getUserInfo", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/user/changeUserPassword", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/user/resetUserPassword", V2: "POST"},
-		{Ptype: "p", V0: "1", V1: "/user/resetSub", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/user/resetSub", V2: "GET"},
 
 		{Ptype: "p", V0: "1", V1: "/user/getUserList", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/user/newUser", V2: "POST"},
@@ -248,7 +248,6 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/menu/getRouteList", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/menu/getRouteTree", V2: "GET"},
 
-		//{Ptype: "p", V0: "1", V1: "/shop/alipayTradePreCreatePay", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/preCreatePay", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/purchase", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/getAllEnabledGoods", V2: "GET"},
@@ -281,7 +280,6 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/order/completedOrder", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/order/getMonthOrderStatistics", V2: "POST"},
 
-		{Ptype: "p", V0: "1", V1: "/system/getThemeConfig", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/system/updateThemeConfig", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/system/getSetting", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/system/updateSetting", V2: "POST"},
@@ -292,9 +290,6 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/websocket/msg", V2: "GET"},
 
 		//普通用户
-		{Ptype: "p", V0: "2", V1: "/public/getSetting", V2: "POST"},
-		{Ptype: "p", V0: "2", V1: "/public/updateSetting", V2: "POST"},
-
 		{Ptype: "p", V0: "2", V1: "/user/login", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/user/getSub", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/user/changeUserPassword", V2: "POST"},

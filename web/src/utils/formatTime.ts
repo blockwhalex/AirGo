@@ -6,6 +6,8 @@ export function DateStrtoTime(strTime: string) {
     }
   if (strTime.indexOf(".") !== -1){
       strTime = strTime.slice(0, strTime.indexOf("."))
+  } else if (strTime.indexOf(".") == -1 && strTime.indexOf("+") !== -1 ) {
+      strTime = strTime.slice(0, strTime.indexOf("+"))
   }
     strTime = strTime.replace(/T/g, ' ');
     return strTime;

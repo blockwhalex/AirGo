@@ -21,7 +21,6 @@ export const useNodeStore = defineStore("nodeStore", {
                 page_size: 10,
                 date: [],
             },
-
         },
         //弹窗页数据
         dialogData: {
@@ -69,7 +68,6 @@ export const useNodeStore = defineStore("nodeStore", {
             const res = await nodeApi.getNodeWithTrafficApi(this.nodeManageData.params)
             this.nodeManageData.nodes = res.data
             this.nodeManageData.loading = false
-
         },
         //获取全部节点 with Traffic,订单统计
         async getNodeStatistics(params?: object) {
