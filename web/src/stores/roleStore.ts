@@ -70,7 +70,8 @@ export const useRoleStore = defineStore("roleStore", {
 
         //获取当前角色的权限
         async getPolicyByRoleIds() {
-            const res = await roleApi.getPolicyByRoleIdsApi()
+            const res = await roleApi.getPolicyByRoleIdsApi({roleID:this.dialogEditApi.casbinInfo.roleID})
+           // console.log("获取当前角色的权限:",res)
             // this.dialogEditApi.casbinInfo = res.data
             var casbinRes: CasbinInfo = res.data
             if (casbinRes.casbinItems !== null) {

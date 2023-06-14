@@ -270,7 +270,7 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/mod_mu/users/traffic", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/mod_mu/users/aliveip", V2: "POST"},
 
-		{Ptype: "p", V0: "1", V1: "/casbin/getPolicyByRoleIds", V2: "GET"},
+		{Ptype: "p", V0: "1", V1: "/casbin/getPolicyByRoleIds", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/casbin/updateCasbinPolicy", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/casbin/updateCasbinPolicyNew", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/casbin/getAllPolicy", V2: "GET"},

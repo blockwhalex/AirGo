@@ -139,7 +139,7 @@ func InitRouter() {
 	casbinAdminRouter := RouterGroup.Group("casbin").Use(middleware.ParseJwt(), middleware.Casbin())
 	{
 		casbinAdminRouter.GET("getAllPolicy", api.GetAllPolicy)                    //获取全部权限
-		casbinAdminRouter.GET("getPolicyByRoleIds", api.GetPolicyByRoleIds)        //获取用户权限ByRoleIds
+		casbinAdminRouter.POST("getPolicyByRoleIds", api.GetPolicyByRoleIds)       //获取用户权限ByRoleIds
 		casbinAdminRouter.POST("updateCasbinPolicy", api.UpdateCasbinPolicy)       //更新casbin权限
 		casbinAdminRouter.POST("updateCasbinPolicyNew", api.UpdateCasbinPolicyNew) //更新casbin权限
 	}

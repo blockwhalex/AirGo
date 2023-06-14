@@ -94,7 +94,7 @@
             <el-form-item label="支付宝加密密钥">
               <el-input v-model="serverConfig.pay.encrypt_key" type="password"/>
             </el-form-item>
-            <el-divider content-position="left">微信 支付</el-divider>
+            <el-divider content-position="left">微信 支付(暂不考虑接入)</el-divider>
             <el-form-item>
               <el-button @click="onSubmit" type="primary">保存</el-button>
             </el-form-item>

@@ -294,6 +294,7 @@ func V2rayNGVless(node model.Node, uuid, host string) string {
 
 // generate  v2rayng trojan
 func V2rayNGTrojan(node model.Node, uuid, host string) string {
+	//trojan://59405054-d6d2-47e1-8f99-b7296be5e7a1@114.114.114.114:80?allowInsecure=0#%E6%B5%8B%E8%AF%952
 	path := url.QueryEscape(node.Path)
 	name := url.QueryEscape(node.Name)
 	var address, port string

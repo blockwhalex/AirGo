@@ -5,6 +5,7 @@ import (
 	"AirGo/model"
 	"AirGo/utils/casbin_plugin"
 	"AirGo/utils/response"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -58,8 +59,8 @@ func GetAllPolicy(ctx *gin.Context) {
 
 // 获取权限列表ByRoleIds
 func GetPolicyByRoleIds(ctx *gin.Context) {
-	// body, err := ioutil.ReadAll(ctx.Request.Body)
-	// fmt.Println("body:", string(body), err)
+	//body, err := ioutil.ReadAll(ctx.Request.Body)
+	//fmt.Println("body:", string(body), err)
 	var casbinInfo model.CasbinInfo
 	err := ctx.ShouldBind(&casbinInfo)
 	if err != nil {
@@ -67,6 +68,8 @@ func GetPolicyByRoleIds(ctx *gin.Context) {
 		response.Fail("获取权限列表参数错误", nil, ctx)
 		return
 	}
+	fmt.Println("获取权限列表ByRoleIds:", casbinInfo)
 	res := casbin_plugin.GetPolicyPathByRoleId(&casbinInfo)
+	fmt.Println("获取权限列表ByRoleIds:", res)
 	response.OK("获取权限列表成功", res, ctx)
 }

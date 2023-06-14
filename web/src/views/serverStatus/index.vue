@@ -53,7 +53,7 @@ const {serverStatusData} = storeToRefs(nodeStore)
 
 //var ws = new WebSocket("ws://localhost/ws",[token]);
 const token = Session.get('token')
-let ws = new WebSocket('ws:///192.168.0.8:8899/websocket/msg', token);
+let ws = new WebSocket('ws://'+import.meta.env.VITE_API_URL+'websocket/msg', token);
 let interval = null;//计时器
 //监听是否连接成功
 function initWS() {

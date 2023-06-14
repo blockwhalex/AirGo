@@ -27,13 +27,13 @@ const {dialogEditApi} = storeToRefs(roleStore)
 
 
 // 打开弹窗
-const openDialog = (row: RowRoleType) => { //RowRoleType 角色类型
+const openDialog = (row: RowRoleType) => {//RowRoleType 角色类型
   dialogEditApi.value.isShowDialog = true;
   //获取当前roleID
-  dialogEditApi.value.casbinInfo.roleID = row.roleID
-  //获取全部api list
+  dialogEditApi.value.casbinInfo.roleID = row.id
+  //获取全部api
   roleStore.getAllPolicy()
-  //获取当前角色 api list（选中）
+  //获取当前角色 api (选中)
   roleStore.getPolicyByRoleIds()
 
 

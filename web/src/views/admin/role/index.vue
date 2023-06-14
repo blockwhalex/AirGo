@@ -89,6 +89,7 @@ const onOpenEditRole = (type: string, row: Object) => {
 };
 // 打开修改api弹窗
 const onOpenEditApi = (row: Object) => {
+  //获取当前roleID
   roleDialogEditApiRef.value.openDialog(row);
 }
 // 删除角色

@@ -44,11 +44,11 @@ export function useRoleApi() {
             })
         },
         //获取当前角色的权限
-        getPolicyByRoleIdsApi: (params?: object) => {
+        getPolicyByRoleIdsApi: (data?: object) => {
             return request({
                 url: "/casbin/getPolicyByRoleIds",
-                method: "get",
-                params,
+                method: "post",
+                data,
             })
         },
         //获取全部权限list
