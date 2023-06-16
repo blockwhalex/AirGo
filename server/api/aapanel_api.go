@@ -38,9 +38,10 @@ func SSNodeInfo(ctx *gin.Context) {
 	nodeIDInt, _ := strconv.Atoi(nodeID)
 	//设置节点在线
 	go func(nodeID string) {
-		vStatus, ok := global.LocalCache.Get(nodeID + "status")
+		_, ok := global.LocalCache.Get(nodeID + "status")
 		if !ok {
-			nodeStatus := vStatus.(model.NodeStatus)
+			//nodeStatus := vStatus.(model.NodeStatus)
+			var nodeStatus model.NodeStatus
 			nodeStatus.Status = true
 			global.LocalCache.Set(nodeID+"status", nodeStatus, time.Minute)
 		}

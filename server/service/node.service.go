@@ -94,7 +94,7 @@ func GetNodesStatus() *[]model.NodeStatus {
 	for _, v := range nodesIds {
 		var nodeStatus = model.NodeStatus{}
 		vStatus, ok := global.LocalCache.Get(strconv.Itoa(v.ID) + "status")
-		if !ok {
+		if !ok { //cache过期，离线了
 			nodeStatus.ID = v.ID
 			nodeStatus.Name = v.Name
 			nodeStatus.TrafficRate = v.TrafficRate
