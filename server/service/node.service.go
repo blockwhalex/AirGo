@@ -106,12 +106,6 @@ func GetNodesStatus() *[]model.NodeStatus {
 			nodeStatus = vStatus.(model.NodeStatus)
 			nodeStatus.Name = v.Name
 			nodeStatus.TrafficRate = v.TrafficRate
-			//if time.Now().Sub(nodeStatus.LastTime).Seconds() > 60 {
-			//	nodeStatus.UserAmount = 0
-			//	nodeStatus.Status = false
-			//} else {
-			//	nodeStatus.Status = true
-			//}
 			nodestatusArr = append(nodestatusArr, nodeStatus)
 		}
 	}

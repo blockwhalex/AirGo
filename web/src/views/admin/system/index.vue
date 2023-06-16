@@ -128,7 +128,7 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        
+
         <el-tab-pane label="json web token">
           <el-form :model="serverConfig" label-width="100px">
             <el-form-item label="jwt签名">

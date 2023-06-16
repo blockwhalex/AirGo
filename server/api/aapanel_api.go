@@ -42,6 +42,7 @@ func SSNodeInfo(ctx *gin.Context) {
 		if !ok {
 			//nodeStatus := vStatus.(model.NodeStatus)
 			var nodeStatus model.NodeStatus
+			nodeStatus.ID = nodeIDInt
 			nodeStatus.Status = true
 			global.LocalCache.Set(nodeID+"status", nodeStatus, time.Minute)
 		}
@@ -119,19 +120,17 @@ func SSUsersTraffic(ctx *gin.Context) {
 			U:          float64(u),
 			D:          float64(d),
 			LastTime:   time.Now(),
+			Status:     true,
 		}
-		//cache 取值
+		var duration float64 = 60
 		cacheStatus, ok := global.LocalCache.Get(strconv.Itoa(id) + "status")
-		//panic: interface conversion: interface {} is nil, not model.NodeStatus
-		if !ok || cacheStatus == nil {
-			global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, time.Minute)
-		} else {
+		if ok && cacheStatus != nil {
 			oldStatus := cacheStatus.(model.NodeStatus)
-			d := nodeStatus.LastTime.Sub(oldStatus.LastTime).Seconds()                                //判断时间间隔
-			nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.D/1024/1024/d*8), 64) //Mbps
-			nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.U/1024/1024/d*8), 64)
-			global.LocalCache.SetNoExpire(strconv.Itoa(id)+"status", nodeStatus)
+			duration = nodeStatus.LastTime.Sub(oldStatus.LastTime).Seconds()
 		}
+		nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.D/1024/1024/duration*8), 64) //Mbps
+		nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.U/1024/1024/duration*8), 64)
+		global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, time.Minute)
 
 	}(node_id, trafficLog.U, trafficLog.D, len(userIds))
 	//插入流量统计统计
