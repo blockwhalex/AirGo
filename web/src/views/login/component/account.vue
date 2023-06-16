@@ -185,8 +185,6 @@ const onGetEmailCode = () => {
       state.isCountDown = true
       ElMessage.success(res.msg)
       handleTimeChange()
-    } else {
-
     }
   })
 

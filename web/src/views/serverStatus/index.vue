@@ -5,30 +5,30 @@
         <div class="home-card-item">
           <el-card class="box-card">
             <el-row :gutter="10" justify="space-around" align="middle">
-              <el-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4" style="margin-bottom: 10px">
+              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin: auto">
                 <el-tag type="warning">{{ v.name }}</el-tag>
+              </el-col>
+              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin: auto">
+                <el-icon v-if="v.status" color="#90ee90" :size="20"><SuccessFilled /></el-icon>
+                <el-icon v-else color="#ff4d00" :size="20"><CircleCloseFilled /></el-icon>
               </el-col>
               <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 10px;margin-bottom: 10px">
                 倍率：{{ v.traffic_rate }}
               </el-col>
-<!--              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 20px;margin-bottom: 10px">-->
-<!--                <el-button v-if="v.status" type="success" plain>在线</el-button>-->
-<!--                <el-button v-else type="info" plain>离线</el-button>-->
-<!--              </el-col>-->
               <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 10px;margin-bottom: 10px">
                 在线：{{ v.user_amount }}
               </el-col>
-              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 10px;margin-bottom: 10px">
+              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin: auto">
                 <el-icon color="#409EFC">
                   <Top/>
                 </el-icon>
-                <span>{{ v.u }}MB/s</span>
+                <span>{{ v.u }}Mbps</span>
               </el-col>
-              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 10px;margin-bottom: 10px">
+              <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin: auto">
                 <el-icon color="#409EFC">
                   <Bottom/>
                 </el-icon>
-                <span>{{ v.d }}MB/s</span>
+                <span>{{ v.d }}Mbps</span>
               </el-col>
             </el-row>
           </el-card>

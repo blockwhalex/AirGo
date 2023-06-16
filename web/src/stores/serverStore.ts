@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 //api
 import {useSystemApi} from "/@/api/system/index";
+import {ElMessage} from "element-plus";
 
 const systemApi = useSystemApi()
 export const useServerStore = defineStore("serverStore", {
@@ -57,12 +58,17 @@ export const useServerStore = defineStore("serverStore", {
         //获取系统设置
         async getServerConfig() {
             const res = await systemApi.getServerConfig()
-            this.serverConfig = res.data
+            if (res.code === 0) {
+                this.serverConfig = res.data
+                ElMessage.success(res.msg)
+            }
         },
         //修改系统设置
-        async updateServerConfig() {
-            const res = await systemApi.updateServerConfig(this.serverConfig)
-            return res
+        async updateServerConfig(params?:object) {
+            const res = await systemApi.updateServerConfig(params)
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+            }
         }
 
     }

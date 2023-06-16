@@ -32,7 +32,7 @@ func UpdateCasbinPolicy(ctx *gin.Context) {
 
 // 更新casbin权限
 func UpdateCasbinPolicyNew(ctx *gin.Context) {
-	var data model.CasbinData
+	var data model.ChangeRoleCasbinReq
 	err := ctx.ShouldBind(&data)
 	if err != nil {
 		global.Logrus.Error("更新casbin权限参数error:", err)

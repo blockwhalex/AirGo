@@ -34,16 +34,23 @@ func SSNodeInfo(ctx *gin.Context) {
 	if global.Server.System.MuKey != ctx.Query("muKey") {
 		return
 	}
-	//节点号 是否启用？
 	nodeID := ctx.Param("nodeID")
 	nodeIDInt, _ := strconv.Atoi(nodeID)
+	//设置节点在线
+	go func(nodeID string) {
+		vStatus, ok := global.LocalCache.Get(nodeID + "status")
+		if !ok {
+			nodeStatus := vStatus.(model.NodeStatus)
+			nodeStatus.Status = true
+			global.LocalCache.Set(nodeID+"status", nodeStatus, time.Minute)
+		}
+	}(nodeID)
 	nodeInfo, err := service.SSNodeInfo(nodeIDInt)
 	if err != nil {
 		response.SSUsersFail(ctx)
 		return
 	}
 	response.SSUsersOK(nodeInfo, ctx)
-
 }
 
 // 可连接的用户
@@ -69,6 +76,7 @@ func SSUsers(ctx *gin.Context) {
 	response.SSUsersOK(users, ctx)
 }
 
+// 用户的流量使用情况: {"data":[{"user_id":1,"u":445782,"d":1757834}]}
 // 上报用户的流量使用情况
 func SSUsersTraffic(ctx *gin.Context) {
 	//验证key
@@ -83,7 +91,6 @@ func SSUsersTraffic(ctx *gin.Context) {
 	if err != nil {
 		return
 	}
-	//用户的流量使用情况: {"data":[{"user_id":1,"u":445782,"d":1757834}]}
 	response.SSUsersOK("ok", ctx)
 
 	var userIds []int
@@ -116,12 +123,12 @@ func SSUsersTraffic(ctx *gin.Context) {
 		cacheStatus, ok := global.LocalCache.Get(strconv.Itoa(id) + "status")
 		//panic: interface conversion: interface {} is nil, not model.NodeStatus
 		if !ok || cacheStatus == nil {
-			global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, time.Hour)
+			global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, time.Minute)
 		} else {
 			oldStatus := cacheStatus.(model.NodeStatus)
-			d := nodeStatus.LastTime.Sub(oldStatus.LastTime).Seconds() //判断时间间隔
-			nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.D/1024/1024/d), 64)
-			nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.U/1024/1024/d), 64)
+			d := nodeStatus.LastTime.Sub(oldStatus.LastTime).Seconds()                                //判断时间间隔
+			nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.D/1024/1024/d*8), 64) //Mbps
+			nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.U/1024/1024/d*8), 64)
 			global.LocalCache.SetNoExpire(strconv.Itoa(id)+"status", nodeStatus)
 		}
 

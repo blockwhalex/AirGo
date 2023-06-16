@@ -11,7 +11,9 @@ type CasbinInfo struct {
 	RoleID      int          `json:"roleID"` // 权限id
 	CasbinItems []CasbinItem `json:"casbinItems"`
 }
-type CasbinData struct {
-	RoleID int      `json:"roleID"` // 权限id
-	Data   []string `json:data`
+
+// 修改角色权限 请求
+type ChangeRoleCasbinReq struct {
+	RoleID      int      `json:"roleID"` // 权限id
+	CasbinItems []string `json:"casbinItems"`
 }

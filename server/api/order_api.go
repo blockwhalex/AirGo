@@ -42,9 +42,9 @@ func GetOrderByUserID(ctx *gin.Context) {
 		return
 	}
 	uIDInt := uID.(int)
-	var params model.PaginationParams
-	err := ctx.ShouldBind(&params)
-	res, err := service.GetOrderByUserID(uIDInt, &params)
+	//var params model.PaginationParams
+	//err := ctx.ShouldBind(&params)
+	res, err := service.GetOrderByUserID(uIDInt)
 	if err != nil {
 		global.Logrus.Error("获取订单 error:", err)
 		response.Fail("订单获取错误"+err.Error(), nil, ctx)

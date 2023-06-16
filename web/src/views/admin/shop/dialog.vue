@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="goodsManageData.isShowDialog" :title="goodsManageData.title" width="769px" destroy-on-close>
+  <el-dialog v-model="state.isShowDialog" :title="state.title" width="769px" destroy-on-close>
     <el-form :model="goodsManageData.currentGoods" label-width="120px">
       <el-form-item label="商品标题">
         <el-input v-model="goodsManageData.currentGoods.subject"/>
@@ -44,7 +44,7 @@
 
       </el-form-item>
 
-      <el-form-item label="是否启用">
+      <el-form-item label="是否显示">
         <el-col :span="4">
           <el-switch v-model="goodsManageData.currentGoods.status" inline-prompt active-text="开启" inactive-text="关闭"
                      style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"></el-switch>
@@ -67,7 +67,7 @@
     </el-form>
     <template #footer>
             <span class="dialog-footer">
-                <el-button @click="goodsManageData.isShowDialog = false">取消</el-button>
+                <el-button @click="state.isShowDialog = false">取消</el-button>
                 <el-button type="primary" @click="onSubmit">
                     确认
                 </el-button>
@@ -85,57 +85,62 @@ const shopStore = useShopStore()
 const {goodsManageData} = storeToRefs(shopStore)
 //store
 import {useNodeStore} from "/@/stores/node";
+import {reactive} from "vue";
 
 const nodeStore = useNodeStore();
 const {nodeManageData} = storeToRefs(nodeStore);
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
+
+//定义参数
+const state = reactive({
+  isShowDialog: false,
+  type: '',
+  title: '',
+})
+
 // 打开弹窗
 const openDialog = (type: string, row?: any) => {
   if (type == 'add') {
-    goodsManageData.value.type = type
-    goodsManageData.value.title = "新建商品"
-    goodsManageData.value.isShowDialog = true
+    state.type = type
+    state.title = "新建商品"
+    state.isShowDialog = true
     goodsManageData.value.currentGoods.id = 0 //清空上次编辑的id，否则无法新建
   } else {
-    goodsManageData.value.type = type
-    goodsManageData.value.title = "修改商品"
+    state.type = type
+    state.title = "修改商品"
     goodsManageData.value.currentGoods = row //将当前row写入pinia
     if (goodsManageData.value.currentGoods.checked_nodes === null || goodsManageData.value.currentGoods.checked_nodes === undefined) {
       goodsManageData.value.currentGoods.checked_nodes = [] //剔除null,否则ts报错
     }
-    goodsManageData.value.currentGoods.nodes = [] //清空nodes，否则传递多余信息
-    goodsManageData.value.isShowDialog = true
+    goodsManageData.value.currentGoods.nodes = [] //清空nodes
+    state.isShowDialog = true
   }
 }
 // 关闭弹窗
 const closeDialog = () => {
-  goodsManageData.value.isShowDialog = false
-
+  state.isShowDialog = false
 };
 
 //确认提交
 function onSubmit() {
-  if (goodsManageData.value.type === 'add') {
-    shopStore.newGoods()
+  if (state.type === 'add') {
+    shopStore.newGoods(goodsManageData.value.currentGoods)
     setTimeout(() => {
       emit('refresh');
-    }, 2000);       //延时。防止没新建完成就
-    closeDialog(); // 关闭弹窗
+    }, 1000);
   } else {
-    //更新节点
-    shopStore.updateGoods()
+    shopStore.updateGoods(goodsManageData.value.currentGoods)
     setTimeout(() => {
       emit('refresh');
-    }, 2000);
-    closeDialog(); // 关闭弹窗
+    }, 1000);
   }
-  goodsManageData.value.isShowDialog = false
+  closeDialog();
 }
 
 // 暴露变量
 defineExpose({
-  openDialog,   // 打开弹窗
+  openDialog,
 });
 
 </script>

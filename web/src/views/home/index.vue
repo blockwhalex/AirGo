@@ -32,7 +32,7 @@
               </div>
             </template>
             <div>
-              <el-input v-model="homeTableData.host" placeholder="输入混淆">
+              <el-input v-model="state.host.host" placeholder="输入混淆">
                 <template #append>
                   <el-button @click="onChangeHost" :icon="Select">确认修改</el-button>
                 </template>
@@ -85,10 +85,10 @@ const userApi = useUserApi()
 //store
 import {storeToRefs} from "pinia";
 import {useUserStore} from "/@/stores/userStore";
-import {onMounted} from 'vue';
+import {onMounted, reactive} from 'vue';
 
 const userStore = useUserStore()
-const {userInfos, homeTableData} = storeToRefs(userStore)
+const {userInfos} = storeToRefs(userStore)
 //ElMessage
 import {ElMessage} from 'element-plus';
 //icon 
@@ -97,19 +97,23 @@ import {Select} from '@element-plus/icons-vue'
 import commonFunction from '/@/utils/commonFunction';
 
 const {copyText} = commonFunction();
-
+//定义参数
+const state = reactive({
+  host:{
+    host:'',
+  }
+})
 
 //修改混淆
 const onChangeHost = () => {
-  userStore.changeHost()
+  userStore.changeHost(state.host)
+  state.host.host=''
 }
 //重置订阅
 const onResetSub = () => {
   userApi.resetSubApi().then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
-    } else {
-
     }
   })
 }
@@ -134,9 +138,7 @@ const v2rayNGSub = (type: number) => {
 }
 // 页面加载时
 onMounted(() => {
-  //设置用户信息
   userStore.getUserInfo()
-
 });
 
 </script>

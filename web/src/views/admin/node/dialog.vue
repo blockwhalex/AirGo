@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogData.isShowDialog" :title="dialogData.title" width="769px" destroy-on-close>
+  <el-dialog v-model="state.isShowDialog" :title="state.title" width="769px" destroy-on-close align-center>
     <el-divider content-position="left">节点参数</el-divider>
     <el-form :model="dialogData.nodeInfo" label-width="120px">
       <el-form-item label="Protocol">
@@ -85,7 +85,7 @@
     </el-form>
     <template #footer>
             <span class="dialog-footer">
-                <el-button @click="dialogData.isShowDialog = false">取消</el-button>
+                <el-button @click="state.isShowDialog = false">取消</el-button>
                 <el-button type="primary" @click="onSubmit">
                     确认
                 </el-button>
@@ -99,60 +99,60 @@
 import {storeToRefs} from "pinia";
 //store
 import {useNodeStore} from "/@/stores/node";
+import {reactive} from "vue";
 
 const nodeStore = useNodeStore()
 const {dialogData} = storeToRefs(nodeStore)
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
-
+//定义参数
+const state = reactive({
+  type: "",
+  title: "",
+  isShowDialog: false,
+})
 
 // 打开弹窗
 const openDialog = (type: string, row?: any) => {
   if (type == 'add') {
     dialogData.value.nodeInfo.id = 0 //编辑和添加公用一个store，清空id,否则服务器无法插入
-    dialogData.value.type = type
-    dialogData.value.title = "新建节点"
-    dialogData.value.isShowDialog = true
+    state.type = type
+    state.title = "新建节点"
+    state.isShowDialog = true
   } else {
-    dialogData.value.type = type
-    dialogData.value.title = "修改节点"
+    state.type = type
+    state.title = "修改节点"
     dialogData.value.nodeInfo = row  //将当前row写入pinia
-    dialogData.value.isShowDialog = true
+    state.isShowDialog = true
   }
-
 }
 // 关闭弹窗
 const closeDialog = () => {
-  dialogData.value.isShowDialog = false
-
+  state.isShowDialog = false
 };
 
 //确认提交
 function onSubmit() {
-  if (dialogData.value.type === 'add') {
-    nodeStore.newNode()
+  if (state.type === 'add') {
+    //新建节点
+    nodeStore.newNode(dialogData.value.nodeInfo)
     setTimeout(() => {
       emit('refresh');
-    }, 3000);       //延时3秒。防止没新建完成就重新请求列表
-
+    }, 1000);       //延时。防止没新建完成就重新请求
   } else {
     //更新节点
-    nodeStore.updateNode()
+    nodeStore.updateNode(dialogData.value.nodeInfo)
     setTimeout(() => {
       emit('refresh');
-    }, 3000);
-
+    }, 1000);
   }
   closeDialog()
-
-
 }
 
 // 暴露变量
 defineExpose({
   openDialog,   // 打开弹窗
 });
-
 </script>
 
 

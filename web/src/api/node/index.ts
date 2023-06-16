@@ -39,6 +39,13 @@ export function useNodeApi() {
                 data
             })
         },
-
+        //
+        nodeSortApi: (data?: object) => {
+            return service({
+                url: '/node/nodeSort',
+                method: 'post',
+                data
+            })
+        },
     }
 }

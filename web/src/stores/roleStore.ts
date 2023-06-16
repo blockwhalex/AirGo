@@ -11,13 +11,16 @@ const roleApi = useRoleApi()
 //暴露role store
 export const useRoleStore = defineStore("roleStore", {
     state: () => ({
+        //角色管理页面参数
+        roleManageData: {
+            roles: {
+                total: 0,
+                role_list: [] as RowRoleType[],
+            },
+        },
         //编辑角色弹窗参数
         dialog: {
-            isShowDialog: false,
-            type: '',
-            title: '',
-            submitTxt: '',
-            ruleForm: {           //当前编辑角色的参数
+            ruleForm: {       //当前编辑角色的参数
                 id: 0,        //角色ID
                 role_name: '',     // 角色名称
                 description: '',  //角色描述
@@ -26,53 +29,32 @@ export const useRoleStore = defineStore("roleStore", {
                 nodes: [],
             } as RowRoleType,
         },
-        //编辑角色Api弹窗参数
+        //编辑角色权限弹窗参数
         dialogEditApi: {
-            isShowDialog: false,
-            type: '',
-            title: '',
-            submitTxt: '',
-            casbinInfo: {    //当前角色Api
+            casbinInfo: {    //当前角色的权限
                 roleID: 0,
                 casbinItems: [''],
             },
-            allCasbinInfo: {    //全部api
+            allCasbinInfo: {    //全部权限
                 roleID: 0,
                 casbinItems: [],
             } as CasbinInfo,
         },
 
-        //角色管理参数
-        roleManageData: {
-            roles: {
-                total: 0,
-                role_list: [] as RowRoleType[],
-            },
-            loading: false,
-            params: {
-                search: '',
-                page_num: 1,
-                page_size: 10,
-            },
-        }
     }),
     actions: {
-        //params===undefined,角色列表,分页;否则查询全部
+        //获取角色列表
         async getRoleList(params?: object) {
-            if (params != undefined) {
-                const res: any = await roleApi.getRoleListApi(params)
+            const res: any = await roleApi.getRoleListApi(params)
+            if (res.code === 0) {
                 this.roleManageData.roles = res.data
-            } else {
-                const res: any = await roleApi.getRoleListApi(this.roleManageData.params)
-                this.roleManageData.roles = res.data
+                ElMessage.success(res.msg)
             }
         },
 
         //获取当前角色的权限
-        async getPolicyByRoleIds() {
-            const res = await roleApi.getPolicyByRoleIdsApi({roleID:this.dialogEditApi.casbinInfo.roleID})
-           // console.log("获取当前角色的权限:",res)
-            // this.dialogEditApi.casbinInfo = res.data
+        async getPolicyByRoleIds(params?: object) {
+            const res = await roleApi.getPolicyByRoleIdsApi(params)
             var casbinRes: CasbinInfo = res.data
             if (casbinRes.casbinItems !== null) {
                 var oldArr: string[] = []
@@ -80,26 +62,22 @@ export const useRoleStore = defineStore("roleStore", {
                     oldArr.push(item.path)
                 });
                 this.dialogEditApi.casbinInfo.casbinItems = oldArr
-                // console.log("oldArr:",oldArr)
             }
         },
         //获取全部权限
         async getAllPolicy() {
             const res = await roleApi.getAllPolicyApi()
-            this.dialogEditApi.allCasbinInfo = res.data
+            if (res.code === 0) {
+                this.dialogEditApi.allCasbinInfo = res.data
+                ElMessage.success(res.msg)
+            }
         },
         //更新角色权限
-        async updateCasbinPolicy(): Promise<boolean> {
-            const res = await roleApi.updateCasbinPolicyApi({
-                roleID: this.dialogEditApi.casbinInfo.roleID,
-                data: this.dialogEditApi.casbinInfo.casbinItems
-            })
+        async updateCasbinPolicy(params?: object) {
+            const res = await roleApi.updateCasbinPolicyApi(params)
             if (res.code === 0) {
                 ElMessage.success(res.msg)
-            } else {
-
             }
-            return true
         }
     }
 })

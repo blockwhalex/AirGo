@@ -1,32 +1,20 @@
 import {defineStore} from "pinia";
+import {ElMessage} from "element-plus";
 //api
 import {useNodeApi} from "/@/api/node/index";
-import {ElMessage} from "element-plus";
-
-
 const nodeApi = useNodeApi()
 
 export const useNodeStore = defineStore("nodeStore", {
     state: () => ({
         //节点管理页数据
         nodeManageData: {
-            loading: true,
             nodes: {
                 total: 0,
                 node_list: [] as NodeInfo[],
             },
-            params: {
-                search: '',
-                page_num: 1,
-                page_size: 10,
-                date: [],
-            },
         },
         //弹窗页数据
         dialogData: {
-            type: "",
-            title: "",
-            isShowDialog: false,
             nodeInfo: {
                 id: 0,
                 name: '',
@@ -53,44 +41,46 @@ export const useNodeStore = defineStore("nodeStore", {
             type: 0,
             data: [] as ServerStatusInfo[],
         },
-
     }),
     actions: {
         //获取全部节点
-        async getAllNode() {
+        async getAllNode(params?:object) {
             const res = await nodeApi.getAllNodeApi()
-            this.nodeManageData.nodes.node_list = res.data
-            this.nodeManageData.loading = false
-
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+                this.nodeManageData.nodes.node_list = res.data
+            }
         },
         //获取全部节点 with Traffic,分页
         async getNodeWithTraffic(params?: object) {
-            const res = await nodeApi.getNodeWithTrafficApi(this.nodeManageData.params)
-            this.nodeManageData.nodes = res.data
-            this.nodeManageData.loading = false
+            const res = await nodeApi.getNodeWithTrafficApi(params)
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+                this.nodeManageData.nodes = res.data
+            }
         },
-        //获取全部节点 with Traffic,订单统计
+        //获取节点 with Traffic(营收概览)
         async getNodeStatistics(params?: object) {
             const res = await nodeApi.getNodeWithTrafficApi(params)
             return res
         },
         //更新节点
-        async updateNode() {
-            const res = await nodeApi.updateNodeApi(this.dialogData.nodeInfo)
+        async updateNode(params?:object) {
+            const res = await nodeApi.updateNodeApi(params)
             if (res.code === 0) {
-                ElMessage.success("更新节点成功")
+                ElMessage.success(res.msg)
             }
         },
         //删除节点
         async deleteNode(params: object) {
             const res = await nodeApi.deleteNodeApi(params)
             if (res.code === 0) {
-                ElMessage.success("删除节点成功")
+                ElMessage.success(res.msg)
             }
         },
         //新建节点
-        async newNode() {
-            const res = await nodeApi.newNodeApi(this.dialogData.nodeInfo)
+        async newNode(params?:object) {
+            const res = await nodeApi.newNodeApi(params)
             if (res.code === 0) {
                 ElMessage.success("新建节点成功")
             }

@@ -8,6 +8,7 @@ const userApi = useUserApi()
 
 //bcrypt
 import bcrypt from 'bcryptjs'
+import {ElMessage} from "element-plus";
 
 export const useUserStore = defineStore('userInfo', {
     state: () => ({
@@ -53,32 +54,32 @@ export const useUserStore = defineStore('userInfo', {
                 d: 0,
             }
         } as SysUser,
-        //首页数据
-        homeTableData: {
-            host: '',//用户混淆
-        },
-        //个人信息页面数据
-        changePasswordDialog: {
-            isShowChangePasswordDialog: false,
-        },
         //用户管理页面数据
         userManageData: {
-            loading: false,
             users: {
                 total: 0,
                 user_list: [] as SysUser[],
             },
-            params: {
-                search: '',
-                page_num: 1,
-                page_size: 10,
-            },
             dialog: {
-                isShowDialog: false,
-                type: '',
-                title: '',
-                submitTxt: '',
-                userForm: {} as SysUser,
+                user: {
+                    user_name: '',
+                    nick_name: '',
+                    password: '',
+                    avatar: '',
+                    phone: '',
+                    email: '',
+                    enable: true,
+                    role_group: [] as RowRoleType[],
+                    subscribe_info: {
+                        sub_status: true,
+                        expired_at: '',
+                        t: 0,
+                        u: 0,
+                        d: 0,
+                        node_speedlimit: 0,
+                        node_connector: 3,
+                    }
+                } as SysUser,
                 check_list: [''], //选中的角色
             },
         },
@@ -152,49 +153,62 @@ export const useUserStore = defineStore('userInfo', {
             Session.set("token", res.data.token)
         },
         //修改混淆
-        async changeHost() {
-            const res = await userApi.changeHostApi(this.homeTableData)
-            await this.getUserInfo()
-            this.homeTableData.host = ''
+        async changeHost(params?: object) {
+            const res = await userApi.changeHostApi(params)
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+                await this.getUserInfo()
+            }
         },
         //获取自身信息
         async getUserInfo() {
             const res = await userApi.getUserInfoApi()
-            this.userInfos = res.data
-            Session.set("userInfos", res.data)
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+                this.userInfos = res.data
+                Session.set("userInfos", res.data)
+            }
         },
         //获取用户列表
-        async getUserList() {
-            const res = await userApi.getUserListApi(this.userManageData.params)
-            this.userManageData.users = res.data
+        async getUserList(params?: object) {
+            const res = await userApi.getUserListApi(params)
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+                this.userManageData.users = res.data
+            }
         },
         //新建用户
-        async newUser() {
+        async newUser(params?:object) {
             //密码加密
-            this.userManageData.dialog.userForm.password = bcrypt.hashSync(this.userManageData.dialog.userForm.password, 10)
-            const res = await userApi.newUserApi({
-                user: this.userManageData.dialog.userForm,
-                check_list: this.userManageData.dialog.check_list
-            })
+            this.userManageData.dialog.user.password = bcrypt.hashSync(this.userManageData.dialog.user.password, 10)
+            const res = await userApi.newUserApi(params)
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+            }
         },
         //修改用户
-        async updateUser() {
-            if (!this.userManageData.dialog.userForm.password.startsWith('$2a$10$')) {
-                this.userManageData.dialog.userForm.password = bcrypt.hashSync(this.userManageData.dialog.userForm.password, 10)
+        async updateUser(params?:object) {
+            if (!this.userManageData.dialog.user.password.startsWith('$2a$10$')) {
+                this.userManageData.dialog.user.password = bcrypt.hashSync(this.userManageData.dialog.user.password, 10)
             }
-            const res = await userApi.updateUserApi({
-                user: this.userManageData.dialog.userForm,
-                check_list: this.userManageData.dialog.check_list
-            })
-            return res
+            const res = await userApi.updateUserApi(params)
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+            }
         },
         //删除用户
         async deleteUser(params?: object) {
             const res = await userApi.deleteUserApi(params)
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+            }
         },
         //修改密码
-        async changePassword() {
-            return await userApi.changePasswordApi(this.registerData)
+        async changePassword(params?: object) {
+            const res = await userApi.changePasswordApi(params)
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+            }
         },
         //确认重置密码
         async submitResetPassword() {

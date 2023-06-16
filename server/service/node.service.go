@@ -3,6 +3,8 @@ package service
 import (
 	"AirGo/global"
 	"AirGo/model"
+	"fmt"
+	"gorm.io/gorm/clause"
 	"strconv"
 	"time"
 )
@@ -10,15 +12,14 @@ import (
 // 根据node name 模糊查询节点
 func GetNodeByName(name string) ([]model.Node, error) {
 	var nodes []model.Node
-	err := global.DB.Where("name like ?", ("%" + name + "%")).Find(&nodes).Error
+	err := global.DB.Where("name like ?", ("%" + name + "%")).Order("node_order").Find(&nodes).Error
 	return nodes, err
-
 }
 
 // 查询全部节点
 func GetAllNode() (*[]model.Node, error) {
 	var nodes []model.Node
-	err := global.DB.Find(&nodes).Error
+	err := global.DB.Order("node_order").Find(&nodes).Error
 	if err != nil {
 		return nil, err
 	}
@@ -63,13 +64,13 @@ func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
 		startTime = endTime.AddDate(0, 0, -30)
 	}
 	if params.Search != "" {
-		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Where("name LIKE ?", "%"+params.Search+"%").Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
+		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Where("name LIKE ?", "%"+params.Search+"%").Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Order("node_order").Find(&nodeArr.NodeList).Error
 		if err != nil {
 			global.Logrus.Error("查询节点流量error:", err.Error())
 			return model.NodesWithTotal{}
 		}
 	} else {
-		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Find(&nodeArr.NodeList).Error
+		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Order("node_order").Find(&nodeArr.NodeList).Error
 		if err != nil {
 			global.Logrus.Error("查询节点流量error:", err.Error())
 			return model.NodesWithTotal{}
@@ -88,7 +89,7 @@ func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
 // 获取 node status
 func GetNodesStatus() *[]model.NodeStatus {
 	var nodesIds []model.Node
-	global.DB.Model(&model.Node{}).Select("id", "name", "traffic_rate").Find(&nodesIds)
+	global.DB.Model(&model.Node{}).Select("id", "name", "traffic_rate").Order("node_order").Find(&nodesIds)
 	var nodestatusArr []model.NodeStatus
 	for _, v := range nodesIds {
 		var nodeStatus = model.NodeStatus{}
@@ -105,12 +106,12 @@ func GetNodesStatus() *[]model.NodeStatus {
 			nodeStatus = vStatus.(model.NodeStatus)
 			nodeStatus.Name = v.Name
 			nodeStatus.TrafficRate = v.TrafficRate
-			if time.Now().Sub(nodeStatus.LastTime).Seconds() > 60 {
-				nodeStatus.UserAmount = 0
-				nodeStatus.Status = false
-			} else {
-				nodeStatus.Status = true
-			}
+			//if time.Now().Sub(nodeStatus.LastTime).Seconds() > 60 {
+			//	nodeStatus.UserAmount = 0
+			//	nodeStatus.Status = false
+			//} else {
+			//	nodeStatus.Status = true
+			//}
 			nodestatusArr = append(nodestatusArr, nodeStatus)
 		}
 	}
@@ -127,4 +128,13 @@ func CleanDBTraffic() error {
 	y, m, _ := time.Now().Date()
 	startTime := time.Date(y, m-2, 1, 0, 0, 0, 0, time.Local)
 	return global.DB.Where("created_at < ?", startTime).Delete(&model.TrafficLog{}).Error
+}
+
+// 节点排序
+func NodeSort(nodeArr *[]model.Node) error {
+	fmt.Println("节点排序:", nodeArr)
+	return global.DB.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		DoUpdates: clause.AssignmentColumns([]string{"node_order"}),
+	}).Create(&nodeArr).Error
 }

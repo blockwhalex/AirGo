@@ -83,7 +83,7 @@
           <el-divider content-position="left">支付宝 支付</el-divider>
           <el-form :model="serverConfig" label-width="120px">
             <el-form-item label="支付宝appID">
-              <el-input v-model="serverConfig.pay.app_id"/>
+              <el-input v-model="serverConfig.pay.app_id" type="password"/>
             </el-form-item>
             <el-form-item label="支付宝应用私钥">
               <el-input v-model="serverConfig.pay.private_key" type="textarea" autosize/>
@@ -119,18 +119,16 @@
               <el-input v-model="serverConfig.email.email_subject"/>
             </el-form-item>
             <el-form-item label="邮件内容格式">
-              <el-input v-model="serverConfig.email.email_content" type="textarea"/>
+              <el-input v-model="serverConfig.email.email_content" type="textarea" autosize/>
               <el-tag class="ml-2" type="warning">*自定义邮件验证码内容样式，"emailcode"为验证码字段，不可删除！</el-tag>
             </el-form-item>
             <el-divider></el-divider>
             <el-form-item>
               <el-button @click="onSubmit" type="primary">保存</el-button>
             </el-form-item>
-
           </el-form>
         </el-tab-pane>
-
-
+        
         <el-tab-pane label="json web token">
           <el-form :model="serverConfig" label-width="100px">
             <el-form-item label="jwt签名">
@@ -148,13 +146,6 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <!--        <el-tab-pane label="其他">-->
-        <!--          <el-form :model="serverConfig" label-width="100px">-->
-        <!--            <el-form-item>-->
-        <!--              <el-button @click="onSubmit" type="primary">保存</el-button>-->
-        <!--            </el-form-item>-->
-        <!--          </el-form>-->
-        <!--        </el-tab-pane>-->
       </el-tabs>
     </el-card>
 
@@ -177,21 +168,14 @@ const shopStore = useShopStore()
 const {goodsList} = storeToRefs(shopStore)
 //保存提交
 const onSubmit = () => {
-  serverStore.updateServerConfig().then((res) => {
-    if (res.code === 0) {
-      ElMessage.success(res.msg)
-    } else {
-
-    }
-  })
+  serverStore.updateServerConfig(serverConfig.value)
   setTimeout(() => {
     serverStore.getServerConfig()
-  }, 2000)
+  }, 1000)
 }
-//加载时
 onMounted(() => {
   serverStore.getServerConfig()
-  shopStore.getAllGoods()
+  shopStore.getAllGoods() //用来设置新注册分配套餐
 
 });
 

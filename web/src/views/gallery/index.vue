@@ -84,8 +84,6 @@ function savePicture() {
       ElMessage.success(res.msg)
       state.galleryData.picUrl = '' //清空输入框
       state.galleryData.subject = '' //清空输入框
-    } else {
-
     }
   }).catch()
 }
@@ -101,8 +99,6 @@ function getPictureList(params?: object) {
     if (res.code === 0) {
       ElMessage.success(res.msg)
       state.galleryDialogData.galleryList = res.data
-    } else {
-
     }
   }).catch()
 

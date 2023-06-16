@@ -16,6 +16,27 @@
 
 <script lang="ts" setup>
 
+
+import {ElMessage, ElMessageBox} from "element-plus";
+
+function test(row:any) {
+  ElMessageBox.confirm(`此操作将永久删除路由：${row.path}, 是否继续?`, '提示', {
+    confirmButtonText: '删除',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+      .then(() => {
+          //逻辑
+        setTimeout(() => {
+          //逻辑
+          ElMessage.success('成功');
+        }, 1000);
+      })
+      .catch(() => {
+      });
+}
+
+
 </script>
 
 

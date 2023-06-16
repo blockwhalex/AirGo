@@ -3,6 +3,7 @@
     <el-card shadow="hover" class="layout-padding-auto">
       <el-button type="info" plain>只显示最近10次订单</el-button>
       <el-table :data="orderPersonal.allOrders.order_list" stripe fit height="100%" style="width: 100%;">
+<!--        :row-class-name="tableRowClassName"-->
         <el-table-column prop="subject" label="商品标题" show-overflow-tooltip/>
         <el-table-column prop="total_amount" label="金额" show-overflow-tooltip width="60px"/>
         <el-table-column prop="trade_status" label="状态" show-overflow-tooltip width="90px">
@@ -16,7 +17,7 @@
             <el-tag type="danger" v-else>未知状态</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="60px">
+        <el-table-column label="操作" width="120px">
           <template #default="scope">
             <el-button v-if="scope.row.trade_status === 'WAIT_BUYER_PAY' || scope.row.trade_status === 'created'"
                        size="small" text type="primary"
@@ -26,7 +27,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <!-- 引入确认支付弹窗组件 -->
+    <!-- 引入确认购买弹窗组件 -->
     <PurchaseDialog ref="PurchaseDialogRef" @openQRDialog="openQRDialog"></PurchaseDialog>
     <!-- 引入二维码弹窗 -->
     <QRDialog ref="QRDialogRef"></QRDialog>
@@ -35,7 +36,9 @@
 
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
-import {defineAsyncComponent, onMounted, ref} from "vue";
+import {defineAsyncComponent, onMounted, reactive, ref} from "vue";
+//表格拖拽
+import Sortable from 'sortablejs'
 //store
 import {useOrderStore} from "/@/stores/orderStore";
 
@@ -44,9 +47,10 @@ const {orderPersonal} = storeToRefs(orderStore)
 //store
 import {useShopStore} from "/@/stores/shopStore";
 import {isMobile} from "/@/utils/other";
+import {toRefs} from "vue-demi";
 
 const shopStore = useShopStore()
-const {tableData} = storeToRefs(shopStore)
+const {shopData} = storeToRefs(shopStore)
 //引入弹窗组件
 
 const PurchaseDialog = defineAsyncComponent(() => import('/@/views/shop/purchase_dialog.vue'))
@@ -54,29 +58,23 @@ const QRDialog = defineAsyncComponent(() => import('/@/views/shop/QR_dialog.vue'
 const PurchaseDialogRef = ref()
 const QRDialogRef = ref()
 
-
 onMounted(() => {
-  orderStore.getOrder({pageNum: 1, pageSize: 5})
+  orderStore.getOrder() //获取用户最近10次订单
 })
 
 //去支付流程
 const toPay = (row: Order) => {
   //当前订单存入pinia
-  tableData.value.currentOrder = row
-  tableData.value.QRtext = row.qr_code
-  if (tableData.value.currentOrder.qr_code === '') {
-    //如果支付链接为空，打开支付弹窗，获取支付链接
+  shopData.value.currentOrder = row
+  if (shopData.value.currentOrder.qr_code === '') {    //如果支付链接为空，打开购买弹窗，获取支付链接
     PurchaseDialogRef.value.openDialog()
   } else {
-    //直接付款
-    //手机端跳转支付页面
-    const ok = isMobile()
+    const ok = isMobile()                                //如果支付链接不为空，直接付款
     if (ok) {
-      window.location.href = tableData.value.QRtext;
+      window.location.href = shopData.value.currentOrder.qr_code;
       return
     } else {
-      //电脑端打开支付二维码弹窗
-      openQRDialog()
+      openQRDialog()       //电脑端打开支付二维码弹窗
     }
   }
 }
@@ -88,7 +86,6 @@ const openQRDialog = () => {
 }
 
 </script>
-
 <style scoped lang="scss">
 .container {
   :deep(.el-card__body) {
@@ -96,10 +93,22 @@ const openQRDialog = () => {
     flex-direction: column;
     flex: 1;
     overflow: auto;
-
     .el-table {
       flex: 1;
     }
   }
 }
+// 拖拽
+.dragClass {
+  background: rgba($color: #41c21a, $alpha: 0.5) !important;
+}
+// 停靠
+.ghostClass {
+  background: rgba($color: #6cacf5, $alpha: 0.5) !important;
+}
+// 选择
+.chosenClass:hover > td {
+  background: rgba($color: #f56c6c, $alpha: 0.5) !important;
+}
+
 </style>

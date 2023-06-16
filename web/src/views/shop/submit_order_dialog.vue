@@ -3,11 +3,11 @@
     <el-dialog v-model="state.isShowSubmitOrderDialog" title="订单详情" width="30%">
       <div>
         <el-button type="success" plain>套餐：</el-button>
-        {{ tableData.currentOrder.subject }}
+        {{ shopData.currentOrder.subject }}
       </div>
       <div>
         <el-button type="success" plain>金额：</el-button>
-        {{ tableData.currentOrder.total_amount }}元
+        {{ shopData.currentOrder.total_amount }}元
       </div>
       <template #footer>
             <span class="dialog-footer">
@@ -29,7 +29,7 @@ import {storeToRefs} from 'pinia';
 import {useShopStore} from "/@/stores/shopStore";
 
 const shopStore = useShopStore()
-const {tableData} = storeToRefs(shopStore)
+const {shopData} = storeToRefs(shopStore)
 //order store
 import {useOrderStore} from "/@/stores/orderStore"
 
@@ -40,7 +40,7 @@ import {useShopApi} from '/@/api/shop/index'
 
 const shopApi = useShopApi()
 
-//变量
+//定义变量
 const state = reactive({
   isShowSubmitOrderDialog: false,
 
@@ -52,38 +52,32 @@ const openDialog = (id: number) => {
   orderStore.getOrderInfo(id).then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
-      tableData.value.currentOrder = res.data
-
-    } else {
-
+      shopData.value.currentOrder = res.data
     }
   }).catch()
-
 }
-//子组件调用父组件
-const emits = defineEmits(['openPurchaseDialog'])
+
 //提交订单按钮
 const onSubmitOrder = () => {
   //传goods_id
-  shopApi.preCreatePayApi({goods_id: tableData.value.currentOrder.goods_id}).then((res) => {
+  shopApi.preCreatePayApi({goods_id: shopData.value.currentOrder.goods_id}).then((res) => {
     if (res.code === 0) {
       //保存订单信息到pinia
-      tableData.value.currentOrder = res.data
+      shopData.value.currentOrder = res.data
       //关闭弹窗
       state.isShowSubmitOrderDialog = false
       //调用父组件 支付弹窗
       emits('openPurchaseDialog')
-
     } else {
-
-      //关闭弹窗
       state.isShowSubmitOrderDialog = false
     }
   })
-
 }
+//子组件调用父组件
+const emits = defineEmits(['openPurchaseDialog'])
+//暴露变量
 defineExpose({
-  openDialog,// 打开弹窗
+  openDialog,
 })
 </script>
 

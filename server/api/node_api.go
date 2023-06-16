@@ -17,7 +17,6 @@ func GetAllNode(ctx *gin.Context) {
 		return
 	}
 	response.OK("获取全部节点成功", nodes, ctx)
-
 }
 
 // 新建节点
@@ -80,10 +79,28 @@ func GetNodeTraffic(ctx *gin.Context) {
 	var trafficParams model.QueryParamsWithDate
 	err := ctx.ShouldBind(&trafficParams)
 	if err != nil {
-		global.Logrus.Error("更新节点错误:", err)
+		global.Logrus.Error("查询节点错误:", err)
 		response.Fail("查询节点流量参数错误"+err.Error(), nil, ctx)
 		return
 	}
 	res := service.GetNodeTraffic(trafficParams)
-	response.OK("查询节点流量", res, ctx)
+	response.OK("查询节点成功", res, ctx)
+}
+
+// 节点排序
+func NodeSort(ctx *gin.Context) {
+	var nodeArr []model.Node
+	err := ctx.ShouldBind(&nodeArr)
+	if err != nil {
+		global.Logrus.Error("节点排序参数错误:", err)
+		response.Fail("节点排序参数错误:"+err.Error(), nil, ctx)
+		return
+	}
+	err = service.NodeSort(&nodeArr)
+	if err != nil {
+		global.Logrus.Error("节点排序错误:", err)
+		response.Fail("节点排序错误:"+err.Error(), nil, ctx)
+		return
+	}
+	response.OK("节点排序成功", nil, ctx)
 }

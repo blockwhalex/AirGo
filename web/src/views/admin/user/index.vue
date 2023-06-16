@@ -2,9 +2,9 @@
   <div class="container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
       <div class="mb15">
-        <el-input v-model="userManageData.params.search" size="default" placeholder="请输入用户名称"
+        <el-input v-model="state.params.search" size="default" placeholder="请输入用户名称"
                   style="max-width: 180px"></el-input>
-        <el-button @click="onSearch" size="default" type="primary" class="ml10">
+        <el-button @click="userStore.getUserList(state.params)" size="default" type="primary" class="ml10">
           <el-icon>
             <ele-Search/>
           </el-icon>
@@ -69,8 +69,8 @@
           class="mt15"
           layout="total, sizes, prev, pager, next, jumper"
           :page-sizes="[10, 20, 30]"
-          v-model:current-page="userManageData.params.page_num"
-          v-model:page-size="userManageData.params.page_size"
+          v-model:current-page="state.params.page_num"
+          v-model:page-size="state.params.page_size"
           :total="userManageData.users.total"
           @size-change="onHandleSizeChange"
           @current-change="onHandleCurrentChange"
@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts" name="systemUser">
-import {defineAsyncComponent, onMounted, ref} from 'vue';
+import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
 import {ElMessageBox, ElMessage} from 'element-plus';
 
 // 引入组件
@@ -98,7 +98,13 @@ const {userManageData} = storeToRefs(userStore)
 
 // 定义变量内容
 const userDialogRef = ref();
-
+const state=reactive({
+  params: {
+    search: '',
+    page_num: 1,
+    page_size: 10,
+  },
+})
 // 打开新增用户弹窗
 const onOpenAddUser = (type: string) => {
   userDialogRef.value.openDialog(type);
@@ -107,10 +113,7 @@ const onOpenAddUser = (type: string) => {
 const onOpenEditUser = (type: string, row: SysUser) => {
   userDialogRef.value.openDialog(type, row);
 };
-//查询用户
-const onSearch = () => {
-  userStore.getUserList()
-}
+
 // 删除用户
 const onRowDel = (row: SysUser) => {
   ElMessageBox.confirm(`此操作将永久删除账户名称：“${row.user_name}”，是否继续?`, '提示', {
@@ -121,27 +124,25 @@ const onRowDel = (row: SysUser) => {
       .then(() => {
         userStore.deleteUser(row)
         setTimeout(() => {
-          userStore.getUserList()
+          userStore.getUserList(state.params)
         }, 1000)
-
-        ElMessage.success('删除成功');
       })
       .catch(() => {
       });
 };
 // 分页改变
 const onHandleSizeChange = (val: number) => {
-  userManageData.value.params.page_size = val;
-  userStore.getUserList()
+  state.params.page_size = val;
+  userStore.getUserList(state.params)
 };
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  userManageData.value.params.page_num = val;
-  userStore.getUserList()
+  state.params.page_num = val;
+  userStore.getUserList(state.params)
 };
 // 页面加载时
 onMounted(() => {
-  userStore.getUserList() //获取用户列表
+  userStore.getUserList(state.params)
 
 });
 </script>

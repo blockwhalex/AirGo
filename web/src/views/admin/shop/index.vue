@@ -50,6 +50,7 @@ const shopStore = useShopStore()
 const {goodsList, goodsManageData} = storeToRefs(shopStore)
 //node store
 import {useNodeStore} from "/@/stores/node";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const nodeStore = useNodeStore()
 
@@ -58,28 +59,33 @@ const ShopDialog = defineAsyncComponent(() => import('/@/views/admin/shop/dialog
 const shopDialogRef = ref()
 
 
-//修改套餐
+//修改套餐弹窗
 const onOpenEditGoods = (row: Goods) => {
   shopDialogRef.value.openDialog('edit', row)
 }
+//添加套餐弹窗
+const onOpenAddGoods = () => {
+  shopDialogRef.value.openDialog('add')
+}
 //删除套餐
 const onRowDel = (row: Goods) => {
-  goodsManageData.value.currentGoods = row
-  shopStore.deleteGoods(row)
-  //延迟2秒
-  setTimeout(() => {
-    shopStore.getAllGoods()
-  }, 2000)
+  ElMessageBox.confirm(`此操作将永久删除商品：${row.subject}, 是否继续?`, '提示', {
+    confirmButtonText: '删除',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+      .then(() => {
+        goodsManageData.value.currentGoods = row
+        shopStore.deleteGoods(row)
+        //延迟2秒
+        setTimeout(() => {
+          shopStore.getAllGoods()
+        }, 1000)
+      })
+      .catch(() => {
+      });
 }
-//添加套餐
-const onOpenAddGoods = () => {
-  //打开tanc
-  shopDialogRef.value.openDialog('add')
-  //延迟2秒重新获取数据
-  setTimeout(() => {
-    shopStore.getAllGoods()
-  }, 2000)
-}
+
 //加载时
 onMounted(() => {
   shopStore.getAllGoods() //获取全部商品

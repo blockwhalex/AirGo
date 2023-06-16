@@ -51,7 +51,7 @@ import {storeToRefs} from 'pinia';
 import {useShopStore} from "/@/stores/shopStore";
 
 const shopStore = useShopStore()
-const {goodsList, tableData} = storeToRefs(shopStore)
+const {goodsList, shopData} = storeToRefs(shopStore)
 //引入弹窗组件
 const SubmitOrderDialog = defineAsyncComponent(() => import('/@/views/shop/submit_order_dialog.vue'))
 const PurchaseDialog = defineAsyncComponent(() => import('/@/views/shop/purchase_dialog.vue'))
@@ -66,18 +66,14 @@ onMounted(() => {
 })
 //打开提交订单弹窗,传goods_id
 const openSubmitOrderDialog = (id: number) => {
-  // tableData.value.currentGoods=v
-
   SubmitOrderDialogRef.value.openDialog(id)
 }
-//打开确认支付弹窗
+//打开确认购买弹窗
 const openPurchaseDialog = (goods: Goods) => {
-  //调用子组件打开弹窗
   PurchaseDialogRef.value.openDialog()
 }
 //打开二维码弹窗
 const openQRDialog = () => {
-  //调用子组件打开弹窗
   QRDialogRef.value.openDialog()
 }
 

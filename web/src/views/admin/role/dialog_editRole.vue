@@ -1,6 +1,6 @@
 <template>
   <div class="system-role-dialog-container">
-    <el-dialog :title="dialog.title" v-model="dialog.isShowDialog" width="769px" destroy-on-close>
+    <el-dialog :title="state.title" v-model="state.isShowDialog" width="769px" destroy-on-close>
       <el-form ref="roleDialogFormRef" :model="dialog.ruleForm" size="default" label-width="90px">
         <el-row :gutter="35">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -34,15 +34,15 @@
       <template #footer>
 				<span class="dialog-footer">
 					<el-button @click="onCancel" size="default">取 消</el-button>
-					<el-button type="primary" @click="onSubmit" size="default">{{ dialog.submitTxt }}</el-button>
+					<el-button type="primary" @click="onSubmit" size="default">{{ state.submitTxt }}</el-button>
 				</span>
       </template>
     </el-dialog>
   </div>
 </template>
 
-<script setup lang="ts" name="systemRoleDialog">
-import {ref} from 'vue';
+<script setup lang="ts">
+import {reactive, ref} from 'vue';
 import {useRoutesStore} from "/@/stores/routesStore";
 import {useRoleStore} from "/@/stores/roleStore";
 import {storeToRefs} from 'pinia';
@@ -63,41 +63,36 @@ const {dialog} = storeToRefs(roleStore)
 
 // 定义变量内容
 const roleDialogFormRef = ref();
+const state=reactive({
+  isShowDialog: false,
+  type: '',
+  title: '',
+  submitTxt: '',
+})
 //拿到选中的数据
 const tree_ref = ref()
 
 
 // 打开弹窗
 const openDialog = (type: string, row: RowRoleType) => {
-  dialog.value.type = type
-  if (type === "edit") {
-    //获取当前role
-    dialog.value.ruleForm = row
-    //获取当前role的菜单节点
-    dialog.value.ruleForm.nodes = arrayExtractionNodes(row.menus)
-  }
-
+  state.isShowDialog = true;
+  state.type = type
   if (type === 'edit') {
     dialog.value.ruleForm = row;
-    dialog.value.title = '修改角色';
-    dialog.value.submitTxt = '修 改';
+    //获取当前role的菜单节点
+    dialog.value.ruleForm.nodes = arrayExtractionNodes(row.menus)
+    state.title = '修改角色';
+    state.submitTxt = '修 改';
   } else {
-    dialog.value.title = '新增角色';
-    dialog.value.submitTxt = '新 增';
-    // 清空表单，此项需加表单验证才能使用
-    // nextTick(() => {
-    // 	roleDialogFormRef.value.resetFields();
-    // });
+    state.title = '新增角色';
+    state.submitTxt = '新 增';
   }
-  dialog.value.isShowDialog = true;
   //请求全部菜单tree
-  getMenuData();
-
-
+  routesStore.setRoutesTree() //全部菜单
 };
 // 关闭弹窗
 const closeDialog = () => {
-  dialog.value.isShowDialog = false;
+  state.isShowDialog = false;
 };
 // 取消
 const onCancel = () => {
@@ -106,18 +101,16 @@ const onCancel = () => {
 // 提交
 const onSubmit = () => {
 
-  if (dialog.value.type === 'edit') {
+  if (state.type === 'edit') {
     //获取全选节点
     //const checkMenu = tree_ref.value.getCheckedNodes();
     //获取半选节点
     // const halfCheckMenu = tree_ref.value.getHalfCheckedNodes()
-    //请求
+
     dialog.value.ruleForm.menus = [] //清空menu，没必要传输
     dialog.value.ruleForm.nodes = tree_ref.value.getCheckedKeys()
     roleApi.modifyRoleInfoApi(dialog.value.ruleForm).then((res) => {
-      if (res.code != 0) {
-        ElMessage.error('错误');
-      } else {
+      if (res.code === 0) {
         ElMessage.success('修改成功');
         //父组件重新加载
         emit('refresh');
@@ -125,15 +118,11 @@ const onSubmit = () => {
     })
     //关闭编辑弹窗
     closeDialog();
-    // if (dialog.type === 'add') { }
   } else {
-    //请求
     dialog.value.ruleForm.id = 0 //清空上次编辑的id
     dialog.value.ruleForm.nodes = tree_ref.value.getCheckedKeys()
     roleApi.addRoleApi(dialog.value.ruleForm).then((res) => {
-      if (res.code != 0) {
-        ElMessage.error('错误');
-      } else {
+      if (res.code === 0) {
         ElMessage.success('新建角色成功');
         //父组件重新加载
         emit('refresh');
@@ -142,13 +131,8 @@ const onSubmit = () => {
     //关闭编辑弹窗
     closeDialog();
   }
+};
 
-};
-// 获取菜单结构数据
-const getMenuData = () => {
-  routesStore.setRoutesTree() //全部菜单
-  //routesStore.setCurrentRoleRoutesTree(state.query) //当前编辑的角色的菜单tree
-};
 
 // 暴露变量
 defineExpose({

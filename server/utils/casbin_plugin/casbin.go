@@ -71,10 +71,10 @@ func UpdateCasbinPolicy(casbinInfo *model.CasbinInfo) error {
 }
 
 // 更新casbin权限
-func UpdateCasbinPolicyNew(casbinData *model.CasbinData) error {
+func UpdateCasbinPolicyNew(casbinData *model.ChangeRoleCasbinReq) error {
 	roleID := strconv.Itoa(casbinData.RoleID)
 	var list []gormadapter.CasbinRule
-	global.DB.Model(&gormadapter.CasbinRule{}).Where("v0 = 1 and v1 in (?)", casbinData.Data).Find(&list)
+	global.DB.Model(&gormadapter.CasbinRule{}).Where("v0 = 1 and v1 in (?)", casbinData.CasbinItems).Find(&list)
 
 	ClearCasbin(0, roleID)
 	rules := [][]string{}

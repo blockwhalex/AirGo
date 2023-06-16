@@ -1,18 +1,13 @@
 import {defineStore} from "pinia";
 //api
 import {useOrderApi} from "/@/api/order/index";
+import {ElMessage} from "element-plus";
 
 const orderApi = useOrderApi()
 export const useOrderStore = defineStore("orderStore", {
     state: () => ({
         //订单管理页面数据
         orderManageData: {
-            queryParams: {
-                page_num: 1,
-                page_size: 10,
-                search: '',
-                date: [],
-            } as QueryParams,
             allOrders: {
                 order_list: [] as Order[],
                 total: 0,
@@ -20,12 +15,6 @@ export const useOrderStore = defineStore("orderStore", {
         },
         //个人订单数据
         orderPersonal: {
-            queryParams: {
-                page_num: 1,
-                page_size: 10,
-                search: '',
-                date: [],
-            } as QueryParams,
             allOrders: {
                 order_list: [] as Order[],
                 total: 0,
@@ -37,22 +26,29 @@ export const useOrderStore = defineStore("orderStore", {
         async getOrderInfo(id?: number) {
             const res = await orderApi.getOrderInfoApi({goods_id: id})
             return res
-
         },
         //获取全部订单
         async getAllOrder(params?: object) {
-            const res = await orderApi.getAllOrderApi(this.orderManageData.queryParams)
-            this.orderManageData.allOrders = res.data
+            const res = await orderApi.getAllOrderApi(params)
+            if (res.code === 0) {
+                this.orderManageData.allOrders = res.data
+                ElMessage.success(res.msg)
+            }
         },
-        //获取用户全部订单
+        //获取用户最近10次订单
         async getOrder(params?: object) {
-            const res = await orderApi.getOrderApi(this.orderPersonal.queryParams)
-            this.orderPersonal.allOrders.order_list = res.data
+            const res = await orderApi.getOrderApi()
+            if (res.code === 0) {
+                this.orderPersonal.allOrders.order_list = res.data
+                ElMessage.success(res.msg)
+            }
         },
         //完成未支付订单
         async completedOrder(params?: object) {
             const res = await orderApi.completedOrderApi(params)
-            return res
+            if (res.code === 0) {
+                ElMessage.success(res.msg)
+            }
         },
     }
 })

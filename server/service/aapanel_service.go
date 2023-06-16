@@ -5,6 +5,7 @@ import (
 	"AirGo/model"
 	"encoding/base64"
 	"encoding/json"
+	"gorm.io/gorm"
 	"net/url"
 	"strconv"
 	"strings"
@@ -16,7 +17,7 @@ import (
 // 节点信息
 func SSNodeInfo(nodeID int) (model.SSNodeInfo, error) {
 	var node model.Node
-	err := global.DB.Where("id = ?", nodeID).First(&node).Error
+	err := global.DB.Where("id = ? and status = true", nodeID).First(&node).Error //节点号 是否启用
 	if err != nil {
 		return model.SSNodeInfo{}, err
 	}
@@ -49,11 +50,6 @@ func SSNodeInfo(nodeID int) (model.SSNodeInfo, error) {
 		}
 		nodeInfo.Server = node.Address + ":" + node.Port + "|host=" + node.Host
 	}
-	//nodeInfo.SSType = "ss-panel-v3-mod_Uim"
-	////判断是否中转---服务器IP;端口;2;ws;;path=/index|host=伪装地址|server=中转IP|outside_port=中转端口
-	//if node.EnableTransfer {
-	//	nodeInfo.Server = nodeInfo.Server + "|server=" + node.TransferAddress + "|outside_port=" + node.TransferPort
-	//}
 	return nodeInfo, nil
 
 }
@@ -66,13 +62,9 @@ func GetUserSub(url string, subType string) string {
 	if err != nil {
 		return ""
 	}
-	//剩余流量检测
-	//if (u.SubscribeInfo.U + u.SubscribeInfo.D) > u.SubscribeInfo.T {
-	//	return ""
-	//}
 	//根据goodsID 查找具体的节点
 	var goods model.Goods
-	err = global.DB.Where("id = ?", u.SubscribeInfo.GoodsID).Preload("Nodes").Find(&goods).Error
+	err = global.DB.Where("id = ?", u.SubscribeInfo.GoodsID).Preload("Nodes", func(db *gorm.DB) *gorm.DB { return db.Order("node_order") }).Find(&goods).Error
 	// 计算剩余天数，流量
 	expiredTime := u.SubscribeInfo.ExpiredAt.Format("2006-01-02")
 	expiredBd1 := (float64(u.SubscribeInfo.T - u.SubscribeInfo.U - u.SubscribeInfo.D)) / 1024 / 1024 / 1024
@@ -171,7 +163,7 @@ func ClashSubscribe(nodes *[]model.Node, uuid, host string) string {
 
 	}
 	var proxyGroup model.ClashProxyGroup
-	proxyGroup.Name = "直连"
+	proxyGroup.Name = global.Server.System.SubName
 	proxyGroup.Type = "select"
 	proxyGroup.Proxies = nameArr
 
@@ -186,7 +178,7 @@ func ClashSubscribe(nodes *[]model.Node, uuid, host string) string {
 	clashYaml.Secret = ""
 	clashYaml.Proxies = proxiesArr
 	clashYaml.ProxyGroups = append(clashYaml.ProxyGroups, proxyGroup)
-
+	clashYaml.Rules = append(clashYaml.Rules, "MATCH,"+global.Server.System.SubName)
 	res, err := yaml.Marshal(clashYaml)
 	if err != nil {
 		global.Logrus.Error("yaml.Marshal error:", err)

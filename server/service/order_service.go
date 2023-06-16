@@ -63,7 +63,7 @@ func GetMonthOrderStatistics(orderParams *model.QueryParamsWithDate) (*model.Ord
 }
 
 // 获取用户订单by user id,,默认显示最近10条
-func GetOrderByUserID(userID int, orderParams *model.PaginationParams) (*[]model.Orders, error) {
+func GetOrderByUserID(userID int) (*[]model.Orders, error) {
 	var orderArr []model.Orders
 	return &orderArr, global.DB.Where("user_id = ?", userID).Limit(10).Order("id desc").Find(&orderArr).Error
 }

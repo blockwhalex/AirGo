@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog v-model="changePasswordDialog.isShowChangePasswordDialog" title="修改密码" width="500px">
+    <el-dialog v-model="state.isShowChangePasswordDialog" title="修改密码" width="500px">
       <el-form ref="userDialogFormRef" size="default" label-width="90px">
         <el-form-item label="新密码">
           <el-input v-model="registerData.password" placeholder="请输入密码" clearable></el-input>
@@ -24,29 +24,27 @@ import {ElMessage} from "element-plus";
 //user store
 import {useUserStore} from "/@/stores/userStore";
 import {storeToRefs} from 'pinia';
+import {reactive} from "vue";
 
 const userStore = useUserStore()
-const {registerData, changePasswordDialog} = storeToRefs(userStore)
-
+const {registerData} = storeToRefs(userStore)
+//定义参数
+const state =reactive({
+  isShowChangePasswordDialog:false,
+})
 // 打开弹窗
 const openDialog = () => {
-  changePasswordDialog.value.isShowChangePasswordDialog = true
+  state.isShowChangePasswordDialog = true
 };
 
 // 关闭弹窗
 const closeDialog = () => {
-  changePasswordDialog.value.isShowChangePasswordDialog = false
+  state.isShowChangePasswordDialog = false
 };
 
 // 提交
 const onSubmit = () => {
-  userStore.changePassword().then((res) => {
-    if (res.code === 0) {
-      ElMessage.success(res.msg)
-    } else {
-      ElMessage.error(res.msg)
-    }
-  })
+  userStore.changePassword(registerData.value)
   closeDialog()
 
 };

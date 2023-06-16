@@ -1,12 +1,12 @@
 <template>
   <div class="container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
-      <div class="mb15">
-        <el-input v-model="nodeManageData.params.search" size="default" placeholder="请输入名称"
+      <div class="mb15" >
+        <el-input v-model="state.params.search" size="default" placeholder="请输入名称"
                   style="max-width: 180px"></el-input>
         <el-date-picker
             size="default"
-            v-model="nodeManageData.params.date"
+            v-model="state.params.date"
             type="datetimerange"
             :shortcuts="shortcuts"
             range-separator="至"
@@ -14,7 +14,7 @@
             end-placeholder="结束日期"
             value-format="YYYY-MM-DD HH:mm:ss"
         />
-        <el-button @click="nodeStore.getNodeWithTraffic()" size="default" type="primary" class="ml10">
+        <el-button @click="onGetNode(state.params)" size="default" type="primary" class="ml10">
           <el-icon>
             <ele-Search/>
           </el-icon>
@@ -26,12 +26,18 @@
           </el-icon>
           新增节点
         </el-button>
+        <el-button size="default" type="warning" class="ml10" @click="onOpenNodeSortDialog">
+          <el-icon>
+            <ele-FolderAdd/>
+          </el-icon>
+          排序
+        </el-button>
       </div>
       <el-table :data="nodeManageData.nodes.node_list" height="100%" style="width: 100%;flex: 1;">
-        <el-table-column fixed type="index" label="序号" width="60"/>
-        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="120" fixed></el-table-column>
+        <!--        <el-table-column fixed type="index" label="序号" width="60"/>-->
+        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="200" fixed></el-table-column>
         <el-table-column prop="id" label="节点ID" show-overflow-tooltip width="60" fixed></el-table-column>
-        <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="120"></el-table-column>
+        <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="150"></el-table-column>
         <el-table-column prop="port" label="节点端口" show-overflow-tooltip></el-table-column>
         <el-table-column prop="sort" label="协议类型" show-overflow-tooltip>
           <template #default="scope">
@@ -52,7 +58,7 @@
         </el-table-column>
         <el-table-column prop="enable_transfer" label="节点类型" show-overflow-tooltip>
           <template #default="scope">
-            <el-tag type="primary" v-if="scope.row.enable_transfer">中转</el-tag>
+            <el-tag type="warning" v-if="scope.row.enable_transfer">中转</el-tag>
             <el-tag type="success" v-else>直连</el-tag>
           </template>
         </el-table-column>
@@ -78,23 +84,27 @@
           :page-sizes="[10, 20, 30, 40]"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="onHandleSizeChange" @current-change="onHandleCurrentChange"
-          v-model:current-page="nodeManageData.params.page_num"
-          v-model:page-size="nodeManageData.params.page_size"
+          v-model:current-page="state.params.page_num"
+          v-model:page-size="state.params.page_size"
           :total="nodeManageData.nodes.total"
       />
     </el-card>
-    <NodeDialog ref="nodeDialogRef" @refresh="nodeStore.getNodeWithTraffic()"/>
+    <NodeDialog ref="nodeDialogRef" @refresh="onGetNode(state.params)"/>
+    <NodeSortDialog ref="nodeSortDialogRef"></NodeSortDialog>
+
   </div>
 </template>
 
 <script setup lang="ts" name="NodeManage">
 
-import {defineAsyncComponent, onMounted, ref} from "vue";
+import {defineAsyncComponent, onMounted, reactive, ref} from "vue";
 
 import {storeToRefs} from "pinia";
 //导入弹出层
 const NodeDialog = defineAsyncComponent(() => import('/@/views/admin/node/dialog.vue'))
+const NodeSortDialog = defineAsyncComponent(() => import('/@/views/admin/node/dialog_node_sort.vue'))
 const nodeDialogRef = ref()
+const nodeSortDialogRef=ref()
 //node store
 import {useNodeStore} from "/@/stores/node";
 
@@ -102,6 +112,7 @@ const nodeStore = useNodeStore()
 const {nodeManageData} = storeToRefs(nodeStore)
 //user store
 import {useUserStore} from "/@/stores/userStore";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const userStore = useUserStore()
 const {userInfos} = storeToRefs(userStore)
@@ -135,33 +146,62 @@ const shortcuts = [
     },
   },
 ]
+//定义参数
+const state = reactive({
+  loading: true,
+  params: {
+    search: '',
+    page_num: 1,
+    page_size: 10,
+    date: [],
+  },
+})
 
-//修改||新建节点
+//新建节点//修改节点 弹窗
 function onOpenEditNode(type: string, row?: Object) {
   nodeDialogRef.value.openDialog(type, row)
 }
+//节点排序弹窗
+function onOpenNodeSortDialog(){
+  nodeSortDialogRef.value.openDialog()
+}
+
+//查询节点
+function onGetNode(params?: object) {
+  nodeStore.getNodeWithTraffic(params)
+}
 
 //删除节点
-function onRowDel(row: Object) {
-  nodeStore.deleteNode(row)
-  setTimeout(() => {
-    nodeStore.getNodeWithTraffic()
-  }, 2000);
+function onRowDel(row: NodeInfo) {
+  ElMessageBox.confirm(`此操作将永久删除节点：${row.name}，是否继续?`, '提示', {
+    confirmButtonText: '删除',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+      .then(() => {
+        nodeStore.deleteNode(row)
+        setTimeout(() => {
+          state.params.search = ''
+          onGetNode(state.params)
+        }, 1000);
+      })
+      .catch(() => {
+      });
 }
 
 // 分页改变
 const onHandleSizeChange = (val: number) => {
-  nodeManageData.value.params.page_size = val;
-  nodeStore.getNodeWithTraffic()
+  state.params.page_size = val;
+  onGetNode(state.params)
 };
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  nodeManageData.value.params.page_num = val;
-  nodeStore.getNodeWithTraffic()
+  state.params.page_num = val;
+  onGetNode(state.params)
 };
 
 onMounted(() => {
-  nodeStore.getNodeWithTraffic()
+  onGetNode(state.params)
 });
 
 </script>

@@ -69,7 +69,6 @@ export function removeDuplicate(arr: EmptyArrayType, attr?: string) {
 
 //menu数组提取节点
 export function arrayExtractionNodes(data: any) {
-    console.log("原始拘束:", data)
     let sonArr: any = []
     let sonNewArr: any = []
     let parentArr: any = []
@@ -87,11 +86,9 @@ export function arrayExtractionNodes(data: any) {
             sonNewArr.push(item)
         }
     })
-    console.log("newPsrentArr:", newPsrentArr)
-    console.log("sonArr:", sonArr)
-    console.log("sonNewArr:", sonNewArr)
-
-
+    // console.log("newPsrentArr:", newPsrentArr)
+    // console.log("sonArr:", sonArr)
+    // console.log("sonNewArr:", sonNewArr)
     return sonNewArr
 }
 

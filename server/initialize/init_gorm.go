@@ -263,6 +263,7 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/node/deleteNode", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/node/updateNode", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/node/getTraffic", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/node/nodeSort", V2: "POST"},
 
 		{Ptype: "p", V0: "1", V1: "/mod_mu/nodes/:nodeID/info", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/mod_mu/users", V2: "GET"},

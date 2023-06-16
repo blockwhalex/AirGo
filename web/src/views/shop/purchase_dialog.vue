@@ -1,18 +1,18 @@
 <template>
   <div>
     <!-- 支付弹窗 -->
-    <el-dialog v-model="tableData.isShowPurchaseDialog" title="支付详情" width="30%">
+    <el-dialog v-model="state.isShowPurchaseDialog" title="支付详情" width="30%">
       <div>
         <el-button type="success" plain>套餐：</el-button>
-        {{ tableData.currentOrder.subject }}
+        {{ shopData.currentOrder.subject }}
       </div>
       <div>
         <el-button type="success" plain>金额：</el-button>
-        {{ tableData.currentOrder.total_amount }}元
+        {{ shopData.currentOrder.total_amount }}元
       </div>
-      <div v-if="tableData.currentOrder.total_amount!=='0'">
+      <div v-if="shopData.currentOrder.total_amount!=='0'">
         <el-button type="primary" plain>支付方式</el-button>
-        <el-radio-group v-model="tableData.currentOrder.pay_type" class="ml-4">
+        <el-radio-group v-model="shopData.currentOrder.pay_type" class="ml-4">
           <el-radio :label="'alipay'">支付宝</el-radio>
           <el-radio :label="'wechat'" disabled>微信(暂未接入)</el-radio>
         </el-radio-group>
@@ -20,8 +20,8 @@
       </div>
       <template #footer>
             <span class="dialog-footer">
-                <el-button @click="tableData.isShowPurchaseDialog = false">取消</el-button>
-                <el-button type="warning" @click="onPurchase({id:tableData.currentGoods.id})">
+                <el-button @click="state.isShowPurchaseDialog = false">取消</el-button>
+                <el-button type="warning" :disabled="shopData.currentOrder.pay_type==='' && shopData.currentOrder.total_amount!=='0'" @click="onPurchase({id:shopData.currentGoods.id})">
                     确认支付
                 </el-button>
             </span>
@@ -32,56 +32,57 @@
 
 <script setup lang="ts">
 import {ElMessage} from 'element-plus';
+import {reactive} from "vue";
 //导入store
 import {storeToRefs} from 'pinia';
 import {useShopStore} from "/@/stores/shopStore";
 import {isMobile} from "/@/utils/other";
 
 const shopStore = useShopStore()
-const {tableData} = storeToRefs(shopStore)
-// 定义子组件向父组件传值/事件
-//const emit = defineEmits(['purchase']);
+const {shopData} = storeToRefs(shopStore)
+
 //api
 import {useShopApi} from '/@/api/shop/index'
-
 const shopApi = useShopApi()
+
+//定义变量
+const state = reactive({
+  isShowPurchaseDialog: false,
+})
 //打开弹窗
 const openDialog = () => {
-  tableData.value.isShowPurchaseDialog = true
+  state.isShowPurchaseDialog = true
 }
 //调用父组件
 const emits = defineEmits(['openQRDialog'])
 
 //购买按钮
 const onPurchase = (params?: object) => {
+
   //api，传out_trade_no，pay_type
   shopApi.purchaseApi({
-    out_trade_no: tableData.value.currentOrder.out_trade_no,
-    pay_type: tableData.value.currentOrder.pay_type
+    out_trade_no: shopData.value.currentOrder.out_trade_no,
+    pay_type: shopData.value.currentOrder.pay_type
   }).then((res) => {
-    if (res.code === 0 && res.msg === "购买成功") {
+    if (res.code === 0 && res.msg === "购买成功") { //0元购
       ElMessage.success("购买成功")
-      tableData.value.isShowPurchaseDialog = false
+      state.isShowPurchaseDialog = false
       return
-
-    } else if (res.code === 0 && res.data != "") {
+    } else if (res.code === 0 && res.data != "") { //后端返回qrcode
       //保存支付二维码
-      tableData.value.QRtext = res.data
-      //手机端跳转支付页面
-      const ok = isMobile()
+      shopData.value.currentOrder.qr_code=res.data
+      const ok = isMobile()            //手机端跳转支付页面
       if (ok) {
-        window.location.href = tableData.value.QRtext;
+        window.location.href = shopData.value.currentOrder.qr_code;
         return
       } else {
-        //电脑端打开支付二维码弹窗
-        console.log("电脑端打开支付二维码弹窗")
-        emits('openQRDialog')
+        emits('openQRDialog')   //电脑端打开支付二维码弹窗
       }
     }
   }).catch(() => {
   })
   //关闭弹窗
-  tableData.value.isShowPurchaseDialog = false
+  state.isShowPurchaseDialog = false
 }
 
 defineExpose({

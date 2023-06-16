@@ -2,11 +2,11 @@
   <div class="container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
       <div class="mb15">
-        <el-input v-model="orderManageData.queryParams.search" placeholder="请输入订单号"
+        <el-input v-model="state.params.search" placeholder="请输入订单号"
                   style="max-width: 180px"></el-input>
         <el-date-picker
             size="small"
-            v-model="orderManageData.queryParams.date"
+            v-model="state.params.date"
             type="datetimerange"
             :shortcuts="shortcuts"
             range-separator="至"
@@ -14,7 +14,7 @@
             end-placeholder="结束日期"
             value-format="YYYY-MM-DD HH:mm:ss"
         />
-        <el-button size="default" type="primary" class="ml10" @click="onSearch">
+        <el-button size="default" type="primary" class="ml10" @click="onSearch(state.params)">
 
           <el-icon>
             <ele-Search/>
@@ -60,8 +60,8 @@
                      class="mt15"
                      layout="total, sizes, prev, pager, next, jumper"
                      :page-sizes="[10, 20, 30]"
-                     v-model:current-page="orderManageData.queryParams.page_num"
-                     v-model:page-size="orderManageData.queryParams.page_size"
+                     v-model:current-page="state.params.page_num"
+                     v-model:page-size="state.params.page_size"
                      :total="orderManageData.allOrders.total"
                      @size-change="onHandleSizeChange"
                      @current-change="onHandleCurrentChange">
@@ -73,7 +73,7 @@
 <script setup lang="ts">
 import {ElMessage} from 'element-plus';
 //store
-import {onMounted} from "vue";
+import {onMounted, reactive} from "vue";
 import {useOrderStore} from "/@/stores/orderStore";
 import {storeToRefs} from "pinia";
 //格式化时间
@@ -83,33 +83,35 @@ import {DateStrtoTime} from "/@/utils/formatTime"
 const orderStore = useOrderStore()
 const {orderManageData} = storeToRefs(orderStore)
 
-const onSearch = () => {
-  orderStore.getAllOrder()
-
+//定义参数
+const state = reactive({
+  params: {
+    page_num: 1,
+    page_size: 10,
+    search: '',
+    date: [],
+  } as QueryParams,
+})
+//
+const onSearch = (params?:object) => {
+  orderStore.getAllOrder(params)
 }
 onMounted(() => {
-  orderStore.getAllOrder()
+  onSearch(state.params)
 })
 //完成未支付订单
 const onCompleteOrder = (row: Order) => {
-  orderStore.completedOrder(row).then((res) => {
-    if (res.code === 0) {
-      ElMessage.success(res.msg)
-    } else {
-
-    }
-  })
-
+  orderStore.completedOrder(row)
 }
 // 分页改变
 const onHandleSizeChange = (val: number) => {
-  orderManageData.value.queryParams.page_size = val;
-  orderStore.getAllOrder()
+  state.params.page_size = val;
+  orderStore.getAllOrder(state.params)
 };
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  orderManageData.value.queryParams.page_num = val;
-  orderStore.getAllOrder()
+  state.params.page_num = val;
+  orderStore.getAllOrder(state.params)
 };
 //时间范围
 const shortcuts = [

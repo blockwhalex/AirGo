@@ -2,7 +2,7 @@
   <div class="system-role-container layout-padding">
     <div class="system-role-padding layout-padding-auto layout-padding-view">
       <div class="system-user-search mb15">
-        <el-input v-model="roleManageData.params.search" size="default" placeholder="请输入角色名称"
+        <el-input v-model="state.params.search" size="default" placeholder="请输入角色名称"
                   style="max-width: 180px"></el-input>
         <el-button size="default" type="primary" class="ml10" @click="onSearch">
           <el-icon>
@@ -17,7 +17,7 @@
           新增角色
         </el-button>
       </div>
-      <el-table :data="roleManageData.roles.role_list" v-loading="roleManageData.loading"
+      <el-table :data="roleManageData.roles.role_list" v-loading="state.loading"
                 style="width: 100%">
         <el-table-column type="index" label="序号" width="60" fixed/>
         <el-table-column prop="role_name" label="角色名称" show-overflow-tooltip fixed></el-table-column>
@@ -47,18 +47,18 @@
           :page-sizes="[10, 20, 30]"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="onHandleSizeChange" @current-change="onHandleCurrentChange" class="mt15"
-          v-model:current-page="roleManageData.params.page_num"
-          v-model:page-size="roleManageData.params.page_size"
+          v-model:current-page="state.params.page_num"
+          v-model:page-size="state.params.page_size"
           :total="roleManageData.roles.total">
       </el-pagination>
     </div>
-    <RoleDialog ref="roleDialogRef" @refresh="roleStore.getRoleList()"/>
+    <RoleDialog ref="roleDialogRef" @refresh="roleStore.getRoleList(state.params)"/>
     <RoleDialogEditApi ref="roleDialogEditApiRef"/>
   </div>
 </template>
 
 <script setup lang="ts" name="systemRole">
-import {defineAsyncComponent, onMounted, ref} from 'vue';
+import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
 import {ElMessageBox, ElMessage} from 'element-plus';
 //导入 role store
 import {storeToRefs} from 'pinia';
@@ -73,12 +73,20 @@ import {useRoleApi} from "/@/api/role/index";
 const roleApi = useRoleApi()
 
 // 引入组件
-const RoleDialog = defineAsyncComponent(() => import('/@/views/admin/role/dialog.vue'));
+const RoleDialog = defineAsyncComponent(() => import('/@/views/admin/role/dialog_editRole.vue'));
 const RoleDialogEditApi = defineAsyncComponent(() => import('/@/views/admin/role/dialog_editApi.vue'))
 const roleDialogRef = ref();
 const roleDialogEditApiRef = ref();
 
-
+//定义参数
+const state=reactive({
+  loading: false,
+  params: {
+    search: '',
+    page_num: 1,
+    page_size: 10,
+  },
+})
 // 打开新增角色弹窗
 const onOpenAddRole = (type: string) => {
   roleDialogRef.value.openDialog(type);
@@ -102,33 +110,27 @@ const onRowDel = (row: RowRoleType) => {
     roleApi.delRoleApi({id: row.id}).then((res) => {
       if (res.code != 0) {
         ElMessage.success('删除失败');
-      } else {
-        ElMessage.success('删除成功');
-        roleStore.getRoleList()
       }
     })
-
   })
-      .catch(() => {
-      });
 };
 //查询
-const onSearch = () => {
-  roleStore.getRoleList()
+const onSearch = (params?:object) => {
+  roleStore.getRoleList(params)
 }
 // 分页改变
 const onHandleSizeChange = (val: number) => {
-  roleManageData.value.params.page_size = val;
-  roleStore.getRoleList()
+  state.params.page_size = val;
+  onSearch(state.params)
 };
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  roleManageData.value.params.page_num = val;
-  roleStore.getRoleList()
+  state.params.page_num = val;
+  onSearch(state.params)
 };
 // 页面加载时
 onMounted(() => {
-  roleStore.getRoleList()
+  onSearch(state.params)
 });
 </script>
 

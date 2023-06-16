@@ -21,6 +21,7 @@ type Node struct {
 	//节点基础参数
 	// NodeGroup int `json:"node_group"`
 	// NodeClass int `json:"node_class"`
+	NodeOrder       int    `json:"node_order"`                           //节点排序
 	Sort            int    `json:"sort"            gorm:"default:11"`    //类型sort==11  V2Ray vmess
 	Name            string `json:"name"`                                 //节点名
 	Address         string `json:"address"`                              //节点地址
@@ -65,11 +66,6 @@ type Vmess struct {
 	Tls          string `json:"tls"`  //传输层安全
 }
 
-// 修改混淆
-type SubHost struct {
-	Host string `json:"host"`
-}
-
 // clash  yaml格式
 type ClashYaml struct {
 	Port               int               `yaml:"port"`
@@ -82,6 +78,7 @@ type ClashYaml struct {
 	Secret             string            `yaml:"secret"`
 	Proxies            []ClashProxy      `yaml:"proxies"`
 	ProxyGroups        []ClashProxyGroup `yaml:"proxy-groups"`
+	Rules              []string          `yaml:"rules"`
 }
 type ClashProxy struct {
 	Name      string    `yaml:"name"`
@@ -116,11 +113,18 @@ type ClashProxyGroup struct {
 	Proxies []string `yaml:"proxies"`
 }
 
+// 修改混淆
+type SubHost struct {
+	Host string `json:"host"`
+}
+
 // 查询节点 with total
 type NodesWithTotal struct {
 	NodeList []Node `json:"node_list"`
 	Total    int64  `json:"total"`
 }
+
+// 节点状态
 type NodeStatus struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"`

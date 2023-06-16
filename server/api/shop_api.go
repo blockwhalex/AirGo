@@ -51,7 +51,6 @@ func PreHandleOrder(ctx *gin.Context) *model.Orders {
 	receiveOrder.UserID = uIDInt
 	receiveOrder.UserName = uNameStr
 	receiveOrder.PayType = receiveOrder.PayType //添加付款方式
-
 	return &receiveOrder
 }
 
@@ -69,7 +68,6 @@ func GetOrderInfo(ctx *gin.Context) {
 func PreCreatePay(ctx *gin.Context) {
 	order := PreHandleOrder(ctx)
 	if order == nil {
-
 		response.Fail("获取订单错误", nil, ctx)
 		return
 	}
@@ -80,9 +78,7 @@ func PreCreatePay(ctx *gin.Context) {
 		response.Fail("创建系统订单error:"+err.Error(), nil, ctx)
 		return
 	}
-
 	response.OK("创建系统订单成功", order, ctx)
-
 }
 
 func Purchase(ctx *gin.Context) {
@@ -108,7 +104,7 @@ func Purchase(ctx *gin.Context) {
 		}
 	}
 	sysOrder.PayType = receiveOrder.PayType
-	//如果价格=0，跳过支付
+	//0元购，跳过支付
 	if sysOrder.TotalAmount == "0" {
 		sysOrder.TradeStatus = "completed"    //更新数据库订单状态,自定义结束状态completed
 		service.UpdateOrder(sysOrder)         //更新数据库状态

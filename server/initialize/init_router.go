@@ -94,6 +94,7 @@ func InitRouter() {
 		nodeAdminRouter.POST("deleteNode", api.DeleteNode)     //删除节点
 		nodeAdminRouter.POST("updateNode", api.UpdateNode)     //更新节点
 		nodeAdminRouter.POST("getTraffic", api.GetNodeTraffic) //获取节点 with Traffic,分页
+		nodeAdminRouter.POST("nodeSort", api.NodeSort)         //节点排序
 	}
 
 	//sspqnel
