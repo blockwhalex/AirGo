@@ -6,18 +6,18 @@
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
-                <el-tag size="large" plain>套餐详情</el-tag>
+                <el-tag size="large" plain><span style="font-size: 15px;color: #FC3D08">套餐详情</span></el-tag>
               </div>
             </template>
-            <div>
+            <div style="display: flex;justify-content: space-between">
               <el-tag style="margin-top: 10px;margin-bottom: 10px" type="info">剩余流量:</el-tag>
-              <span>{{
+              <span style="margin-top: 10px;margin-bottom: 10px;font-size: 20px;">{{
                   (userInfos.subscribe_info.t - userInfos.subscribe_info.d - userInfos.subscribe_info.u) / 1024 / 1024 / 1024
                 }}GB</span>
             </div>
-            <div>
+            <div style="display: flex;justify-content: space-between">
               <el-tag style="margin-top: 10px;margin-bottom: 10px" type="info">到期时间:</el-tag>
-              {{ DateStrtoTime(userInfos.subscribe_info.expired_at) }}
+             <span style="margin-top: 10px;margin-bottom: 10px;font-size: 20px;">{{ DateStrtoTime(userInfos.subscribe_info.expired_at) }}</span>
             </div>
           </el-card>
         </div>
@@ -34,7 +34,7 @@
             <div>
               <el-input v-model="state.host.host" placeholder="输入混淆">
                 <template #append>
-                  <el-button @click="onChangeHost" :icon="Select">确认修改</el-button>
+                  <el-button size="large" @click="onChangeHost" :icon="Select">确认修改</el-button>
                 </template>
               </el-input>
             </div>
@@ -49,7 +49,7 @@
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
-                <span>订阅地址</span>
+                <el-tag size="large" plain><span style="font-size: 15px;color: #FC3D08">订阅地址</span></el-tag>
                 <el-button type="primary" plain class="button" @click="onResetSub">重置订阅链接</el-button>
               </div>
             </template>
@@ -160,5 +160,11 @@ onMounted(() => {
   background: var(--el-color-white);
   color: var(--el-text-color-primary);
   border: 1px solid var(--next-border-color-light);
+}
+.el-card{
+  background-image: url("../../assets/bgc/bg-1.svg");
+  background-repeat:no-repeat;
+  background-position: 100%,100%;
+  //background: rgba(0,0,0,0.3);
 }
 </style>

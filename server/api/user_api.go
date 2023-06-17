@@ -6,6 +6,7 @@ import (
 	"AirGo/service"
 	"AirGo/utils/encode_plugin"
 	"AirGo/utils/jwt_plugin"
+	timeTool "AirGo/utils/time_plugin"
 	"net/http"
 
 	//"AirGo/utils/encode_plugin"
@@ -76,15 +77,26 @@ func Login(c *gin.Context) {
 		return
 	}
 	//登录以后签发jwt
-	baseClaims := jwt_plugin.BaseClaims{
-		ID:       user.ID,
-		UserName: user.UserName,
-	}
-	myClaims := jwt_plugin.CreateClaims(baseClaims)
-	token, err := jwt_plugin.CreateToken(myClaims)
-	if err != nil {
-		global.Logrus.Error("生成token err", err.Error())
-		return
+	var token string
+	cacheToken, ok := global.LocalCache.Get(l.UserName + "token")
+	if ok {
+		token = cacheToken.(string)
+	} else {
+		baseClaims := jwt_plugin.BaseClaims{
+			ID:       user.ID,
+			UserName: user.UserName,
+		}
+		newToken, err := jwt_plugin.CreateToken(jwt_plugin.CreateClaims(baseClaims))
+		if err != nil {
+			global.Logrus.Error("生成token err", err.Error())
+			return
+		} else {
+			token = newToken
+			go func(l *model.UserLogin, token string) {
+				duration, _ := timeTool.ParseDuration(global.Server.JWT.ExpiresTime)
+				global.LocalCache.Set(l.UserName+"token", token, duration)
+			}(&l, token)
+		}
 	}
 	//fmt.Println("生成token :", token)
 	response.OK("登录成功", gin.H{

@@ -459,7 +459,7 @@
 </template>
 
 <script setup lang="ts" name="layoutBreadcrumbSeting">
-import {nextTick, onUnmounted, onMounted, computed, reactive} from 'vue';
+import {nextTick, onUnmounted, onMounted, computed, reactive, onBeforeMount} from 'vue';
 import {ElMessage} from 'element-plus';
 import {storeToRefs} from 'pinia';
 import {useThemeConfig} from '/@/stores/themeConfig';
@@ -688,6 +688,7 @@ const initSetStyle = () => {
   // 2、菜单 / 顶栏 --> 分栏菜单背景渐变
   onColumnsMenuBarGradualChange();
 };
+
 onMounted(() => {
   nextTick(() => {
     // 判断当前布局是否不相同，不相同则初始化当前布局的样式，防止监听窗口大小改变时，布局配置logo、菜单背景等部分布局失效问题

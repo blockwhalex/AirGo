@@ -6,7 +6,7 @@ import {storeToRefs} from 'pinia';
 import {useKeepALiveNames} from '/@/stores/keepAliveNames';
 import {useRoutesStore} from '/@/stores/routesStore';
 import {useThemeConfig} from '/@/stores/themeConfig';
-import {Session} from '/@/utils/storage';
+import {Session,Local} from '/@/utils/storage';
 import {staticRoutes, notFoundAndNoPower} from '/@/router/route';
 //import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import {initBackEndControlRoutes} from '/@/router/backEnd';
@@ -101,7 +101,8 @@ export function formatTwoStageRoutes(arr: any) {
 router.beforeEach(async (to, from, next) => {
     NProgress.configure({showSpinner: false});
     if (to.meta.title) NProgress.start();
-    const token = Session.get('token');
+    // const token = Session.get('token');
+    const token = Local.get('token');
     if (to.path === '/login' && !token) {
         next();
         NProgress.done();
@@ -110,6 +111,7 @@ router.beforeEach(async (to, from, next) => {
             //next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`);
             next(`/login`);
             Session.clear();
+            Local.clear();
             NProgress.done();
         } else if (token && to.path === '/login') {
             next('/home');

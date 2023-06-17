@@ -49,6 +49,11 @@ onBeforeMount(() => {
   // 设置批量第三方 js
   setIntroduction.jsCdn();
 });
+
+//组件被挂载之前
+onBeforeMount(()=>{
+  storesThemeConfig.getThemeConfig()
+})
 // 页面加载时
 onMounted(() => {
   nextTick(() => {
@@ -57,7 +62,6 @@ onMounted(() => {
       setingsRef.value.openDrawer();
     });
     // 获取缓存中的布局配置
-    storesThemeConfig.getThemeConfig()
     // if (Local.get('themeConfig')) {
     //   //加载时获取服务器主题配置
     // 	//storesThemeConfig.setThemeConfig({ themeConfig: Local.get('themeConfig') });

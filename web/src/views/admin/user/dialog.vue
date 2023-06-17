@@ -191,7 +191,7 @@ const onSubmit = () => {
     if (state.subParams.t !== 0) {     //计算流量
       userManageData.value.dialog.user.subscribe_info.t = state.subParams.t * 1024 * 1024 * 1024
     }
-    userStore.updateUser()
+    userStore.updateUser(userManageData.value.dialog)
   }
   setTimeout(() => {
     userStore.getUserList(state.params)

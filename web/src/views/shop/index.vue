@@ -3,29 +3,27 @@
     <el-row :gutter="15" class="home-card-one mb15">
       <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-for="(v, k) in goodsList" :key="k">
         <div class="home-card-item">
-          <el-card class="box-card">
+          <el-card>
             <template #header>
               <div class="card-header">
-                <div class="block">
-                </div>
-                <el-tag size="large" type="success">{{ v.subject }}</el-tag>
+                <el-text  style="font-size: 30px;color: #FC3D08">{{ v.subject }}</el-text>
               </div>
             </template>
-            <div style="margin-bottom: 10px">
+            <div style="margin-bottom: 15px;display: flex;justify-content: space-between;">
               <el-tag style="width: 70px" type="warning">套餐流量</el-tag>
               <span>{{ v.total_bandwidth }}GB</span>
             </div>
-            <div style="margin-top: 10px;margin-bottom: 10px">
-              <el-tag style="width: 70px" type="warning">有效期(天)</el-tag>
-              <span>{{ v.expiration_date }}</span>
+            <div style="margin-bottom: 15px;display: flex;justify-content: space-between;">
+              <el-tag style="width: 70px" type="warning">有效期</el-tag>
+              <span>{{ v.expiration_date }}天</span>
             </div>
-            <div style="margin-top: 10px;margin-bottom: 10px">
-              <el-tag style="width: 70px" type="warning">价格(元)</el-tag>
-              <span>{{ v.total_amount }}</span>
+            <div style="margin-bottom: 15px;display: flex;justify-content: space-between;">
+              <el-tag style="width: 70px" type="warning">价格</el-tag>
+              <span style="font-size: 20px;">¥{{ v.total_amount }}</span>
             </div>
             <el-tag type="info">有效期内不清零、不重置，长期有效</el-tag>
             <div style="margin-top: 10px;margin-bottom: 10px">
-              <el-button @click="openSubmitOrderDialog(v.id)" type="primary">立即购买</el-button>
+              <el-button size="large" @click="openSubmitOrderDialog(v.id)" color="#FC3D08">立即购买</el-button>
             </div>
 
           </el-card>
@@ -90,5 +88,10 @@ const openQRDialog = () => {
   background: var(--el-color-white);
   color: var(--el-text-color-primary);
   border: 1px solid var(--next-border-color-light);
+}
+.el-card{
+  background-image: url("../../assets/bgc/bg-3.svg");
+  background-repeat:no-repeat;
+  background-position: 100%,100%;
 }
 </style>

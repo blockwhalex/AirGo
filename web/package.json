@@ -1,7 +1,7 @@
 {
-	"name": "vue-next-admin-template",
+	"name": "AirGo",
 	"version": "2.4.32",
-	"description": "vue3 vite next admin template",
+	"description": "AirGo",
 	"author": "lyt_20201208",
 	"license": "MIT",
 	"scripts": {

@@ -21,7 +21,6 @@ func InitRouter() {
 	Router := gin.Default()
 	Router.Use(middleware.Cors(), middleware.Recovery()) //不开启跨域验证码出错
 	RouterGroup := Router.Group("/")
-
 	//公共路由
 	publicRouter := RouterGroup.Group("public").Use(middleware.RateLimitIP())
 	{

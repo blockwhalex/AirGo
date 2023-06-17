@@ -1,6 +1,6 @@
 import axios, {AxiosInstance} from 'axios';
 import {ElMessage, ElMessageBox} from 'element-plus';
-import {Session} from '/@/utils/storage';
+import {Session,Local} from '/@/utils/storage';
 import qs from 'qs';
 
 // 配置新建一个 axios 实例
@@ -22,8 +22,9 @@ service.interceptors.request.use(
     (config) => {
         // console.log("请求拦截器 config:", config)
         // 在发送请求之前做些什么 token
-        if (Session.get('token')) {
-            config.headers!['Authorization'] = `${Session.get('token')}`;
+        // if (Session.get('token')) {
+        if (Local.get('token')) {
+            config.headers!['Authorization'] = `${Local.get('token')}`;
         }
         if (config.method === "get") { //get等URL传参，重写请求头和序列化
             config.headers['Content-Type'] = "application/x-www-form-urlencoded"
@@ -50,7 +51,8 @@ service.interceptors.response.use(
         if (res.code && res.code !== 0) {
             // `token` 过期或者账号已在别处登录
             if (res.code === 401 || res.code === 4001) {
-                Session.clear(); // 清除浏览器全部临时缓存
+                // Session.clear(); // 清除浏览器全部临时缓存
+                Local.clear()
                 window.location.href = '/'; // 去登录页
                 ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
                     .then(() => {

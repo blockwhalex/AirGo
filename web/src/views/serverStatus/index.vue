@@ -3,7 +3,7 @@
     <el-row :gutter="15">
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" v-for="(v,k) in serverStatusData.data" :key="k">
         <div class="home-card-item">
-          <el-card class="box-card">
+          <el-card>
             <el-row :gutter="10" justify="space-around" align="middle">
               <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin: auto">
                 <el-tag type="warning">{{ v.name }}</el-tag>
@@ -46,13 +46,14 @@ import {storeToRefs} from "pinia";
 
 //node store
 import {useNodeStore} from "/@/stores/node";
-import {Session} from "/@/utils/storage";
+import {Session,Local} from "/@/utils/storage";
 
 const nodeStore = useNodeStore()
 const {serverStatusData} = storeToRefs(nodeStore)
 
 //var ws = new WebSocket("ws://localhost/ws",[token]);
-const token = Session.get('token')
+// const token = Session.get('token')
+const token = Local.get('token')
 const wsUrl:string = import.meta.env.VITE_API_URL
 const url =wsUrl.slice(wsUrl.indexOf('//')+2,wsUrl.length)
 //console.log("url:",url)
@@ -65,7 +66,7 @@ function initWS() {
     ws.send('{"type":1,"data":"hi"}');
     interval = setInterval(() => {
       ws.send('{"type":1,"data":"hi"}');
-    }, 30000);
+    }, 3000);
   }
 //接收服务器发回的信息
   ws.onmessage = function (data) {
@@ -109,5 +110,10 @@ onUnmounted(() => {
   background: var(--el-color-white);
   color: var(--el-text-color-primary);
   border: 1px solid var(--next-border-color-light);
+}
+.el-card{
+  background-image: url("../../assets/bgc/3.png");
+  background-repeat:no-repeat;
+  /*background-position: 100%,100%;*/
 }
 </style>

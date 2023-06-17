@@ -3,7 +3,7 @@ import {RouteRecordRaw} from 'vue-router';
 import pinia from '/@/stores/index';
 //import { useUserInfo } from '/@/stores/userInfo';
 //import { useRequestOldRoutes } from '/@/stores/requestOldRoutes';
-import {Session} from '/@/utils/storage';
+import {Session,Local} from '/@/utils/storage';
 import {NextLoading} from '/@/utils/loading';
 import {dynamicRoutes, notFoundAndNoPower} from '/@/router/route';
 import {formatTwoStageRoutes, formatFlatteningRoutes, router} from '/@/router/index';
@@ -36,7 +36,8 @@ export async function initBackEndControlRoutes() {
     // 界面 loading 动画开始执行
     if (window.nextLoading === undefined) NextLoading.start();
     // 无 token 停止执行下一步
-    if (!Session.get('token')) return false;
+    // if (!Session.get('token')) return false;
+    if (!Local.get('token')) return false;
     //获取路由菜单数据
     const res = await getBackEndControlRoutes();
     // 无登录权限时，添加判断

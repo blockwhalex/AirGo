@@ -279,8 +279,11 @@ const getSummaries = (param: SummaryMethodProps) => {
   transition: all ease 0.3s;
   padding: 20px;
   overflow: hidden;
-  background: let(--el-color-white);
-  color: let(--el-text-color-primary);
-  border: 1px solid let(--next-border-color-light);
+  background: var(--el-color-white);
+  color: var(--el-text-color-primary);
+  border: 1px solid var(--next-border-color-light);
+}
+.el-card{
+  background-image: url("../../assets/bgc/1.png");
 }
 </style>

@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 //import Cookies from 'js-cookie';
-import {Session} from '/@/utils/storage';
+import {Session,Local} from '/@/utils/storage';
 //导入api
 import {useUserApi} from "../api/user/index";
 
@@ -150,7 +150,8 @@ export const useUserStore = defineStore('userInfo', {
             //保存用户信息到Session
             Session.set("userInfos", res.data.user)
             //保存token
-            Session.set("token", res.data.token)
+            // Session.set("token", res.data.token)
+            Local.set("token", res.data.token)
         },
         //修改混淆
         async changeHost(params?: object) {
