@@ -20,7 +20,7 @@
             <div class="columns-vertical-title font12">
               {{
                 v.meta.title && v.meta.title.length >= 4
-                    ? v.meta.title.substr(0, themeConfig.columnsAsideLayout === 'columns-vertical' ? 4 : 3)
+                    ? v.meta.title.substr(0, themeConfig.columnsAsideLayout === 'columns-vertical' ? 6 : 6)
                     : v.meta.title
               }}
             </div>
@@ -31,7 +31,7 @@
               <div class="columns-vertical-title font12">
                 {{
                   v.meta.title && v.meta.title.length >= 4
-                      ? v.meta.title.substr(0, themeConfig.columnsAsideLayout === 'columns-vertical' ? 4 : 3)
+                      ? v.meta.title.substr(0, themeConfig.columnsAsideLayout === 'columns-vertical' ? 6 : 6)
                       : v.meta.title
                 }}
               </div>
@@ -217,7 +217,7 @@ watch(
 
 <style scoped lang="scss">
 .layout-columns-aside {
-  width: 70px;
+  width: 100px;
   height: 100%;
   background: var(--next-bg-columnsMenuBar);
 
@@ -293,7 +293,8 @@ watch(
       left: 50%;
       top: 2px;
       height: 44px;
-      width: 65px;
+      //width: 65px;
+      width: 100%;
       transform: translateX(-50%);
       z-index: 0;
       transition: 0.3s ease-in-out;

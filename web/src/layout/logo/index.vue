@@ -34,7 +34,7 @@ const onThemeConfigChange = () => {
 
 <style scoped lang="scss">
 .layout-logo {
-  width: 220px;
+  width: 180px;
   height: 50px;
   display: flex;
   align-items: center;
@@ -57,14 +57,15 @@ const onThemeConfigChange = () => {
   }
 
   &-medium-img {
-    width: 20px;
+    width: 30px;
     margin-right: 5px;
   }
 }
 
 .layout-logo-size {
   width: 100%;
-  height: 50px;
+  //height: 50px;
+  widheightth: 100%;
   display: flex;
   cursor: pointer;
   animation: logoAnimation 0.3s ease-in-out;

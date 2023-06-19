@@ -2,8 +2,9 @@
   <div class="layout-footer pb15">
     <div class="layout-footer-warp">
       <div class="mt5">
-        <el-link href="https://github.com/ppoonk/AirGo" type="warning">
-          <span>Copyright©{{ themeConfig.globalTitle }}</span></el-link>
+        <el-link>Powered by {{ themeConfig.globalTitle }}</el-link>
+        <span> | </span>
+        <el-link href="https://github.com/ppoonk/AirGo">Copyright © {{ themeConfig.globalTitle }}</el-link>
       </div>
     </div>
   </div>

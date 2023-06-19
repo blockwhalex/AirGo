@@ -79,5 +79,6 @@ type Theme struct {
 	GlobalI18n          string `json:"globalI18n"           gorm:"default:zh-cn;comment:默认初始语言"`
 	GlobalComponentSize string `json:"globalComponentSize"  gorm:"default:small;comment:默认全局组件大小，可选值<large|'default'|small>"`
 	//注册界面
-	EnableEmailCode bool `json:"enable_email_code"          gorm:"default:false;comment:是否开启email验证码"`
+	EnableEmailCode      bool `json:"enable_email_code"          gorm:"default:false;comment:是否开启注册email验证码"`
+	EnableLoginEmailCode bool `json:"enable_login_email_code"    gorm:"default:false;comment:是否开启登录email验证码"` // 是否开启登录email 验证码
 }

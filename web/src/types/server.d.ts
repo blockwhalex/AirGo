@@ -20,6 +20,7 @@ declare interface Jwt {
 declare interface System {
     enable_register: boolean;
     enable_email_code: boolean;
+    enable_login_email_code: boolean;
     is_multipoint: boolean;
     sub_name: string;
     muKey: string;

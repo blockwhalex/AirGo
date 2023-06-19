@@ -43,12 +43,13 @@ type JWT struct {
 	Issuer      string `json:"issuer"       gorm:"default:AirGo"` // 签发者
 }
 type System struct {
-	EnableRegister  bool   `json:"enable_register"   gorm:"default:true"`  // 是否开启注册
-	EnableEmailCode bool   `json:"enable_email_code" gorm:"default:false"` // 是否开启email 验证码
-	IsMultipoint    bool   `json:"is_multipoint"     gorm:"default:true"`  // 是否多点登录
-	SubName         string `json:"sub_name"          gorm:"default:AirGo"` // 订阅名称
-	MuKey           string `json:"muKey"`                                  // 前后端通信密钥
-	DefaultGoods    string `json:"default_goods"`                          //新用户默认套餐
+	EnableRegister       bool   `json:"enable_register"         gorm:"default:true"`  // 是否开启注册
+	EnableEmailCode      bool   `json:"enable_email_code"       gorm:"default:false"` // 是否开启注册email 验证码
+	EnableLoginEmailCode bool   `json:"enable_login_email_code" gorm:"default:false"` // 是否开启登录email 验证码
+	IsMultipoint         bool   `json:"is_multipoint"     gorm:"default:true"`        // 是否多点登录
+	SubName              string `json:"sub_name"          gorm:"default:AirGo"`       // 订阅名称
+	MuKey                string `json:"muKey"`                                        // 前后端通信密钥
+	DefaultGoods         string `json:"default_goods"`                                //新用户默认套餐
 }
 
 // Pay 支付相关配置

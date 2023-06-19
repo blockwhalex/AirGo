@@ -8,6 +8,7 @@
           <span class="login-left-logo-text-msg">{{ getThemeConfig.globalViceTitleMsg }}</span>
         </div>
       </div>
+<!--      左侧svg-->
       <div class="login-left-img">
         <img :src="loginMain"/>
       </div>
@@ -39,11 +40,13 @@
         </div>
       </div>
     </div>
+    <LayoutFooter class="login-footer" v-if="isFooter"/>
   </div>
+  <Muyu ></Muyu>
 </template>
 
 <script setup lang="ts" name="loginIndex">
-import {defineAsyncComponent, onMounted, reactive, computed} from 'vue';
+import {defineAsyncComponent, onMounted, reactive, ref,computed} from 'vue';
 import {storeToRefs} from 'pinia';
 //store
 import {useThemeConfig} from '/@/stores/themeConfig';
@@ -53,12 +56,14 @@ import {NextLoading} from '/@/utils/loading';
 
 import loginMain from '/@/assets/login-main.svg';
 import loginBg from '/@/assets/login-bg.svg';
+import {useRoute} from "vue-router";
 
 // 引入组件
 const Account = defineAsyncComponent(() => import('/@/views/login/component/account.vue'));
 const Register = defineAsyncComponent(() => import('/@/views/login/component/register.vue'));
 const Scan = defineAsyncComponent(() => import('/@/views/login/component/scan.vue'));
-
+const LayoutFooter = defineAsyncComponent(() => import('/@/layout/footer/index.vue'));
+const Muyu = defineAsyncComponent(() => import('/@/views/login/component/muyu.vue'));
 // 定义变量内容
 const storesThemeConfig = useThemeConfig();
 const {themeConfig} = storeToRefs(storesThemeConfig);
@@ -67,9 +72,15 @@ const state = reactive({
   isScan: false,
 });
 
+
 // 获取布局配置信息
 const getThemeConfig = computed(() => {
   return themeConfig.value;
+});
+// 设置 footer 显示/隐藏
+const route = useRoute();
+const isFooter = computed(() => {
+  return themeConfig.value.isFooter && !route.meta.isIframe;
 });
 // 页面加载时
 onMounted(() => {
@@ -81,7 +92,6 @@ onMounted(() => {
 .login-container {
   height: 100%;
   background: var(--el-color-white);
-
   .login-left {
     flex: 1;
     position: relative;
@@ -92,8 +102,8 @@ onMounted(() => {
       display: flex;
       align-items: center;
       position: absolute;
-      top: 50px;
-      left: 10px;
+      top: 30px;
+      left: 30px;
       z-index: 1;
       animation: logoAnimation 0.3s ease;
 
@@ -109,12 +119,12 @@ onMounted(() => {
         span {
           margin-left: 10px;
           font-size: 28px;
-          color: #E6E6FA;
+          color: #ffffff;//标题颜色
         }
 
         .login-left-logo-text-msg {
           font-size: 12px;
-          color: #E6E6FA; //副标题颜色
+          color: #ffffff; //副标题颜色
         }
       }
     }
@@ -144,12 +154,11 @@ onMounted(() => {
   .login-right {
     width: 500px;
     margin-right: 100px;
-
     .login-right-warp {
-      border: 1px solid var(--el-color-primary-light-3);
+      border: 1px solid var(--el-color-primary-light-3); //表单边框
       border-radius: 3px;
       width: 100%;
-      //height: 500px;
+      height: 500px; //表单高度
       position: relative;
       overflow: hidden;
       background-color: var(--el-color-white);
@@ -175,7 +184,7 @@ onMounted(() => {
           top: 0px;
           left: 0;
           width: 100%;
-          height: 3px;
+          height: 5px;
           background: linear-gradient(90deg, transparent, var(--el-color-primary));
           animation: loginLeft 3s linear infinite;
         }
@@ -184,7 +193,7 @@ onMounted(() => {
           filter: hue-rotate(60deg);
           top: -100%;
           right: 2px;
-          width: 3px;
+          width: 5px;
           height: 100%;
           background: linear-gradient(180deg, transparent, var(--el-color-primary));
           animation: loginTop 3s linear infinite;
@@ -198,7 +207,7 @@ onMounted(() => {
           bottom: 2px;
           right: -100%;
           width: 100%;
-          height: 3px;
+          height: 5px;
           background: linear-gradient(270deg, transparent, var(--el-color-primary));
           animation: loginRight 3s linear infinite;
           animation-delay: 1.4s;
@@ -208,7 +217,7 @@ onMounted(() => {
           filter: hue-rotate(300deg);
           bottom: -100%;
           left: 0px;
-          width: 3px;
+          width: 5px;
           height: 100%;
           background: linear-gradient(360deg, transparent, var(--el-color-primary));
           animation: loginBottom 3s linear infinite;
@@ -278,5 +287,17 @@ onMounted(() => {
       }
     }
   }
+}
+.login-footer{
+  position: absolute;
+  left: 50%;
+  top: 98%;
+  transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
+}
+.muyu{
+  position: absolute;
+  left: 50%;
+  top: 90%;
+  transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
 }
 </style>

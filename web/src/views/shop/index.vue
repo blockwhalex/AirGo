@@ -5,23 +5,26 @@
         <div class="home-card-item">
           <el-card>
             <template #header>
-              <div class="card-header">
-                <el-text  style="font-size: 30px;color: #FC3D08">{{ v.subject }}</el-text>
+              <div >
+                <el-text class="card-header-left">{{ v.subject }}</el-text>
               </div>
             </template>
-            <div style="margin-bottom: 15px;display: flex;justify-content: space-between;">
-              <el-tag style="width: 70px" type="warning">套餐流量</el-tag>
-              <span>{{ v.total_bandwidth }}GB</span>
+            <div class="card-text">
+              <el-tag class="card-text-left">套餐流量</el-tag>
+              <span class="card-text-right">{{ v.total_bandwidth }}GB</span>
             </div>
-            <div style="margin-bottom: 15px;display: flex;justify-content: space-between;">
-              <el-tag style="width: 70px" type="warning">有效期</el-tag>
-              <span>{{ v.expiration_date }}天</span>
+            <div class="card-text">
+              <el-tag class="card-text-left" type="warning">有效期</el-tag>
+              <span class="card-text-right">{{ v.expiration_date }}天</span>
             </div>
-            <div style="margin-bottom: 15px;display: flex;justify-content: space-between;">
-              <el-tag style="width: 70px" type="warning">价格</el-tag>
-              <span style="font-size: 20px;">¥{{ v.total_amount }}</span>
+            <div class="card-text">
+              <el-tag class="card-text-left" type="warning">价格</el-tag>
+              <span class="card-text-right">¥{{ v.total_amount }}</span>
             </div>
-            <el-tag type="info">有效期内不清零、不重置，长期有效</el-tag>
+            <div v-html="v.des">
+
+            </div>
+<!--            <el-text type="info" style="white-space: pre-line">{{v.des}}</el-text>-->
             <div style="margin-top: 10px;margin-bottom: 10px">
               <el-button size="large" @click="openSubmitOrderDialog(v.id)" color="#FC3D08">立即购买</el-button>
             </div>
@@ -93,5 +96,23 @@ const openQRDialog = () => {
   background-image: url("../../assets/bgc/bg-3.svg");
   background-repeat:no-repeat;
   background-position: 100%,100%;
+}
+.card-text{
+  display: flex;
+  justify-content: space-between;
+  height: 35px
+}
+.card-text-left{
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.card-text-right{
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 20px;
+}
+.card-header-left{
+  font-size: 30px;
+  color: #FC3D08;
 }
 </style>

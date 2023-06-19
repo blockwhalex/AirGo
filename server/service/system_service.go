@@ -27,9 +27,9 @@ func GetSetting() (*model.Server, error) {
 
 // 修改系统配置
 func UpdateSetting(setting *model.Server) error {
-	//改系统设置错误Error 1406 (22001): Data too long for column 'ali_public_key' at row 1
 	//修改theme中的字段
 	global.Theme.EnableEmailCode = setting.System.EnableEmailCode
+	global.Theme.EnableLoginEmailCode = setting.System.EnableLoginEmailCode
 	err := global.DB.Save(&global.Theme).Error
 	if err != nil {
 		return err

@@ -147,7 +147,7 @@ body,
 
   // pc端左侧导航样式
   .layout-aside-pc-220 {
-    width: 220px !important;
+    width: 180px !important;  //左侧导航宽度
     transition: width 0.3s ease;
   }
 
@@ -167,8 +167,8 @@ body,
   .layout-aside-mobile {
     position: fixed;
     top: 0;
-    left: -220px;
-    width: 220px;
+    left: -180px;
+    width: 180px;
     z-index: 9999999;
   }
 

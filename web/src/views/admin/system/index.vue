@@ -14,15 +14,15 @@
                          inactive-text="关闭"
                          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"></el-switch>
             </el-form-item>
+            <el-form-item label="登录邮箱验证码">
+              <el-switch v-model="serverConfig.system.enable_login_email_code" inline-prompt active-text="开启"
+                         inactive-text="关闭"
+                         style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"></el-switch>
+              <el-tag type="info" style="margin-left: 10px">最好不要开启，配置不正确你自己都登录不上</el-tag>
+            </el-form-item>
 
 
             <el-divider></el-divider>
-            <el-form-item label="是否多点登录">
-              <el-switch v-model="serverConfig.system.is_multipoint" inline-prompt active-text="开启"
-                         inactive-text="关闭"
-                         style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"></el-switch>
-            </el-form-item>
-
             <el-form-item label="IP限流">
               <el-col :span="4">
                 <el-input v-model.number="serverConfig.rate_limit_params.ip_role_param" type="number"/>
@@ -86,10 +86,10 @@
               <el-input v-model="serverConfig.pay.app_id" type="password"/>
             </el-form-item>
             <el-form-item label="支付宝应用私钥">
-              <el-input v-model="serverConfig.pay.private_key" type="textarea" autosize/>
+              <el-input v-model="serverConfig.pay.private_key" type="password" autosize/>
             </el-form-item>
             <el-form-item label="支付宝公钥">
-              <el-input v-model="serverConfig.pay.ali_public_key" type="textarea" autosize/>
+              <el-input v-model="serverConfig.pay.ali_public_key" type="password" autosize/>
             </el-form-item>
             <el-form-item label="支付宝加密密钥">
               <el-input v-model="serverConfig.pay.encrypt_key" type="password"/>
@@ -120,7 +120,7 @@
             </el-form-item>
             <el-form-item label="邮件内容格式">
               <el-input v-model="serverConfig.email.email_content" type="textarea" autosize/>
-              <el-tag class="ml-2" type="warning">*自定义邮件验证码内容样式，"emailcode"为验证码字段，不可删除！</el-tag>
+              <el-text style="color: #9b9da1">*自定义邮件验证码内容样式，支持HTML，`emailcode`为验证码字段，不可删除！</el-text>
             </el-form-item>
             <el-divider></el-divider>
             <el-form-item>

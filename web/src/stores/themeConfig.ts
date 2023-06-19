@@ -162,6 +162,7 @@ export const useThemeConfig = defineStore('themeStore', {
             // 默认全局组件大小，可选值"<large|'default'|small>"，默认 'large'
             globalComponentSize: 'large',
             enable_email_code: false,
+            enable_login_email_code:false,
         },
     }),
     actions: {

@@ -61,8 +61,6 @@
           <span>重置密码</span>
         </el-button>
       </el-col>
-
-
       <el-col :span="11">
         <el-button v-if="state.enableResetPassword" @click="onSubmitResetPassword" class="login-content-resetPassword"
                    round type="danger">
@@ -78,6 +76,9 @@
         </el-button>
       </el-col>
     </el-form-item>
+    <div>
+      <el-text size="default" type="info" style="font-style: italic;">{{state.oneWord}}</el-text>
+    </div>
   </el-form>
 </template>
 
@@ -107,6 +108,7 @@ const storesThemeConfig = useThemeConfig();
 const {themeConfig} = storeToRefs(storesThemeConfig);
 //api
 import {usePublicApi} from '/@/api/public/index'
+import service from "/@/utils/request";
 
 const publicApi = usePublicApi()
 //定义参数
@@ -118,6 +120,7 @@ const state = reactive({
   loading: {
     signIn: false,
   },
+  oneWord:'',
 });
 
 // 时间获取
@@ -201,11 +204,20 @@ const handleTimeChange = () => {
     }, 1000);
   }
 };
+//one word
+const oneWord=()=>{
+  service({
+    url:'https://api.xygeng.cn/one/get/',
+  }).then((res:any)=>{
+    console.log(`one word:${res}`)
+    const r:string = res
+    state.oneWord=r.slice(15,r.length-1)
+  })
+}
 //
 onMounted(() => {
-
+  oneWord()
 });
-
 
 </script>
 

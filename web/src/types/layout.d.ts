@@ -53,7 +53,8 @@ declare interface ThemeConfigState {
         globalI18n: string;
         globalComponentSize: string;
 
-        enable_email_code: boolean; //是否开启邮箱验证码
+        enable_email_code: boolean; //是否开启注册邮箱验证码
+        enable_login_email_code: boolean; //是否开启登录邮箱验证码
     };
 }
 

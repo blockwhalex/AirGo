@@ -76,15 +76,15 @@
   background-color: var(--next-bg-menuBarActiveColor) !important;
 }
 
-// 默认样式修改
+// 默认样式修改，每一行菜单的样式
 .el-menu {
   border-right: none !important;
-  width: 220px;
+  width: 180px;
 }
 
 .el-menu-item {
-  height: 56px !important;
-  line-height: 56px !important;
+  height: 46px !important;
+  line-height: 46px !important;
 }
 
 .el-menu-item,

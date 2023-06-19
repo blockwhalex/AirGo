@@ -16,6 +16,8 @@ func InitBase64Captcha() *base64Captcha.Captcha {
 	return cp
 }
 
+//生成captcha
+//id, b64s, err := cp.Generate()
 //	model.Result(200, "验证码获取成功", gin.H{
 //		"captchaId":     id,
 //		"picPath":       b64s,

@@ -130,7 +130,7 @@ func SSUsersTraffic(ctx *gin.Context) {
 		}
 		nodeStatus.D, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.D/1024/1024/duration*8), 64) //Mbps
 		nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.U/1024/1024/duration*8), 64)
-		global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, time.Minute)
+		global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, 2*time.Minute)
 
 	}(node_id, trafficLog.U, trafficLog.D, len(userIds))
 	//插入流量统计统计

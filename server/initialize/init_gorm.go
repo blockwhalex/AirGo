@@ -192,8 +192,8 @@ func InsertInto(db *gorm.DB) error {
 	}
 	//插入货物 goods
 	goodsData := []model.Goods{
-		{Subject: "10G|30天", TotalBandwidth: 10, ExpirationDate: 30, TotalAmount: "0.01"},
-		{Subject: "20G|180天", TotalBandwidth: 20, ExpirationDate: 180, TotalAmount: "0"},
+		{Subject: "10G|30天", TotalBandwidth: 10, ExpirationDate: 30, TotalAmount: "0.01", Des: text2},
+		{Subject: "20G|180天", TotalBandwidth: 20, ExpirationDate: 180, TotalAmount: "0", Des: text2},
 	}
 	if err := global.DB.Create(&goodsData).Error; err != nil {
 		return errors.New("goods表数据初始化失败!")
@@ -329,7 +329,7 @@ func InsertInto(db *gorm.DB) error {
 	settingData := model.Server{
 		ID: 1,
 		Email: model.Email{
-			EmailContent: text,
+			EmailContent: text1,
 		},
 	}
 	if err := global.DB.Create(&settingData).Error; err != nil {
@@ -339,7 +339,7 @@ func InsertInto(db *gorm.DB) error {
 }
 
 // 默认邮件验证码样式
-const text = `
+const text1 = `
 <style>
 .cookieCard {
   margin:auto;
@@ -386,4 +386,10 @@ const text = `
   <span style="font-size:30px">emailcode</span>
 </div>
 </body>
+`
+
+// 商品默认描述
+const text2 = `
+<h3 style="color:#00BFFF">究竟什么样的终点，才配得上这一路的颠沛流离---管泽元</h3>
+<h3 style="color:#DDA0DD">世界聚焦于你---管泽元</h3>
 `

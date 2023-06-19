@@ -3,10 +3,9 @@
     <el-card shadow="hover" class="layout-padding-auto">
       <el-button type="info" plain>只显示最近10次订单</el-button>
       <el-table :data="orderPersonal.allOrders.order_list" stripe fit height="100%" style="width: 100%;">
-<!--        :row-class-name="tableRowClassName"-->
-        <el-table-column prop="subject" label="商品标题" show-overflow-tooltip/>
+        <el-table-column prop="subject" label="商品标题" show-overflow-tooltip width="150px"/>
         <el-table-column prop="total_amount" label="金额" show-overflow-tooltip width="60px"/>
-        <el-table-column prop="trade_status" label="状态" show-overflow-tooltip width="90px">
+        <el-table-column prop="trade_status" label="状态" show-overflow-tooltip width="60px">
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.trade_status==='TRADE_SUCCESS'">支付成功</el-tag>
             <el-tag type="warning" v-else-if="scope.row.trade_status==='WAIT_BUYER_PAY'">等待付款</el-tag>

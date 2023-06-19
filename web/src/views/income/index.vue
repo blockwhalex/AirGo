@@ -53,7 +53,7 @@
       <el-table :data="state.statisticsData.monthNodeCurrent.node_list" height="100%" style="width: 100%;flex: 1;"
                 stripe fit show-summary :summary-method="getSummaries">
         <el-table-column fixed type="index" label="序号" width="60"/>
-        <el-table-column fixed prop="name" label="节点名称" show-overflow-tooltip width="200"></el-table-column>
+        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="200"></el-table-column>
         <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="200"></el-table-column>
         <el-table-column prop="total_up" label="上行流量(GB)" show-overflow-tooltip width="200">
           <template #default="scope">
@@ -74,7 +74,7 @@
       <el-table :data="state.statisticsData.monthNodeLast.node_list" height="100%" style="width: 100%;flex: 1;" stripe
                 fit show-summary :summary-method="getSummaries">
         <el-table-column fixed type="index" label="序号" width="60"/>
-        <el-table-column fixed prop="name" label="节点名称" show-overflow-tooltip width="200"></el-table-column>
+        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="200"></el-table-column>
         <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="200"></el-table-column>
         <el-table-column prop="total_up" label="上行流量(GB)" show-overflow-tooltip width="200">
           <template #default="scope">

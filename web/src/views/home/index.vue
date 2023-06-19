@@ -6,18 +6,18 @@
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
-                <el-tag size="large" plain><span style="font-size: 15px;color: #FC3D08">套餐详情</span></el-tag>
+                <el-text class="card-header-left">套餐详情</el-text>
               </div>
             </template>
-            <div style="display: flex;justify-content: space-between">
-              <el-tag style="margin-top: 10px;margin-bottom: 10px" type="info">剩余流量:</el-tag>
-              <span style="margin-top: 10px;margin-bottom: 10px;font-size: 20px;">{{
+            <div class="card-text">
+              <el-tag class="card-text-left" type="info">剩余流量:</el-tag>
+              <span class="card-text-right">{{
                   (userInfos.subscribe_info.t - userInfos.subscribe_info.d - userInfos.subscribe_info.u) / 1024 / 1024 / 1024
                 }}GB</span>
             </div>
-            <div style="display: flex;justify-content: space-between">
-              <el-tag style="margin-top: 10px;margin-bottom: 10px" type="info">到期时间:</el-tag>
-             <span style="margin-top: 10px;margin-bottom: 10px;font-size: 20px;">{{ DateStrtoTime(userInfos.subscribe_info.expired_at) }}</span>
+            <div class="card-text">
+              <el-tag class="card-text-left" type="info">到期时间:</el-tag>
+             <span class="card-text-right">{{ DateStrtoTime(userInfos.subscribe_info.expired_at).slice(0,10) }}</span>
             </div>
           </el-card>
         </div>
@@ -27,8 +27,8 @@
           <el-card class="box-card" style="width: 100%;flex: 1;">
             <template #header>
               <div class="card-header">
-                <el-tag size="large" plain>当前混淆:</el-tag>
-                <el-tag size="large" type="info">{{ userInfos.subscribe_info.host }}</el-tag>
+                <el-text  class="card-header-left">当前混淆:</el-text>
+                <span>{{ userInfos.subscribe_info.host }}</span>
               </div>
             </template>
             <div>
@@ -49,8 +49,8 @@
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
-                <el-tag size="large" plain><span style="font-size: 15px;color: #FC3D08">订阅地址</span></el-tag>
-                <el-button type="primary" plain class="button" @click="onResetSub">重置订阅链接</el-button>
+                <el-text class="card-header-left">订阅地址</el-text>
+                <el-button type="primary" text plain class="button" @click="onResetSub">重置订阅链接</el-button>
               </div>
             </template>
             <div>
@@ -166,5 +166,23 @@ onMounted(() => {
   background-repeat:no-repeat;
   background-position: 100%,100%;
   //background: rgba(0,0,0,0.3);
+}
+.card-text{
+  display: flex;
+  justify-content: space-between;
+  height: 60px
+}
+.card-text-left{
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.card-text-right{
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 30px;
+}
+.card-header-left{
+  font-size: 15px;
+  color: #AC96F1;
 }
 </style>

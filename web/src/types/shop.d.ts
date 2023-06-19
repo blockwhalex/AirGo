@@ -10,4 +10,5 @@ declare interface Goods {
     checked_nodes: number[]; //套餐编辑时选中的节点
     nodes: Node[];
     status: boolean;//是否启用
+    des:string;     //商品描述
 }

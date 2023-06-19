@@ -9,8 +9,12 @@
                 <el-tag type="warning">{{ v.name }}</el-tag>
               </el-col>
               <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin: auto">
-                <el-icon v-if="v.status" color="#90ee90" :size="20"><SuccessFilled /></el-icon>
-                <el-icon v-else color="#ff4d00" :size="20"><CircleCloseFilled /></el-icon>
+                <el-icon v-if="v.status" color="#90ee90" :size="20">
+                  <SuccessFilled/>
+                </el-icon>
+                <el-icon v-else color="#ff4d00" :size="20">
+                  <CircleCloseFilled/>
+                </el-icon>
               </el-col>
               <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top: 10px;margin-bottom: 10px">
                 倍率：{{ v.traffic_rate }}
@@ -46,18 +50,23 @@ import {storeToRefs} from "pinia";
 
 //node store
 import {useNodeStore} from "/@/stores/node";
-import {Session,Local} from "/@/utils/storage";
+import {Session, Local} from "/@/utils/storage";
 
 const nodeStore = useNodeStore()
 const {serverStatusData} = storeToRefs(nodeStore)
-
-//var ws = new WebSocket("ws://localhost/ws",[token]);
-// const token = Session.get('token')
 const token = Local.get('token')
-const wsUrl:string = import.meta.env.VITE_API_URL
-const url =wsUrl.slice(wsUrl.indexOf('//')+2,wsUrl.length)
-//console.log("url:",url)
-let ws = new WebSocket('ws://'+url+'websocket/msg', token);
+function getWsUrl(): string {
+  const apiUrl: string = import.meta.env.VITE_API_URL
+  const url = apiUrl.slice(apiUrl.indexOf('//') + 2, apiUrl.length)
+  const pre_url = apiUrl.slice(0, apiUrl.indexOf('//') + 2)
+  //console.log(`pre_url:${pre_url} url:${url}`)
+  if (pre_url === 'https://') {
+    return "wss://" + url + 'websocket/msg'
+  } else {
+    return "ws://" + url + 'websocket/msg'
+  }
+}
+let ws = new WebSocket(getWsUrl(), token);
 let interval = null;//计时器
 //监听是否连接成功
 function initWS() {
@@ -66,7 +75,7 @@ function initWS() {
     ws.send('{"type":1,"data":"hi"}');
     interval = setInterval(() => {
       ws.send('{"type":1,"data":"hi"}');
-    }, 3000);
+    }, 5000);
   }
 //接收服务器发回的信息
   ws.onmessage = function (data) {
@@ -111,9 +120,9 @@ onUnmounted(() => {
   color: var(--el-text-color-primary);
   border: 1px solid var(--next-border-color-light);
 }
-.el-card{
+
+.el-card {
   background-image: url("../../assets/bgc/3.png");
-  background-repeat:no-repeat;
-  /*background-position: 100%,100%;*/
+  background-repeat: no-repeat;
 }
 </style>

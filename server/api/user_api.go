@@ -69,6 +69,21 @@ func Login(c *gin.Context) {
 		response.Fail("用户登录参数错误"+err.Error(), nil, c)
 		return
 	}
+	//校验邮箱验证码
+	if global.Server.System.EnableLoginEmailCode {
+		cacheEmail, ok := global.LocalCache.Get(l.UserName + "emailcode")
+		global.LocalCache.Delete(l.UserName + "emailcode")
+		if ok {
+			if cacheEmail != l.EmailCode {
+				response.Fail("邮箱验证码校验错误", nil, c)
+				return
+			}
+		} else {
+			//cache获取验证码失败,原因：1超时 2系统错误
+			response.Fail("邮箱验证码超时，请重新获取", nil, c)
+			return
+		}
+	}
 	//查询用户
 	user, err := service.Login(&l)
 	if err != nil {
