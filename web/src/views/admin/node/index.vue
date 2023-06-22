@@ -1,40 +1,52 @@
 <template>
   <div class="container layout-padding">
     <el-card shadow="hover" class="layout-padding-auto">
-      <div class="mb15" >
-        <el-input v-model="state.params.search" size="default" placeholder="请输入名称"
-                  style="max-width: 180px"></el-input>
-        <el-date-picker
-            size="default"
-            v-model="state.params.date"
-            type="datetimerange"
-            :shortcuts="shortcuts"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            value-format="YYYY-MM-DD HH:mm:ss"
-        />
-        <el-button @click="onGetNode(state.params)" size="default" type="primary" class="ml10">
-          <el-icon>
-            <ele-Search/>
-          </el-icon>
-          查询
-        </el-button>
-        <el-button size="default" type="success" class="ml10" @click="onOpenEditNode('add')">
-          <el-icon>
-            <ele-FolderAdd/>
-          </el-icon>
-          新增节点
-        </el-button>
-        <el-button size="default" type="warning" class="ml10" @click="onOpenNodeSortDialog">
-          <el-icon>
-            <ele-FolderAdd/>
-          </el-icon>
-          排序
-        </el-button>
-      </div>
+      <el-row gutter="10" style="width: 768px">
+        <el-col :span="4">
+          <el-input v-model="state.params.search" size="default" placeholder="请输入名称"
+                    style="max-width: 180px"></el-input>
+        </el-col>
+        <el-col :span="8">
+          <el-date-picker
+              style="width: 250px"
+              size="default"
+              v-model="state.params.date"
+              type="datetimerange"
+              :shortcuts="shortcuts"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="YYYY-MM-DD HH:mm:ss"
+          />
+        </el-col>
+        <el-col :span="3">
+          <el-button @click="onGetNode(state.params)" size="default" type="primary" class="ml10">
+            <el-icon>
+              <ele-Search/>
+            </el-icon>
+            查询
+          </el-button>
+        </el-col>
+        <el-col :span="4">
+          <el-button size="default" type="success" class="ml10" @click="onOpenEditNode('add')">
+            <el-icon>
+              <ele-FolderAdd/>
+            </el-icon>
+            新增节点
+          </el-button>
+        </el-col>
+        <el-col :span="3">
+          <el-button size="default" type="warning" class="ml10" @click="onOpenNodeSortDialog">
+            <el-icon>
+              <ele-FolderAdd/>
+            </el-icon>
+            排序
+          </el-button>
+        </el-col>
+      </el-row>
+
       <el-table :data="nodeManageData.nodes.node_list" height="100%" style="width: 100%;flex: 1;">
-        <!--        <el-table-column fixed type="index" label="序号" width="60"/>-->
+        <el-table-column fixed type="index" label="序号" width="60"/>
         <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="200" fixed></el-table-column>
         <el-table-column prop="id" label="节点ID" show-overflow-tooltip width="60" fixed></el-table-column>
         <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="150"></el-table-column>
@@ -42,8 +54,8 @@
         <el-table-column prop="sort" label="协议类型" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.sort ===11">vmess</el-tag>
-            <el-tag type="success" v-if="scope.row.sort ===15">vless</el-tag>
-            <el-tag type="success" v-if="scope.row.sort ===14">trojan</el-tag>
+            <el-tag type="warning" v-if="scope.row.sort ===15">vless</el-tag>
+            <el-tag type="info" v-if="scope.row.sort ===14">trojan</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="total_up" label="上行流量(GB)" show-overflow-tooltip width="200">
@@ -68,7 +80,9 @@
             <el-tag type="danger" v-else>禁用</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100">
+        <el-table-column prop="nodespeed_limit" label="限速" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="traffic_rate" label="倍率" show-overflow-tooltip></el-table-column>
+        <el-table-column label="操作" width="100" fixed="right">
           <template #default="scope">
             <el-button :disabled="userInfos.id !== 1" size="small" text type="primary"
                        @click="onOpenEditNode('edit', scope.row)">修改

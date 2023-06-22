@@ -58,7 +58,7 @@ type UserAndRole struct {
 	RoleID int
 }
 
-// 用户校验邮箱
+// 用户注册 校验邮箱
 type UserRegisterEmail struct {
 	UserName string `json:"user_name" binding:"required,email,max=40,min=8"` // 用户名
 }
@@ -134,4 +134,46 @@ type SSUsers struct {
 	NodeSpeedLimit int    `json:"node_speedlimit"`
 	NodeConnector  int    `json:"node_connector"`
 	// IsMultiUser    int    `json:"is_multi_user"` //用不到
+}
+
+type UserHeader struct {
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+	ID        string `json:"id"`
+	UUID      string `json:"uuid"`
+	UserName  string `json:"user_name"`
+	Password  string `json:"password"`
+	Enable    string `json:"enable"`
+
+	Host           string `json:"subscribe_info.host"`
+	SubStatus      string `json:"subscribe_info.sub_status"`
+	SubscribeUrl   string `json:"subscribe_info.subscribe_url"`
+	GoodsID        string `json:"subscribe_info.goods_id"`
+	ExpiredAt      string `json:"subscribe_info.expired_at"`
+	T              string `json:"subscribe_info.t"`
+	U              string `json:"subscribe_info.u"`
+	D              string `json:"subscribe_info.d"`
+	NodeSpeedLimit string `json:"subscribe_info.node_speed_limit"`
+	NodeConnector  string `json:"subscribe_info.node_connector"`
+}
+
+var UserHeaderItem = UserHeader{
+	CreatedAt: "创建日期",
+	UpdatedAt: "更新日期",
+	ID:        "id",
+	UUID:      "uuid",
+	UserName:  "用户名",
+	Password:  "密码",
+	Enable:    "是否启用",
+
+	Host:           "用户混淆",
+	SubStatus:      "订阅是否有效",
+	SubscribeUrl:   "订阅链接",
+	GoodsID:        "商品ID",
+	ExpiredAt:      "过期时间",
+	T:              "总流量",
+	U:              "上行流量",
+	D:              "下行流量",
+	NodeSpeedLimit: "限速Mbps",
+	NodeConnector:  "连接客户端数",
 }

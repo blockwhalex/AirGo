@@ -16,11 +16,29 @@
           </el-icon>
           新增用户
         </el-button>
+        <el-button size="default" type="primary" class="ml10" @click="onShowCollapse">
+          <el-icon>
+            <ele-FolderAdd/>
+          </el-icon>
+          高级查询
+        </el-button>
+
+        <el-collapse v-if="state.isShowCollapse" v-model="state.activeCollapseNames">
+          <el-collapse-item name="1">
+            <!--          report组件-->
+            <ReportComponent ref="reportRef" @getReportData="getReportDataHandler"></ReportComponent>
+          </el-collapse-item>
+        </el-collapse>
       </div>
       <el-table :data="userManageData.users.user_list" fit style="width: 100%;flex: 1;">
-        <!--				<el-table-column type="index" label="序号" width="60" />-->
-        <el-table-column prop="id" label="账户ID" show-overflow-tooltip fixed width="60"></el-table-column>
+        <el-table-column type="index" label="序号" width="60" fixed />
         <el-table-column prop="user_name" label="账户名称" show-overflow-tooltip fixed width="150"></el-table-column>
+        <el-table-column prop="id" label="账户ID" show-overflow-tooltip fixed width="60"></el-table-column>
+        <el-table-column prop="created_at" label="创建日期" show-overflow-tooltip width="150">
+          <template #default="{row}">
+            <span>{{DateStrtoTime(row.created_at)}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="enable" label="用户状态" show-overflow-tooltip width="80">
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.enable">启用</el-tag>
@@ -36,11 +54,12 @@
         <el-table-column prop="subscribe_info.expired_at" label="订阅到期时间" show-overflow-tooltip width="150">
           <template #default="scope">
             <el-tag type="info">
-              {{DateStrtoTime(scope.row.subscribe_info.expired_at)}}
+              {{ DateStrtoTime(scope.row.subscribe_info.expired_at) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="subscribe_info.goods_id" label="商品ID" show-overflow-tooltip width="60"></el-table-column>
+        <el-table-column prop="subscribe_info.goods_id" label="商品ID" show-overflow-tooltip
+                         width="60"></el-table-column>
         <el-table-column prop="subscribe_info.t" label="总流量(GB)" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="info">{{ scope.row.subscribe_info.t / 1024 / 1024 / 1024 }}</el-tag>
@@ -82,28 +101,42 @@
 </template>
 
 <script setup lang="ts" name="systemUser">
-import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
+import {defineAsyncComponent, nextTick, onMounted, reactive, ref, watch} from 'vue';
 import {ElMessageBox, ElMessage} from 'element-plus';
 
-// 引入组件
-const UserDialog = defineAsyncComponent(() => import('/@/views/admin/user/dialog.vue'));
+
 //store
 import {storeToRefs} from 'pinia';
 import {useUserStore} from '/@/stores/userStore'
-import {DateStrtoTime} from "../../../utils/formatTime";
 
 const userStore = useUserStore()
 const {userManageData} = storeToRefs(userStore)
+//时间格式化
+import {DateStrtoTime} from "../../../utils/formatTime";
 
+//report api
+import {useReportApi} from "/@/api/report";
+
+const reportApi = useReportApi()
+
+// 引入组件
+const UserDialog = defineAsyncComponent(() => import('/@/views/admin/user/dialog.vue'));
+const ReportComponent = defineAsyncComponent(() => import('/@/components/report/index.vue'))
+//组件ref
+const userDialogRef = ref();
+const reportRef = ref()
 
 // 定义变量内容
-const userDialogRef = ref();
-const state=reactive({
+
+const state = reactive({
+  activeCollapseNames: '1', //当前激活的折叠面板
+  isShowCollapse: false,
   params: {
     search: '',
     page_num: 1,
     page_size: 10,
   },
+  fieldConditionList: {},
 })
 // 打开新增用户弹窗
 const onOpenAddUser = (type: string) => {
@@ -132,19 +165,52 @@ const onRowDel = (row: SysUser) => {
 };
 // 分页改变
 const onHandleSizeChange = (val: number) => {
-  state.params.page_size = val;
-  userStore.getUserList(state.params)
+  if (state.isShowCollapse) {
+    getReportDataHandler(state.fieldConditionList)
+  } else {
+    state.params.page_size = val;
+    userStore.getUserList(state.params)
+  }
 };
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  state.params.page_num = val;
-  userStore.getUserList(state.params)
+  if (state.isShowCollapse) {
+    getReportDataHandler(state.fieldConditionList)
+  } else {
+    state.params.page_num = val;
+    userStore.getUserList(state.params)
+  }
 };
 // 页面加载时
 onMounted(() => {
   userStore.getUserList(state.params)
-
 });
+
+//开启高级查询折叠面板
+const onShowCollapse = () => {
+  state.isShowCollapse = !state.isShowCollapse
+  //防止子组件渲染太慢，导致undefined问题
+  setTimeout(() => {
+    if ( state.isShowCollapse) {
+      reportRef.value.openReportComponent("user")
+    }
+  }, 500)
+}
+//请求数据
+const getReportDataHandler = (data: any) => {
+  //拼接分页参数
+  (data as any).pagination_params = state.params;
+  state.fieldConditionList = data
+  //请求数据
+  reportApi.submitReportApi(data).then((res) => {
+    if (res.code === 0) {
+      userManageData.value.users.user_list = res.data.table_data
+      userManageData.value.users.total = res.data.total
+    }
+  })
+}
+
+
 </script>
 
 <style scoped lang="scss">

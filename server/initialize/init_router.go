@@ -155,7 +155,15 @@ func InitRouter() {
 		uploadRouter.GET("newPictureUrl", api.NewPictureUrl)
 		uploadRouter.POST("getPictureList", api.GetPictureList)
 	}
+	//报表
+	reportRouter := RouterGroup.Group("report")
+	{
+		reportRouter.GET("getDB", api.GetDB)
+		reportRouter.POST("getTables", api.GetTables)
+		reportRouter.POST("getColumn", api.GetColumn)
+		reportRouter.POST("reportSubmit", api.ReportSubmit)
 
+	}
 	//Router.Run(":" + strconv.Itoa(global.CONFIG.System.Port))
 
 	srv := &http.Server{

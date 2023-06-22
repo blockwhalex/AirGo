@@ -5,7 +5,6 @@
       <img @click="clickMuyu" :class="state.muyuImgClass" src="/src/assets/icon/wooden_fish.png"/>
     </div>
   </div>
-  <audio ref="audio" src="/src/assets/music/wooden_fish.mp3"></audio>
 </template>
 
 <script lang="ts" setup>
@@ -20,7 +19,7 @@ const state = reactive({
 
 function clickMuyu() {
   let audio = new Audio()
-  audio.src = "/src/assets/music/muyu.mp3"
+  audio.src = "/@/assets/music/muyu.mp3"
   audio.play();
   state.muyuImgClass = 'w-f-c-img w-f-c-i-size'
   state.muyuTextClass = 'w-f-c-text w-f-c-t-size'

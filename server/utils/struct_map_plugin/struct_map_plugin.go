@@ -1,6 +1,7 @@
 package struct_map_plugin
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 )
@@ -53,4 +54,23 @@ func StructToMap1(obj interface{}) map[string]interface{} {
 		}
 	}
 	return data
+}
+
+// golang struct 动态创建
+func RegisterType(elem ...interface{}) map[string]reflect.Type {
+	var typeRegistry = make(map[string]reflect.Type)
+	for i := 0; i < len(elem); i++ {
+		t := reflect.TypeOf(elem[i])
+		typeRegistry[t.Name()] = t
+	}
+	return typeRegistry
+}
+func NewStruct(name string, typeRegistry map[string]reflect.Type) (interface{}, bool) {
+	elem, ok := typeRegistry[name]
+	fmt.Println("elem", elem)
+	if !ok {
+		return nil, false
+	}
+	return reflect.New(elem).Elem().Interface(), true
+
 }

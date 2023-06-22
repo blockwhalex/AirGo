@@ -110,6 +110,9 @@ const onRowDel = (row: RowRoleType) => {
     roleApi.delRoleApi({id: row.id}).then((res) => {
       if (res.code != 0) {
         ElMessage.success('删除失败');
+      } else {
+        //
+        onSearch(state.params)
       }
     })
   })

@@ -48,3 +48,41 @@ type OrderStatistics struct {
 	Total       int64 `json:"total"`
 	TotalAmount int64 `json:"total_amount"`
 }
+
+type OrdersHeader struct {
+	CreatedAt      string `json:"created_at"`
+	UpdatedAt      string `json:"updated_at"`
+	ID             string `json:"id"`
+	UserID         string `json:"user_id"`
+	UserName       string `json:"user_name"`
+	OutTradeNo     string `json:"out_trade_no"`
+	GoodsID        string `json:"goods_id"`
+	Subject        string `json:"subject"`
+	Price          string `json:"price"`
+	PayType        string `json:"pay_type"`
+	TradeNo        string `json:"trade_no"`
+	BuyerLogonId   string `json:"buyer_logon_id"`
+	TradeStatus    string `json:"trade_status"`
+	TotalAmount    string `json:"total_amount"`
+	ReceiptAmount  string `json:"receipt_amount"`
+	BuyerPayAmount string `json:"buyer_pay_amount"`
+}
+
+var OrdersHeaderItem = OrdersHeader{
+	CreatedAt:  "创建日期",
+	UpdatedAt:  "更新日期",
+	ID:         "ID",
+	UserID:     "用户ID",
+	UserName:   "用户名",
+	OutTradeNo: "系统订单号",
+	GoodsID:    "商品ID",
+	Subject:    "商品标题",
+	//Price:"价格",
+	PayType:        "支付类型",
+	TradeNo:        "支付宝订单号",
+	BuyerLogonId:   "买家支付宝账号",
+	TradeStatus:    "交易状态",
+	TotalAmount:    "订单金额",
+	ReceiptAmount:  "实收金额",
+	BuyerPayAmount: "付款金额",
+}

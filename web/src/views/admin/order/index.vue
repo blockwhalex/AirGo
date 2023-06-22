@@ -3,35 +3,37 @@
     <el-card shadow="hover" class="layout-padding-auto">
       <div class="mb15">
         <el-input v-model="state.params.search" placeholder="请输入订单号"
-                  style="max-width: 180px"></el-input>
-        <el-date-picker
-            size="small"
-            v-model="state.params.date"
-            type="datetimerange"
-            :shortcuts="shortcuts"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            value-format="YYYY-MM-DD HH:mm:ss"
-        />
+                  style="max-width: 180px" size="default"></el-input>
         <el-button size="default" type="primary" class="ml10" @click="onSearch(state.params)">
-
           <el-icon>
             <ele-Search/>
           </el-icon>
           查询
         </el-button>
+        <el-button size="default" type="primary" class="ml10" @click="onShowCollapse">
+          <el-icon>
+            <ele-Search/>
+          </el-icon>
+          高级查询
+        </el-button>
+
+        <el-collapse v-if="state.isShowCollapse" v-model="state.activeCollapseNames">
+          <el-collapse-item name="1">
+            <!--          report组件-->
+            <ReportComponent ref="reportRef" @getReportData="getReportDataHandler"></ReportComponent>
+          </el-collapse-item>
+        </el-collapse>
       </div>
       <el-table :data="orderManageData.allOrders.order_list" fit style="width: 100%;flex: 1;">
-        <el-table-column type="index" label="序号" fixed/>
-        <!--        <el-table-column prop="id" label="订单ID" fixed/>-->
+        <el-table-column type="index" label="序号" fixed width="60px"/>
         <el-table-column prop="out_trade_no" label="订单号" fixed width="200"/>
+        <el-table-column prop="id" label="订单ID" fixed width="60px"/>
         <el-table-column prop="created_at" label="下单日期" width="150">
           <template #default="scope">
             <el-tag type="success">{{ DateStrtoTime(scope.row.created_at) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="user_name" label="用户" width="120"/>
+        <el-table-column prop="user_name" label="用户" width="180"/>
         <el-table-column prop="goods_id" label="商品ID" show-overflow-tooltip width="60"/>
         <el-table-column prop="subject" label="商品标题" show-overflow-tooltip width="200"/>
         <el-table-column prop="total_amount" label="订单金额" show-overflow-tooltip width="80"/>
@@ -47,7 +49,7 @@
             <el-tag type="danger" v-else>未知状态</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100">
+        <el-table-column label="操作" width="100" fixed="right">
           <template #default="scope">
             <el-button v-if="scope.row.trade_status === 'WAIT_BUYER_PAY' || scope.row.trade_status ==='created'"
                        size="small" text type="primary"
@@ -73,16 +75,23 @@
 <script setup lang="ts">
 import {ElMessage} from 'element-plus';
 //store
-import {onMounted, reactive} from "vue";
+import {defineAsyncComponent, onMounted, reactive, ref} from "vue";
 import {useOrderStore} from "/@/stores/orderStore";
 import {storeToRefs} from "pinia";
+const orderStore = useOrderStore()
+const {orderManageData} = storeToRefs(orderStore)
+
 //格式化时间
 import {DateStrtoTime} from "/@/utils/formatTime"
 // console.log(DateStrtoTime("2023-05-29T17:28:47.50276+08:00"))
 
-const orderStore = useOrderStore()
-const {orderManageData} = storeToRefs(orderStore)
+//组件
+const ReportComponent = defineAsyncComponent(() => import('/@/components/report/index.vue'))
+const reportRef = ref()
+//report api
+import {useReportApi} from "/@/api/report";
 
+const reportApi = useReportApi()
 //定义参数
 const state = reactive({
   params: {
@@ -91,6 +100,9 @@ const state = reactive({
     search: '',
     date: [],
   } as QueryParams,
+  activeCollapseNames: '1', //当前激活的折叠面板
+  isShowCollapse: false,
+  fieldConditionList: {},
 })
 //
 const onSearch = (params?:object) => {
@@ -105,14 +117,47 @@ const onCompleteOrder = (row: Order) => {
 }
 // 分页改变
 const onHandleSizeChange = (val: number) => {
-  state.params.page_size = val;
-  orderStore.getAllOrder(state.params)
+  if (state.isShowCollapse) {
+    getReportDataHandler(state.fieldConditionList)
+  } else {
+    state.params.page_size = val;
+    orderStore.getAllOrder(state.params)
+  }
+
 };
 // 分页改变
 const onHandleCurrentChange = (val: number) => {
-  state.params.page_num = val;
-  orderStore.getAllOrder(state.params)
+  if (state.isShowCollapse) {
+    getReportDataHandler(state.fieldConditionList)
+  } else {
+    state.params.page_num = val;
+    orderStore.getAllOrder(state.params)
+  }
 };
+//开启高级查询折叠面板
+const onShowCollapse = () => {
+  state.isShowCollapse = !state.isShowCollapse
+  //防止子组件渲染太慢，导致undefined问题
+  setTimeout(() => {
+    if ( state.isShowCollapse) {
+      reportRef.value.openReportComponent("orders")
+    }
+  }, 500)
+}
+//请求数据
+const getReportDataHandler = (data: any) => {
+  //拼接分页参数
+  (data as any).pagination_params = state.params;
+  state.fieldConditionList = data
+  //请求数据
+  reportApi.submitReportApi(data).then((res) => {
+    if (res.code === 0) {
+      orderManageData.value.allOrders.order_list = res.data.table_data
+      orderManageData.value.allOrders.total= res.data.total
+    }
+  })
+}
+
 //时间范围
 const shortcuts = [
   {
