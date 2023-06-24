@@ -15,7 +15,7 @@
                         clearable></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+          <el-col v-if="userInfos.id===1" :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
             <el-form-item label="关联角色">
               <el-checkbox-group v-model="userManageData.dialog.check_list">
                 <el-checkbox :label="v.role_name" v-for="(v,index) in roleManageData.roles.role_list"
@@ -134,7 +134,7 @@ import {useUserStore} from '/@/stores/userStore'
 const userStore = useUserStore()
 import {storeToRefs} from 'pinia';
 
-const {userManageData} = storeToRefs(userStore)
+const {userManageData,userInfos} = storeToRefs(userStore)
 //role store
 import {useRoleStore} from '/@/stores/roleStore'
 

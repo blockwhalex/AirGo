@@ -76,8 +76,8 @@ const nodeSortHandler = (data: Array<any>) => {
 //确认提交
 const onSubmit = () => {
   state.isShowDialog = false
-  nodeApi.nodeSortApi(nodeSortHandler(state.node_list)).then((res)=>{
-    if (res.code === 0 ) {
+  nodeApi.nodeSortApi(nodeSortHandler(state.node_list)).then((res) => {
+    if (res.code === 0) {
       ElMessage.success(res.msg)
     }
   })
@@ -107,7 +107,7 @@ function initSortable(className: string) {
       const currRow = state.node_list.splice(evt.oldIndex, 1)[0];
       state.node_list.splice(evt.newIndex, 0, currRow);
       // console.log("结束拖动", state.node_list);
-      },
+    },
   });
 };
 

@@ -8,11 +8,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router'
+import {useRoute} from 'vue-router'
+
 const route = useRoute()
 
-let Id=route.query.id;
-console.log("传过来的id：",Id)
+let Id = route.query.id;
+console.log("传过来的id：", Id)
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 //import Cookies from 'js-cookie';
-import {Session,Local} from '/@/utils/storage';
+import {Session, Local} from '/@/utils/storage';
 //导入api
 import {useUserApi} from "../api/user/index";
 
@@ -179,7 +179,7 @@ export const useUserStore = defineStore('userInfo', {
             }
         },
         //新建用户
-        async newUser(params?:object) {
+        async newUser(params?: object) {
             //密码加密
             this.userManageData.dialog.user.password = bcrypt.hashSync(this.userManageData.dialog.user.password, 10)
             const res = await userApi.newUserApi(params)
@@ -188,7 +188,7 @@ export const useUserStore = defineStore('userInfo', {
             }
         },
         //修改用户
-        async updateUser(params?:object) {
+        async updateUser(params?: object) {
             if (!this.userManageData.dialog.user.password.startsWith('$2a$10$')) {
                 this.userManageData.dialog.user.password = bcrypt.hashSync(this.userManageData.dialog.user.password, 10)
             }

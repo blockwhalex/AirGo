@@ -64,7 +64,7 @@ export const useServerStore = defineStore("serverStore", {
             }
         },
         //修改系统设置
-        async updateServerConfig(params?:object) {
+        async updateServerConfig(params?: object) {
             const res = await systemApi.updateServerConfig(params)
             if (res.code === 0) {
                 ElMessage.success(res.msg)

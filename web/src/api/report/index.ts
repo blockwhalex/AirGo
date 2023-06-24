@@ -1,5 +1,6 @@
 import service from '/@/utils/request';
-export function useReportApi(){
+
+export function useReportApi() {
     return {
         //getDB
         getDBApi: () => {
@@ -9,7 +10,7 @@ export function useReportApi(){
             })
         },
         // getTables
-        getTablesApi: (data?:object) => {
+        getTablesApi: (data?: object) => {
             return service({
                 url: "/report/getTables",
                 method: "post",
@@ -17,7 +18,7 @@ export function useReportApi(){
             })
         },
         // getColumn
-        getColumnApi: (data?:object) => {
+        getColumnApi: (data?: object) => {
             return service({
                 url: "/report/getColumn",
                 method: "post",
@@ -25,7 +26,7 @@ export function useReportApi(){
             })
         },
         //提交
-        submitReportApi:(data?:object)=>{
+        submitReportApi: (data?: object) => {
             return service({
                 url: "/report/reportSubmit",
                 method: "post",

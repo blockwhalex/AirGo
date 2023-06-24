@@ -23,20 +23,22 @@
           高级查询
         </el-button>
 
-        <el-collapse v-if="state.isShowCollapse" v-model="state.activeCollapseNames">
-          <el-collapse-item name="1">
-            <!--          report组件-->
-            <ReportComponent ref="reportRef" @getReportData="getReportDataHandler"></ReportComponent>
-          </el-collapse-item>
-        </el-collapse>
+        <div v-if="state.isShowCollapse">
+
+          <!--          report组件-->
+          <ReportComponent ref="reportRef" @getReportData="getReportDataHandler"></ReportComponent>
+
+        </div>
+
+
       </div>
-      <el-table :data="userManageData.users.user_list" fit style="width: 100%;flex: 1;">
-        <el-table-column type="index" label="序号" width="60" fixed />
-        <el-table-column prop="user_name" label="账户名称" show-overflow-tooltip  width="150"></el-table-column>
-        <el-table-column prop="id" label="账户ID" show-overflow-tooltip  width="60"></el-table-column>
+      <el-table :data="userManageData.users.user_list" stripe style="width: 100%;flex: 1;">
+        <el-table-column type="index" label="序号" width="60" fixed/>
+        <el-table-column prop="user_name" label="账户名称" show-overflow-tooltip width="150"></el-table-column>
+        <el-table-column prop="id" label="账户ID" show-overflow-tooltip width="60"></el-table-column>
         <el-table-column prop="created_at" label="创建日期" show-overflow-tooltip width="150">
           <template #default="{row}">
-            <span>{{DateStrtoTime(row.created_at)}}</span>
+            <span>{{ DateStrtoTime(row.created_at) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="enable" label="用户状态" show-overflow-tooltip width="80">
@@ -191,7 +193,7 @@ const onShowCollapse = () => {
   state.isShowCollapse = !state.isShowCollapse
   //防止子组件渲染太慢，导致undefined问题
   setTimeout(() => {
-    if ( state.isShowCollapse) {
+    if (state.isShowCollapse) {
       reportRef.value.openReportComponent("user")
     }
   }, 500)

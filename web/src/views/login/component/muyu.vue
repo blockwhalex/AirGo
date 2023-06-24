@@ -13,6 +13,7 @@ import {reactive} from "vue";
 import muyuMp3 from "/@/assets/music/muyu.mp3"
 //muyuImg
 import muyuImg from "/@/assets/icon/wooden_fish.png"
+
 const state = reactive({
   muyuImgClass: 'w-f-c-img',
   muyuTextClass: 'w-f-c-text'
@@ -48,7 +49,7 @@ function clickMuyu() {
   height: 100%;
 }
 
-.w-f-c-text  {
+.w-f-c-text {
   width: 100%;
   font-size: 18px;
   text-align: center;

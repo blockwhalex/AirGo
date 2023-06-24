@@ -55,6 +55,7 @@ import {Session, Local} from "/@/utils/storage";
 const nodeStore = useNodeStore()
 const {serverStatusData} = storeToRefs(nodeStore)
 const token = Local.get('token')
+
 function getWsUrl(): string {
   const apiUrl: string = import.meta.env.VITE_API_URL
   const url = apiUrl.slice(apiUrl.indexOf('//') + 2, apiUrl.length)
@@ -66,6 +67,7 @@ function getWsUrl(): string {
     return "ws://" + url + 'websocket/msg'
   }
 }
+
 let ws = new WebSocket(getWsUrl(), token);
 let interval = null;//计时器
 //监听是否连接成功

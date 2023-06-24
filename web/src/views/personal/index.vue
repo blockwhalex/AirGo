@@ -13,7 +13,7 @@
             </div>
             <div class="personal-user-right">
               <el-row>
-                <el-col :span="24" class="personal-title mb18">{{currentTime }}</el-col>
+                <el-col :span="24" class="personal-title mb18">{{ currentTime }}</el-col>
                 <el-col :span="24">
                   <el-row>
                     <el-col :xs="24" :sm="12" class="personal-item mb6">

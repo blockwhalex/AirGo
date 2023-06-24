@@ -18,7 +18,7 @@
           新增菜单
         </el-button>
       </div>
-      <el-table :data="allRoutesList" v-loading="state.tableData.loading" style="width: 100%" row-key="path"
+      <el-table :data="allRoutesList" v-loading="state.tableData.loading" stripe style="width: 100%" row-key="path"
                 :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
         <el-table-column label="菜单名称" show-overflow-tooltip width="200px">
           <template #default="scope">
@@ -37,7 +37,7 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" show-overflow-tooltip >
+        <el-table-column label="操作" show-overflow-tooltip>
           <template #default="scope">
             <el-button size="small" text type="primary"
                        @click="onOpenEditMenu('edit', scope.row)">修改

@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts" name="noPower">
-import {Session,Local} from '/@/utils/storage';
+import {Session, Local} from '/@/utils/storage';
 
 const onSetAuth = () => {
   // https://gitee.com/lyt-top/vue-next-admin/issues/I5C3JS

@@ -6,7 +6,7 @@ declare interface NodeInfo {
     name: string;
     address: string;
     port: string;
-    node_order:number;        //节点排序
+    node_order: number;        //节点排序
     sort: number;             //类型sort==11  V2Ray vmess
     nodespeed_limit: number;  //限速
     traffic_rate: number;     //倍率

@@ -36,7 +36,7 @@ const {shopData} = storeToRefs(shopStore)
 //定义变量
 const state = reactive({
   isShowQRDialog: false,
-  QRcode:null,
+  QRcode: null,
 
 })
 //二维码

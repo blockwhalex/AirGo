@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {ElMessage} from "element-plus";
 //api
 import {useNodeApi} from "/@/api/node/index";
+
 const nodeApi = useNodeApi()
 
 export const useNodeStore = defineStore("nodeStore", {
@@ -44,7 +45,7 @@ export const useNodeStore = defineStore("nodeStore", {
     }),
     actions: {
         //获取全部节点
-        async getAllNode(params?:object) {
+        async getAllNode(params?: object) {
             const res = await nodeApi.getAllNodeApi()
             if (res.code === 0) {
                 ElMessage.success(res.msg)
@@ -65,7 +66,7 @@ export const useNodeStore = defineStore("nodeStore", {
             return res
         },
         //更新节点
-        async updateNode(params?:object) {
+        async updateNode(params?: object) {
             const res = await nodeApi.updateNodeApi(params)
             if (res.code === 0) {
                 ElMessage.success(res.msg)
@@ -79,7 +80,7 @@ export const useNodeStore = defineStore("nodeStore", {
             }
         },
         //新建节点
-        async newNode(params?:object) {
+        async newNode(params?: object) {
             const res = await nodeApi.newNodeApi(params)
             if (res.code === 0) {
                 ElMessage.success("新建节点成功")

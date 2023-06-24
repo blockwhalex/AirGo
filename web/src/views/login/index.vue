@@ -8,7 +8,7 @@
           <span class="login-left-logo-text-msg">{{ getThemeConfig.globalViceTitleMsg }}</span>
         </div>
       </div>
-<!--      左侧svg-->
+      <!--      左侧svg-->
       <div class="login-left-img">
         <img :src="loginMain"/>
       </div>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts" name="loginIndex">
-import {defineAsyncComponent, onMounted, reactive, ref,computed} from 'vue';
+import {defineAsyncComponent, onMounted, reactive, ref, computed} from 'vue';
 import {storeToRefs} from 'pinia';
 //store
 import {useThemeConfig} from '/@/stores/themeConfig';
@@ -92,6 +92,7 @@ onMounted(() => {
 .login-container {
   height: 100%;
   background: var(--el-color-white);
+
   .login-left {
     flex: 1;
     position: relative;
@@ -119,7 +120,7 @@ onMounted(() => {
         span {
           margin-left: 10px;
           font-size: 28px;
-          color: #ffffff;//标题颜色
+          color: #ffffff; //标题颜色
         }
 
         .login-left-logo-text-msg {
@@ -154,6 +155,7 @@ onMounted(() => {
   .login-right {
     width: 500px;
     margin-right: 100px;
+
     .login-right-warp {
       border: 1px solid var(--el-color-primary-light-3); //表单边框
       border-radius: 3px;
@@ -288,13 +290,15 @@ onMounted(() => {
     }
   }
 }
-.login-footer{
+
+.login-footer {
   position: absolute;
   left: 50%;
   top: 98%;
   transform: translate(-50%, -50%); /* 50%为自身尺寸的一半 */
 }
-.muyu{
+
+.muyu {
   position: absolute;
   left: 50%;
   top: 90%;

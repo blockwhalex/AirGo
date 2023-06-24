@@ -29,8 +29,8 @@ import {reactive} from "vue";
 const userStore = useUserStore()
 const {registerData} = storeToRefs(userStore)
 //定义参数
-const state =reactive({
-  isShowChangePasswordDialog:false,
+const state = reactive({
+  isShowChangePasswordDialog: false,
 })
 // 打开弹窗
 const openDialog = () => {

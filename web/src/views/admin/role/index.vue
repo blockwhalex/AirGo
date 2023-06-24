@@ -17,7 +17,7 @@
           新增角色
         </el-button>
       </div>
-      <el-table :data="roleManageData.roles.role_list" v-loading="state.loading"
+      <el-table :data="roleManageData.roles.role_list" stripe v-loading="state.loading"
                 style="width: 100%">
         <el-table-column type="index" label="序号" width="60" fixed/>
         <el-table-column prop="role_name" label="角色名称" show-overflow-tooltip fixed></el-table-column>
@@ -79,7 +79,7 @@ const roleDialogRef = ref();
 const roleDialogEditApiRef = ref();
 
 //定义参数
-const state=reactive({
+const state = reactive({
   loading: false,
   params: {
     search: '',
@@ -118,7 +118,7 @@ const onRowDel = (row: RowRoleType) => {
   })
 };
 //查询
-const onSearch = (params?:object) => {
+const onSearch = (params?: object) => {
   roleStore.getRoleList(params)
 }
 // 分页改变

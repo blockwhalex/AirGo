@@ -116,13 +116,21 @@
 <script lang="ts" setup>
 
 
-import { onMounted, reactive, watch} from "vue";
+import {onMounted, reactive, watch} from "vue";
 //report store
 import {useReportStore} from "/@/stores/reportStore"
 import {storeToRefs} from "pinia";
 
 const reportStore = useReportStore()
-const {dbInfo, sqliteTable,mysqlColumn, mysqlColumnTypeMap,mysqlColumnChineseNameMap,sqliteColumn, sqliteColumnTypeMap} = storeToRefs(reportStore)
+const {
+  dbInfo,
+  sqliteTable,
+  mysqlColumn,
+  mysqlColumnTypeMap,
+  mysqlColumnChineseNameMap,
+  sqliteColumn,
+  sqliteColumnTypeMap
+} = storeToRefs(reportStore)
 //report api
 import {useReportApi} from "/@/api/report";
 import {ElMessage} from "element-plus";
@@ -173,18 +181,18 @@ const onSubmit = (params?: object) => {
 
 //删除当前条件
 const deleteCurrrentCondition = (row: any) => {
- // console.log("当前所有条件:",state.reportTable.field_params_list)
+  // console.log("当前所有条件:",state.reportTable.field_params_list)
   state.reportTable.field_params_list = state.reportTable.field_params_list.filter(item => item !== row);
 }
 //增加新条件
 const addCondition = () => {
-  if (dbInfo.value.db_type==='' || (mysqlColumn.value.length===0 && sqliteColumn.value.length===0)){
+  if (dbInfo.value.db_type === '' || (mysqlColumn.value.length === 0 && sqliteColumn.value.length === 0)) {
     ElMessage.warning("请选择数据库，并加载数据库表！")
     return
   }
   state.reportTable.field_params_list.push({
     field: '',
-    field_chinese_name:'',
+    field_chinese_name: '',
     field_type: '',
     condition: '=',
     condition_value: '',
@@ -196,9 +204,9 @@ watch(
     () => state.reportTable,
     () => {
       state.reportTable.field_params_list.forEach((item) => {
-        if (dbInfo.value.db_type==='mysql'){
+        if (dbInfo.value.db_type === 'mysql') {
           item.field_type = mysqlColumnTypeMap.value.get(item.field)
-          item.field_chinese_name =mysqlColumnChineseNameMap.value.get(item.field)
+          item.field_chinese_name = mysqlColumnChineseNameMap.value.get(item.field)
         } else {
           item.field_type = sqliteColumnTypeMap.value.get(item.field)
           item.field_chinese_name = sqliteColumnTypeMap.value.get(item.field)

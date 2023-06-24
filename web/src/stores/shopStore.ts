@@ -22,7 +22,7 @@ export const useShopStore = defineStore("shopStore", {
                 // expiration_date: 0,
                 // checked_nodes: [0], //套餐编辑时选中的节点
                 // nodes: [],
-                des:'<h3 style="color:#00BFFF">究竟什么样的终点，才配得上这一路的颠沛流离---管泽元</h3>\n<h3 style="color:#DDA0DD">世界聚焦于你---管泽元</h3>',
+                des: '<h3 style="color:#00BFFF">究竟什么样的终点，才配得上这一路的颠沛流离---管泽元</h3>\n<h3 style="color:#DDA0DD">世界聚焦于你---管泽元</h3>',
             } as Goods,
         },
         //全部商品
@@ -35,7 +35,7 @@ export const useShopStore = defineStore("shopStore", {
                 created_at: "",
                 updated_at: "",
                 subject: "",
-                des:'',
+                des: '',
                 total_amount: "",
                 product_code: "",
                 total_bandwidth: 0,
@@ -79,7 +79,7 @@ export const useShopStore = defineStore("shopStore", {
             }
         },
         //添加商品
-        async newGoods(params?:object) {
+        async newGoods(params?: object) {
             //this.goodsManageData.currentGoods
             const res = await shopApi.newGoodsApi(params)
             if (res.code === 0) {
@@ -87,14 +87,14 @@ export const useShopStore = defineStore("shopStore", {
             }
         },
         //修改商品
-        async updateGoods(params?:object) {
+        async updateGoods(params?: object) {
             const res = await shopApi.updateGoodsApi(params)
             if (res.code === 0) {
                 ElMessage.success(res.msg)
             }
         },
         //删除商品
-        async deleteGoods(params?:object) {
+        async deleteGoods(params?: object) {
             const res = await shopApi.deleteGoodsApi(params)
             if (res.code === 0) {
                 ElMessage.success(res.msg)

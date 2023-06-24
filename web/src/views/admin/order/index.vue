@@ -24,7 +24,7 @@
           </el-collapse-item>
         </el-collapse>
       </div>
-      <el-table :data="orderManageData.allOrders.order_list" fit style="width: 100%;flex: 1;">
+      <el-table :data="orderManageData.allOrders.order_list" stripe style="width: 100%;flex: 1;">
         <el-table-column type="index" label="序号" fixed width="60px"/>
         <el-table-column prop="out_trade_no" label="订单号" width="200"/>
         <el-table-column prop="id" label="订单ID" width="60px"/>

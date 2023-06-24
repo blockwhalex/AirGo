@@ -19,14 +19,14 @@
 
 import {ElMessage, ElMessageBox} from "element-plus";
 
-function test(row:any) {
+function test(row: any) {
   ElMessageBox.confirm(`此操作将永久删除路由：${row.path}, 是否继续?`, '提示', {
     confirmButtonText: '删除',
     cancelButtonText: '取消',
     type: 'warning',
   })
       .then(() => {
-          //逻辑
+        //逻辑
         setTimeout(() => {
           //逻辑
           ElMessage.success('成功');
@@ -35,6 +35,7 @@ function test(row:any) {
       .catch(() => {
       });
 }
+
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 //定义参数
@@ -44,7 +45,7 @@ const state = reactive({
   type: "",
   title: "",
   isShowDialog: false,
-  article:{} as Article,
+  article: {} as Article,
 })
 
 // 打开弹窗
@@ -63,6 +64,7 @@ const openDialog = (type: string, row?: any) => {
 const closeDialog = () => {
   state.isShowDialog = false
 };
+
 //确认提交
 function onSubmit() {
   if (state.type === 'add') {
@@ -76,6 +78,7 @@ function onSubmit() {
   }
   closeDialog()
 }
+
 // 暴露变量
 defineExpose({
   openDialog,   // 打开弹窗

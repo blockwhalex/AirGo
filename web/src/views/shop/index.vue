@@ -5,7 +5,7 @@
         <div class="home-card-item">
           <el-card>
             <template #header>
-              <div >
+              <div>
                 <el-text class="card-header-left">{{ v.subject }}</el-text>
               </div>
             </template>
@@ -63,7 +63,7 @@ onMounted(() => {
 })
 //打开提交订单弹窗
 const openSubmitOrderDialog = (goood: Goods) => {
-  shopData.value.currentGoods=goood
+  shopData.value.currentGoods = goood
   SubmitOrderDialogRef.value.openDialog()
 }
 //打开确认购买弹窗
@@ -89,26 +89,31 @@ const openQRDialog = () => {
   color: var(--el-text-color-primary);
   border: 1px solid var(--next-border-color-light);
 }
-.el-card{
+
+.el-card {
   background-image: url("../../assets/bgc/bg-3.svg");
-  background-repeat:no-repeat;
-  background-position: 100%,100%;
+  background-repeat: no-repeat;
+  background-position: 100%, 100%;
 }
-.card-text{
+
+.card-text {
   display: flex;
   justify-content: space-between;
   height: 35px
 }
-.card-text-left{
+
+.card-text-left {
   margin-top: auto;
   margin-bottom: auto;
 }
-.card-text-right{
+
+.card-text-right {
   margin-top: auto;
   margin-bottom: auto;
   font-size: 20px;
 }
-.card-header-left{
+
+.card-header-left {
   font-size: 30px;
   color: #FC3D08;
 }

@@ -237,6 +237,7 @@ interface SummaryMethodProps<T = any> {
   columns: TableColumnCtx<T>[]
   data: T[]
 }
+
 //合计
 const getSummaries = (param: SummaryMethodProps) => {
   const {columns, data} = param
@@ -283,7 +284,8 @@ const getSummaries = (param: SummaryMethodProps) => {
   color: var(--el-text-color-primary);
   border: 1px solid var(--next-border-color-light);
 }
-.el-card{
+
+.el-card {
   background-image: url("../../assets/bgc/1.png");
 }
 </style>

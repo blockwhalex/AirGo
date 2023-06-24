@@ -3,7 +3,7 @@
     <el-dialog v-model="state.isShowSubmitOrderDialog" title="订单详情" width="30%">
       <div class="home-card-item">
         <el-card>
-          <div >
+          <div>
             <el-text class="card-header-left">{{ shopData.currentGoods.subject }}</el-text>
           </div>
           <div class="card-text">
@@ -19,10 +19,9 @@
       </div>
       <div class="home-card-item">
         <el-card>
-          <div style="display: flex;align-items: center">
-            <el-button type="primary" plain>金额：</el-button>
-
-            <el-text style="font-size: 40px">{{ shopData.currentOrder.total_amount }}</el-text>
+          <div class="card-text">
+            <el-button class="card-text-left" type="primary" plain>金额：</el-button>
+            <el-text class="card-text-right">{{ shopData.currentOrder.total_amount }}</el-text>
           </div>
         </el-card>
       </div>
@@ -99,26 +98,30 @@ defineExpose({
 </script>
 
 <style scoped>
-.el-card{
+.el-card {
   background-image: url("../../assets/bgc/bg-3.svg");
-  background-repeat:no-repeat;
-  background-position: 100%,100%;
+  background-repeat: no-repeat;
+  background-position: 100%, 100%;
 }
-.card-text{
+
+.card-text {
   display: flex;
   justify-content: space-between;
   height: 35px
 }
-.card-text-left{
+
+.card-text-left {
   margin-top: auto;
   margin-bottom: auto;
 }
-.card-text-right{
+
+.card-text-right {
   margin-top: auto;
   margin-bottom: auto;
   font-size: 20px;
 }
-.card-header-left{
+
+.card-header-left {
   font-size: 30px;
   color: #FC3D08;
 }

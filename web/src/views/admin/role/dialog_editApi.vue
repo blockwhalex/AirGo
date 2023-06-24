@@ -27,7 +27,7 @@ const roleStore = useRoleStore()
 const {dialogEditApi} = storeToRefs(roleStore)
 
 // 定义变量内容
-const state=reactive({
+const state = reactive({
   isShowDialog: false,
   type: '',
   title: '',
@@ -42,7 +42,7 @@ const openDialog = (row: RowRoleType) => {//RowRoleType 角色类型
   //获取全部api
   roleStore.getAllPolicy()
   //获取当前角色 api (选中)
-  roleStore.getPolicyByRoleIds({roleID:row.id})
+  roleStore.getPolicyByRoleIds({roleID: row.id})
 };
 // 关闭弹窗
 const closeDialog = () => {

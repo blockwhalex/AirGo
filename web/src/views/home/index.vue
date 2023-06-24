@@ -12,12 +12,12 @@
             <div class="card-text">
               <el-tag class="card-text-left" type="info">剩余流量:</el-tag>
               <span class="card-text-right">{{
-                  (userInfos.subscribe_info.t - userInfos.subscribe_info.d - userInfos.subscribe_info.u) / 1024 / 1024 / 1024
+                  ((userInfos.subscribe_info.t - userInfos.subscribe_info.d - userInfos.subscribe_info.u) / 1024 / 1024 / 1024).toFixed(2)
                 }}GB</span>
             </div>
             <div class="card-text">
               <el-tag class="card-text-left" type="info">到期时间:</el-tag>
-             <span class="card-text-right">{{ DateStrtoTime(userInfos.subscribe_info.expired_at).slice(0,10) }}</span>
+              <span class="card-text-right">{{ DateStrtoTime(userInfos.subscribe_info.expired_at).slice(0, 10) }}</span>
             </div>
           </el-card>
         </div>
@@ -27,7 +27,7 @@
           <el-card class="box-card" style="width: 100%;flex: 1;">
             <template #header>
               <div class="card-header">
-                <el-text  class="card-header-left">当前混淆:</el-text>
+                <el-text class="card-header-left">当前混淆:</el-text>
                 <span>{{ userInfos.subscribe_info.host }}</span>
               </div>
             </template>
@@ -99,15 +99,15 @@ import commonFunction from '/@/utils/commonFunction';
 const {copyText} = commonFunction();
 //定义参数
 const state = reactive({
-  host:{
-    host:'',
+  host: {
+    host: '',
   }
 })
 
 //修改混淆
 const onChangeHost = () => {
   userStore.changeHost(state.host)
-  state.host.host=''
+  state.host.host = ''
 }
 //重置订阅
 const onResetSub = () => {
@@ -163,27 +163,32 @@ onMounted(() => {
   color: var(--el-text-color-primary);
   border: 1px solid var(--next-border-color-light);
 }
-.el-card{
+
+.el-card {
   background-image: url("../../assets/bgc/bg-1.svg");
-  background-repeat:no-repeat;
-  background-position: 100%,100%;
+  background-repeat: no-repeat;
+  background-position: 100%, 100%;
   //background: rgba(0,0,0,0.3);
 }
-.card-text{
+
+.card-text {
   display: flex;
   justify-content: space-between;
   height: 60px
 }
-.card-text-left{
+
+.card-text-left {
   margin-top: auto;
   margin-bottom: auto;
 }
-.card-text-right{
+
+.card-text-right {
   margin-top: auto;
   margin-bottom: auto;
   font-size: 30px;
 }
-.card-header-left{
+
+.card-header-left {
   font-size: 15px;
   color: #AC96F1;
 }

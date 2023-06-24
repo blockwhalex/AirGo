@@ -3,7 +3,7 @@ import {RouteRecordRaw} from 'vue-router';
 import pinia from '/@/stores/index';
 //import { useUserInfo } from '/@/stores/userInfo';
 //import { useRequestOldRoutes } from '/@/stores/requestOldRoutes';
-import {Session,Local} from '/@/utils/storage';
+import {Session, Local} from '/@/utils/storage';
 import {NextLoading} from '/@/utils/loading';
 import {dynamicRoutes, notFoundAndNoPower} from '/@/router/route';
 import {formatTwoStageRoutes, formatFlatteningRoutes, router} from '/@/router/index';

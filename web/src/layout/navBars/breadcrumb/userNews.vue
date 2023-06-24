@@ -2,27 +2,28 @@
   <div class="layout-navbars-breadcrumb-user-news">
     <div class="head-box">
       <div class="head-box-title">通知</div>
-<!--      <div class="head-box-btn"  @click="onAllReadClick">全部已读</div>-->
+      <!--      <div class="head-box-btn"  @click="onAllReadClick">全部已读</div>-->
     </div>
     <div class="content-box">
-        <div class="content-box-item" @click="toDetails(v)" v-for="(v,k) in state.articleDate.article_list" :key="k">
-          <div>{{ v.title }}</div>
-          <div class="content-box-msg">
-            {{ v.introduction }}
-          </div>
-          <div class="head-box">
-            <span class="content-box-time">{{ DateStrtoTime(v.created_at) }}</span> <el-text type="primary">详情>>></el-text>
-          </div>
-
+      <div class="content-box-item" @click="toDetails(v)" v-for="(v,k) in state.articleDate.article_list" :key="k">
+        <div>{{ v.title }}</div>
+        <div class="content-box-msg">
+          {{ v.introduction }}
         </div>
+        <div class="head-box">
+          <span class="content-box-time">{{ DateStrtoTime(v.created_at) }}</span>
+          <el-text type="primary">详情>>></el-text>
+        </div>
+
+      </div>
     </div>
-<!--    <div class="foot-box" @click="onGoToMore">更多>>></div>-->
-    <el-dialog v-model="state.isShowDialog"  width="768px" destroy-on-close align-center>
+    <!--    <div class="foot-box" @click="onGoToMore">更多>>></div>-->
+    <el-dialog v-model="state.isShowDialog" width="768px" destroy-on-close align-center>
       <div style="font-size: 40px">
-        {{state.currentArticle.title}}
+        {{ state.currentArticle.title }}
       </div>
       <div>
-        {{state.currentArticle.introduction}}
+        {{ state.currentArticle.introduction }}
       </div>
       <el-divider content-position="left"></el-divider>
       <div>
@@ -37,10 +38,12 @@ import {onMounted, reactive} from 'vue';
 //时间格式化
 import {DateStrtoTime} from "../../../utils/formatTime";
 //api
-import {useArticleApi}from "/@/api/article/index"
-const articleApi=useArticleApi()
+import {useArticleApi} from "/@/api/article/index"
+
+const articleApi = useArticleApi()
 // router
 import {useRoute, useRouter} from 'vue-router';
+
 const router = useRouter();
 // 定义变量内容
 const state = reactive({
@@ -50,24 +53,24 @@ const state = reactive({
     page_num: 1,
     page_size: 3,
   },
-  articleDate:{
-    total:0,
-    article_list:[] as Article[],
+  articleDate: {
+    total: 0,
+    article_list: [] as Article[],
   },
-  currentArticle:{} as Article,
+  currentArticle: {} as Article,
 });
 //获取article列表
-const getArticleList=(params:object)=>{
-  articleApi.getArticleApi(params).then((res)=>{
-    if (res.code===0){
-      state.articleDate=res.data
+const getArticleList = (params: object) => {
+  articleApi.getArticleApi(params).then((res) => {
+    if (res.code === 0) {
+      state.articleDate = res.data
       // console.log(state.articleDate)
     }
   })
 }
 //打开详情弹窗
-const onOpenDialog=()=>{
-  state.isShowDialog=true
+const onOpenDialog = () => {
+  state.isShowDialog = true
 
 }
 // 全部已读点击
@@ -79,15 +82,15 @@ const onGoToMore = () => {
   // window.open('');
 };
 // 前往详情
-const toDetails=(params:Article)=>{
+const toDetails = (params: Article) => {
   // router.push({path:'notices',query:{id:1}})
-  console.log("k:",params)
+  console.log("k:", params)
   // JSON.parse(JSON.stringify(row))
-  state.currentArticle=JSON.parse(JSON.stringify(params))
-  state.isShowDialog=true
+  state.currentArticle = JSON.parse(JSON.stringify(params))
+  state.isShowDialog = true
 }
 //
-onMounted(()=>{
+onMounted(() => {
   getArticleList(state.params)
 });
 </script>

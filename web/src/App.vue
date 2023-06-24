@@ -51,7 +51,7 @@ onBeforeMount(() => {
 });
 
 //组件被挂载之前,获取布局配置
-onBeforeMount(()=>{
+onBeforeMount(() => {
   storesThemeConfig.getThemeConfig()
 })
 // 页面加载时

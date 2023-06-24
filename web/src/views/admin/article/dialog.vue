@@ -5,10 +5,10 @@
         <el-input v-model="state.article.title"/>
       </el-form-item>
       <el-form-item label="文章简介">
-        <el-input v-model="state.article.introduction" />
+        <el-input v-model="state.article.introduction"/>
       </el-form-item>
       <el-form-item label="文章内容---使用markdown语法">
-<!--        <el-input v-model="state.article.content" type="textarea" :rows="12" />-->
+        <!--        <el-input v-model="state.article.content" type="textarea" :rows="12" />-->
         <v-md-editor v-model="state.article.content" height="400px"></v-md-editor>
       </el-form-item>
     </el-form>
@@ -31,25 +31,26 @@ const emit = defineEmits(['refresh']);
 
 import {reactive} from "vue";
 //api
-import {useArticleApi}from "/@/api/article/index"
-const articleApi=useArticleApi()
+import {useArticleApi} from "/@/api/article/index"
+
+const articleApi = useArticleApi()
 //定义参数
 const state = reactive({
   type: "",
   title: "",
   isShowDialog: false,
-  article:{} as Article,
+  article: {} as Article,
 })
 
 // 打开弹窗
 const openDialog = (type: string, row?: any) => {
-  console.log("打开弹窗:",type)
+  console.log("打开弹窗:", type)
   if (type == 'add') {
     state.type = type
     state.title = "新建文章"
     state.isShowDialog = true
   } else {
-    state.article=row
+    state.article = row
     state.type = type
     state.title = "修改文章"
     state.isShowDialog = true
@@ -59,6 +60,7 @@ const openDialog = (type: string, row?: any) => {
 const closeDialog = () => {
   state.isShowDialog = false
 };
+
 //确认提交
 function onSubmit() {
   if (state.type === 'add') {
@@ -74,6 +76,7 @@ function onSubmit() {
   }
   closeDialog()
 }
+
 // 暴露变量
 defineExpose({
   openDialog,   // 打开弹窗

@@ -20,7 +20,7 @@ export const useRoleStore = defineStore("roleStore", {
         },
         //编辑角色弹窗参数
         dialog: {
-            ruleForm: {       //当前编辑角色的参数
+            roleForm: {       //当前编辑角色的参数
                 id: 0,        //角色ID
                 role_name: '',     // 角色名称
                 description: '',  //角色描述

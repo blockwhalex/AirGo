@@ -17,7 +17,7 @@ func GetDB() (model.DbInfo, error) {
 		return entities, nil
 	}
 	entities.DbType = "mysql"
-	sql := "SELECT SCHEMA_NAME AS `database` FROM INFORMATION_SCHEMA"
+	sql := "SELECT SCHEMA_NAME AS `database` FROM INFORMATION_SCHEMA.SCHEMATA"
 	err := global.DB.Raw(sql).Scan(&entities.DatabaseList).Error
 	return entities, err
 }

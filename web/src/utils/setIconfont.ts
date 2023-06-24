@@ -1,7 +1,8 @@
 // 字体图标 url
 const cssCdnUrlList: Array<string> = [
-	'//at.alicdn.com/t/c/font_2298093_rnp72ifj3ba.css',
-	'//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+    '//at.alicdn.com/t/c/font_2298093_rnp72ifj3ba.css',
+    // '//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+    '//cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
 ];
 // 字体图标 url
 // const cssCdnUrlList: Array<string> = [
@@ -10,7 +11,7 @@ const cssCdnUrlList: Array<string> = [
 // 第三方 js url
 const jsCdnUrlList: Array<string> = [];
 
-// 动态批量设置字体图标 有问题！！
+// 动态批量设置字体图标
 export function setCssCdn() {
     if (cssCdnUrlList.length <= 0) return false;
     cssCdnUrlList.map((v) => {

@@ -120,7 +120,8 @@
             </el-form-item>
             <el-form-item label="邮件内容格式">
               <el-input v-model="serverConfig.email.email_content" type="textarea" autosize/>
-              <el-text style="color: #9b9da1">*自定义邮件验证码内容样式，支持HTML，`emailcode`为验证码字段，不可删除！</el-text>
+              <el-text style="color: #9b9da1">*自定义邮件验证码内容样式，支持HTML，`emailcode`为验证码字段，不可删除！
+              </el-text>
             </el-form-item>
             <el-divider></el-divider>
             <el-form-item>

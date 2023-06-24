@@ -47,7 +47,7 @@
         </el-col>
       </el-row>
 
-      <el-table :data="nodeManageData.nodes.node_list" height="100%" style="width: 100%;flex: 1;">
+      <el-table :data="nodeManageData.nodes.node_list" height="100%" stripe style="width: 100%;flex: 1;">
         <el-table-column fixed type="index" label="序号" width="60"/>
         <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="200"></el-table-column>
         <el-table-column prop="id" label="节点ID" show-overflow-tooltip width="60"></el-table-column>

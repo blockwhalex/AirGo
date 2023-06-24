@@ -1,76 +1,75 @@
 <template>
   <div class="container report_layout-padding">
-    <el-card shadow="hover" class="layout-padding-auto">
-      <div>
-        <el-button type="primary" @click="addCondition">新增条件</el-button>
-      </div>
-      <el-table :data="state.reportTable.field_params_list" height="100%" style="width: 100%;flex: 1;" stripe>
-        <el-table-column align="left" type="index" label="序列" width="60"/>
-        <el-table-column align="left" prop="field" label="字段" width="160">
-          <template #default="{row}">
-            <el-select v-if="dbInfo.db_type==='sqlite'" v-model="row.field" class="m-2" placeholder="选择字段">
-              <el-option
-                  v-for="(v,k) in sqliteColumn"
-                  :key="k"
-                  :label="v.name"
-                  :value="v.name"
-              />
-            </el-select>
-            <el-select v-if="dbInfo.db_type==='mysql'" v-model="row.field" class="m-2" placeholder="选择字段">
-              <el-option
-                  v-for="(v,k) in mysqlColumn"
-                  :key="k"
-                  :label="v.column_name"
-                  :value="v.data_type"
-              />
-            </el-select>
-          </template>
-
-        </el-table-column>
-        <el-table-column align="left" prop="field_chinese_name " label="字段中文名" width="160">
-          <template #default="{row}">
-            <el-text>{{ row.field_chinese_name }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column align="left" prop="field_type" label="字段类型" width="160">
-          <template #default="{row}">
-            <el-text>{{ row.field_type }}</el-text>
-          </template>
-        </el-table-column>
-        <el-table-column align="left" prop="condition" label="搜索条件" width="160">
-          <template #default="{row}">
-            <el-select v-model="row.condition" class="m-2" placeholder="搜索条件">
-              <el-option
-                  v-for="(v,k) in conditionList"
-                  :key="k"
-                  :label="v"
-                  :value="v"
-              />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column align="left" prop="conditionValue" label="条件值">
-          <template #default="{row}">
-            <el-date-picker
-                v-if="row.field_type==='datetime'"
-                v-model="row.condition_value"
-                type="datetime"
-                value-format="YYYY-MM-DD HH:mm:ss"
+    <div>
+      <el-button type="primary" @click="addCondition">新增条件</el-button>
+    </div>
+    <el-table :data="state.reportTable.field_params_list" height="100%" style="width: 100%;flex: 1;" stripe>
+      <el-table-column align="left" type="index" label="序列" width="60"/>
+      <el-table-column align="left" prop="field" label="字段" width="160">
+        <template #default="{row}">
+          <el-select v-if="dbInfo.db_type==='sqlite'" v-model="row.field" class="m-2" placeholder="选择字段">
+            <el-option
+                v-for="(v,k) in sqliteColumn"
+                :key="k"
+                :label="v.name"
+                :value="v.name"
             />
-            <el-input v-else v-model="row.condition_value"></el-input>
-          </template>
-        </el-table-column>
-        <el-table-column align="left" label="操作" fixed="right">
-          <template #default="{row}">
-            <el-button type="primary" @click="deleteCurrrentCondition(row)">删除</el-button>
-          </template>
-        </el-table-column>
+          </el-select>
+          <el-select v-if="dbInfo.db_type==='mysql'" v-model="row.field" class="m-2" placeholder="选择字段">
+            <el-option
+                v-for="(v,k) in mysqlColumn"
+                :key="k"
+                :label="v.column_name"
+                :value="v.data_type"
+            />
+          </el-select>
+        </template>
 
-      </el-table>
-      <div style="margin-top: 20px">
-        <el-button @click="onSubmit()" type="primary">确定</el-button>
-      </div>
-    </el-card>
+      </el-table-column>
+      <el-table-column align="left" prop="field_chinese_name " label="字段中文名" width="160">
+        <template #default="{row}">
+          <el-text>{{ row.field_chinese_name }}</el-text>
+        </template>
+      </el-table-column>
+      <el-table-column align="left" prop="field_type" label="字段类型" width="160">
+        <template #default="{row}">
+          <el-text>{{ row.field_type }}</el-text>
+        </template>
+      </el-table-column>
+      <el-table-column align="left" prop="condition" label="搜索条件" width="160">
+        <template #default="{row}">
+          <el-select v-model="row.condition" class="m-2" placeholder="搜索条件">
+            <el-option
+                v-for="(v,k) in conditionList"
+                :key="k"
+                :label="v"
+                :value="v"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column align="left" prop="conditionValue" label="条件值">
+        <template #default="{row}">
+          <el-date-picker
+              v-if="row.field_type==='datetime'"
+              v-model="row.condition_value"
+              type="datetime"
+              value-format="YYYY-MM-DD HH:mm:ss"
+          />
+          <el-input v-else v-model="row.condition_value"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column align="left" label="操作">
+        <template #default="{row}">
+          <el-button type="primary" @click="deleteCurrrentCondition(row)">删除</el-button>
+        </template>
+      </el-table-column>
+
+    </el-table>
+    <div style="margin-top: 20px">
+      <el-button @click="onSubmit()" type="primary">确定</el-button>
+    </div>
+
   </div>
 </template>
 

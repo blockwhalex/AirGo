@@ -77,7 +77,7 @@
       </el-col>
     </el-form-item>
     <div>
-      <el-text size="default" type="info" style="font-style: italic;">{{state.oneWord}}</el-text>
+      <el-text size="default" type="info" style="font-style: italic;">{{ state.oneWord }}</el-text>
     </div>
   </el-form>
 </template>
@@ -121,7 +121,7 @@ const state = reactive({
   loading: {
     signIn: false,
   },
-  oneWord:'',
+  oneWord: '',
 });
 
 // 时间获取
@@ -206,12 +206,12 @@ const handleTimeChange = () => {
   }
 };
 //one word
-const oneWord=()=>{
+const oneWord = () => {
   service({
-    url:'https://api.xygeng.cn/one/get/',
-  }).then((res:any)=>{
-    const r:string = res
-    state.oneWord=r.slice(15,r.length-1)
+    url: 'https://api.xygeng.cn/one/get/',
+  }).then((res: any) => {
+    const r: string = res
+    state.oneWord = r.slice(15, r.length - 1)
   })
 }
 //
