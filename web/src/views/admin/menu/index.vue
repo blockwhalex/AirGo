@@ -20,14 +20,14 @@
       </div>
       <el-table :data="allRoutesList" v-loading="state.tableData.loading" style="width: 100%" row-key="path"
                 :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-        <el-table-column label="菜单名称" show-overflow-tooltip>
+        <el-table-column label="菜单名称" show-overflow-tooltip width="200px">
           <template #default="scope">
             <SvgIcon :name="scope.row.meta.icon"/>
             <span class="ml10">{{ scope.row.meta.title }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="path" label="路由路径" show-overflow-tooltip></el-table-column>
-        <el-table-column label="组件路径" show-overflow-tooltip>
+        <el-table-column prop="path" label="路由路径" show-overflow-tooltip width="150px"></el-table-column>
+        <el-table-column label="组件路径" show-overflow-tooltip width="200px">
           <template #default="scope">
             <span>{{ scope.row.component }}</span>
           </template>
@@ -37,7 +37,7 @@
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" show-overflow-tooltip width="140">
+        <el-table-column label="操作" show-overflow-tooltip >
           <template #default="scope">
             <el-button size="small" text type="primary"
                        @click="onOpenEditMenu('edit', scope.row)">修改

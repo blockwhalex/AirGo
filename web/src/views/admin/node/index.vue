@@ -38,7 +38,9 @@
         <el-col :span="3">
           <el-button size="default" type="warning" class="ml10" @click="onOpenNodeSortDialog">
             <el-icon>
-              <ele-FolderAdd/>
+              <el-icon>
+                <DCaret/>
+              </el-icon>
             </el-icon>
             排序
           </el-button>
@@ -47,8 +49,8 @@
 
       <el-table :data="nodeManageData.nodes.node_list" height="100%" style="width: 100%;flex: 1;">
         <el-table-column fixed type="index" label="序号" width="60"/>
-        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="200" fixed></el-table-column>
-        <el-table-column prop="id" label="节点ID" show-overflow-tooltip width="60" fixed></el-table-column>
+        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="200"></el-table-column>
+        <el-table-column prop="id" label="节点ID" show-overflow-tooltip width="60"></el-table-column>
         <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="150"></el-table-column>
         <el-table-column prop="port" label="节点端口" show-overflow-tooltip></el-table-column>
         <el-table-column prop="sort" label="协议类型" show-overflow-tooltip>
@@ -82,7 +84,7 @@
         </el-table-column>
         <el-table-column prop="nodespeed_limit" label="限速" show-overflow-tooltip></el-table-column>
         <el-table-column prop="traffic_rate" label="倍率" show-overflow-tooltip></el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column label="操作" width="100">
           <template #default="scope">
             <el-button :disabled="userInfos.id !== 1" size="small" text type="primary"
                        @click="onOpenEditNode('edit', scope.row)">修改
@@ -118,7 +120,7 @@ import {storeToRefs} from "pinia";
 const NodeDialog = defineAsyncComponent(() => import('/@/views/admin/node/dialog.vue'))
 const NodeSortDialog = defineAsyncComponent(() => import('/@/views/admin/node/dialog_node_sort.vue'))
 const nodeDialogRef = ref()
-const nodeSortDialogRef=ref()
+const nodeSortDialogRef = ref()
 //node store
 import {useNodeStore} from "/@/stores/node";
 
@@ -175,8 +177,9 @@ const state = reactive({
 function onOpenEditNode(type: string, row?: Object) {
   nodeDialogRef.value.openDialog(type, row)
 }
+
 //节点排序弹窗
-function onOpenNodeSortDialog(){
+function onOpenNodeSortDialog() {
   nodeSortDialogRef.value.openDialog()
 }
 

@@ -21,14 +21,10 @@
               <el-tag class="card-text-left" type="warning">价格</el-tag>
               <span class="card-text-right">¥{{ v.total_amount }}</span>
             </div>
-            <div v-html="v.des">
-
-            </div>
-<!--            <el-text type="info" style="white-space: pre-line">{{v.des}}</el-text>-->
+            <div v-html="v.des"></div>
             <div style="margin-top: 10px;margin-bottom: 10px">
-              <el-button size="large" @click="openSubmitOrderDialog(v.id)" color="#FC3D08">立即购买</el-button>
+              <el-button size="large" @click="openSubmitOrderDialog(v)" color="#FC3D08">立即购买</el-button>
             </div>
-
           </el-card>
         </div>
 
@@ -65,9 +61,10 @@ const SubmitOrderDialogRef = ref()
 onMounted(() => {
   shopStore.getAllEnabledGoods()
 })
-//打开提交订单弹窗,传goods_id
-const openSubmitOrderDialog = (id: number) => {
-  SubmitOrderDialogRef.value.openDialog(id)
+//打开提交订单弹窗
+const openSubmitOrderDialog = (goood: Goods) => {
+  shopData.value.currentGoods=goood
+  SubmitOrderDialogRef.value.openDialog()
 }
 //打开确认购买弹窗
 const openPurchaseDialog = (goods: Goods) => {

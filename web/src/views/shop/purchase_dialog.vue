@@ -1,27 +1,46 @@
 <template>
   <div>
     <!-- 支付弹窗 -->
-    <el-dialog v-model="state.isShowPurchaseDialog" title="支付详情" width="30%">
-      <div>
-        <el-button type="success" plain>套餐：</el-button>
-        {{ shopData.currentOrder.subject }}
-      </div>
-      <div>
-        <el-button type="success" plain>金额：</el-button>
-        {{ shopData.currentOrder.total_amount }}元
-      </div>
-      <div v-if="shopData.currentOrder.total_amount!=='0'">
-        <el-button type="primary" plain>支付方式</el-button>
-        <el-radio-group v-model="shopData.currentOrder.pay_type" class="ml-4">
-          <el-radio :label="'alipay'">支付宝</el-radio>
-          <el-radio :label="'wechat'" disabled>微信(暂未接入)</el-radio>
-        </el-radio-group>
+    <el-dialog v-model="state.isShowPurchaseDialog" title="等待支付" width="30%">
 
+      <div class="home-card-item">
+        <el-card>
+          <div class="card-text">
+            <el-button type="primary" plain>套餐：</el-button>
+            <el-text class="card-text-right">{{ shopData.currentOrder.subject }}</el-text>
+          </div>
+          <div class="card-text">
+            <el-button type="primary" plain>金额：</el-button>
+            <el-text class="card-text-right">{{ shopData.currentOrder.total_amount }}元</el-text>
+          </div>
+        </el-card>
+      </div>
+
+      <div class="home-card-item">
+        <el-card>
+          <div  v-if="shopData.currentOrder.total_amount!=='0'">
+            <el-button type="primary" plain>支付方式</el-button>
+            <div >
+              <el-radio-group style="height: 60px;" v-model="shopData.currentOrder.pay_type" class="ml-4">
+                <el-radio :label="'alipay'">
+                  <div style="display: flex;align-items: center">
+                    <el-image :src="alipayIcon" style="height: 15px;"></el-image>支付宝
+                  </div>
+                </el-radio>
+                <el-radio :label="'wechat'" disabled >
+                  <div style="display: flex;align-items: center">
+                    <el-image :src="wechatpayIcon" style="height: 15px;"></el-image>微信(暂未接入)
+                  </div>
+                </el-radio>
+              </el-radio-group>
+            </div>
+          </div>
+        </el-card>
       </div>
       <template #footer>
             <span class="dialog-footer">
                 <el-button @click="state.isShowPurchaseDialog = false">取消</el-button>
-                <el-button type="warning" :disabled="shopData.currentOrder.pay_type==='' && shopData.currentOrder.total_amount!=='0'" @click="onPurchase({id:shopData.currentGoods.id})">
+                <el-button  color="#FC3D08" :disabled="shopData.currentOrder.pay_type==='' && shopData.currentOrder.total_amount!=='0'" @click="onPurchase({id:shopData.currentGoods.id})">
                     确认支付
                 </el-button>
             </span>
@@ -44,6 +63,9 @@ const {shopData} = storeToRefs(shopStore)
 //api
 import {useShopApi} from '/@/api/shop/index'
 const shopApi = useShopApi()
+//图标
+import alipayIcon from "/@/assets/icon/alipay.jpeg"
+import wechatpayIcon from "/@/assets/icon/wechatpay.jpeg"
 
 //定义变量
 const state = reactive({
@@ -91,5 +113,27 @@ defineExpose({
 </script>
 
 <style scoped>
-
+.el-card{
+  background-image: url("../../assets/bgc/bg-3.svg");
+  background-repeat:no-repeat;
+  background-position: 100%,100%;
+}
+.card-text{
+  display: flex;
+  justify-content: space-between;
+  height: 35px
+}
+.card-text-left{
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.card-text-right{
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 20px;
+}
+.card-header-left{
+  font-size: 30px;
+  color: #FC3D08;
+}
 </style>

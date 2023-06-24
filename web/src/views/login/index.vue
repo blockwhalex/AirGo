@@ -42,7 +42,7 @@
     </div>
     <LayoutFooter class="login-footer" v-if="isFooter"/>
   </div>
-  <Muyu ></Muyu>
+  <Muyu></Muyu>
 </template>
 
 <script setup lang="ts" name="loginIndex">

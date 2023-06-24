@@ -50,7 +50,7 @@ onBeforeMount(() => {
   setIntroduction.jsCdn();
 });
 
-//组件被挂载之前
+//组件被挂载之前,获取布局配置
 onBeforeMount(()=>{
   storesThemeConfig.getThemeConfig()
 })
@@ -61,13 +61,6 @@ onMounted(() => {
     mittBus.on('openSetingsDrawer', () => {
       setingsRef.value.openDrawer();
     });
-    // 获取缓存中的布局配置
-    // if (Local.get('themeConfig')) {
-    //   //加载时获取服务器主题配置
-    // 	//storesThemeConfig.setThemeConfig({ themeConfig: Local.get('themeConfig') });
-    //   storesThemeConfig.getThemeConfig()
-    // 	document.documentElement.style.cssText = Local.get('themeConfigStyle');
-    // }
     // 获取缓存中的全屏配置
     if (Session.get('isTagsViewCurrenFull')) {
       stores.setCurrenFullscreen(Session.get('isTagsViewCurrenFull'));

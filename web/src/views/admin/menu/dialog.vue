@@ -31,19 +31,19 @@
           <!--					</el-col>-->
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="菜单名称">
-              <el-input v-model="state.ruleForm.meta.title" placeholder="格式：message.router.xxx"
+              <el-input v-model="state.ruleForm.meta.title" placeholder="例如：用户管理"
                         clearable></el-input>
             </el-form-item>
           </el-col>
           <template v-if="state.ruleForm.menuType === 'menu'">
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
               <el-form-item label="路由名称">
-                <el-input v-model="state.ruleForm.name" placeholder="路由中的 name 值" clearable></el-input>
+                <el-input v-model="state.ruleForm.name" placeholder="例如：userManage" clearable></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
               <el-form-item label="路由路径">
-                <el-input v-model="state.ruleForm.path" placeholder="路由中的 path 值" clearable></el-input>
+                <el-input v-model="state.ruleForm.path" placeholder="例如：/admin/userManage" clearable></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -58,7 +58,7 @@
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
               <el-form-item label="组件路径">
-                <el-input v-model="state.ruleForm.component" placeholder="组件路径" clearable></el-input>
+                <el-input v-model="state.ruleForm.component" placeholder="例如：/login/index.vue" clearable></el-input>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">

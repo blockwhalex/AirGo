@@ -156,13 +156,21 @@ func InitRouter() {
 		uploadRouter.POST("getPictureList", api.GetPictureList)
 	}
 	//报表
-	reportRouter := RouterGroup.Group("report")
+	reportRouter := RouterGroup.Group("report").Use(middleware.RateLimitIP(), middleware.ParseJwt(), middleware.Casbin(), middleware.RateLimitVisit())
 	{
 		reportRouter.GET("getDB", api.GetDB)
 		reportRouter.POST("getTables", api.GetTables)
 		reportRouter.POST("getColumn", api.GetColumn)
 		reportRouter.POST("reportSubmit", api.ReportSubmit)
 
+	}
+	//文章
+	articleRouter := RouterGroup.Group("article").Use(middleware.RateLimitIP(), middleware.ParseJwt(), middleware.Casbin(), middleware.RateLimitVisit())
+	{
+		articleRouter.POST("newArticle", api.NewArticle)
+		articleRouter.POST("deleteArticle", api.DeleteArticle)
+		articleRouter.POST("updaterticle", api.UpdateArticle)
+		articleRouter.POST("getArticle", api.GetArticle)
 	}
 	//Router.Run(":" + strconv.Itoa(global.CONFIG.System.Port))
 

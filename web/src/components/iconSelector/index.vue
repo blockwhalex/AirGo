@@ -37,12 +37,14 @@
               <IconList :list="fontIconSheetsFilterList" :empty="emptyDescription" :prefix="state.fontIconPrefix"
                         @get-icon="onColClick"/>
             </el-tab-pane>
-            <!--						<el-tab-pane lazy label="ele" name="ele">-->
-            <!--							<IconList :list="fontIconSheetsFilterList" :empty="emptyDescription" :prefix="state.fontIconPrefix" @get-icon="onColClick" />-->
-            <!--						</el-tab-pane>-->
-            <!--						<el-tab-pane lazy label="awe" name="awe">-->
-            <!--							<IconList :list="fontIconSheetsFilterList" :empty="emptyDescription" :prefix="state.fontIconPrefix" @get-icon="onColClick" />-->
-            <!--						</el-tab-pane>-->
+            <el-tab-pane lazy label="ele" name="ele">
+              <IconList :list="fontIconSheetsFilterList" :empty="emptyDescription" :prefix="state.fontIconPrefix"
+                        @get-icon="onColClick"/>
+            </el-tab-pane>
+            <el-tab-pane lazy label="awe" name="awe">
+              <IconList :list="fontIconSheetsFilterList" :empty="emptyDescription" :prefix="state.fontIconPrefix"
+                        @get-icon="onColClick"/>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </template>
@@ -147,8 +149,8 @@ const fontIconSheetsFilterList = computed(() => {
 const fontIconTabNameList = () => {
   let iconList: any = [];
   if (state.fontIconTabActive === 'ali') iconList = state.fontIconList.ali;
-  // else if (state.fontIconTabActive === 'ele') iconList = state.fontIconList.ele;
-  // else if (state.fontIconTabActive === 'awe') iconList = state.fontIconList.awe;
+  else if (state.fontIconTabActive === 'ele') iconList = state.fontIconList.ele;
+  else if (state.fontIconTabActive === 'awe') iconList = state.fontIconList.awe;
   return iconList;
 };
 // 处理 icon 双向绑定数值回显

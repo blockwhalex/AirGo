@@ -18,7 +18,7 @@
         </el-button>
         <el-button size="default" type="primary" class="ml10" @click="onShowCollapse">
           <el-icon>
-            <ele-FolderAdd/>
+            <ele-Search/>
           </el-icon>
           高级查询
         </el-button>
@@ -32,8 +32,8 @@
       </div>
       <el-table :data="userManageData.users.user_list" fit style="width: 100%;flex: 1;">
         <el-table-column type="index" label="序号" width="60" fixed />
-        <el-table-column prop="user_name" label="账户名称" show-overflow-tooltip fixed width="150"></el-table-column>
-        <el-table-column prop="id" label="账户ID" show-overflow-tooltip fixed width="60"></el-table-column>
+        <el-table-column prop="user_name" label="账户名称" show-overflow-tooltip  width="150"></el-table-column>
+        <el-table-column prop="id" label="账户ID" show-overflow-tooltip  width="60"></el-table-column>
         <el-table-column prop="created_at" label="创建日期" show-overflow-tooltip width="150">
           <template #default="{row}">
             <span>{{DateStrtoTime(row.created_at)}}</span>

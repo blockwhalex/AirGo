@@ -94,6 +94,8 @@ func RegisterTables() {
 		model.Server{},
 		//图库
 		model.Gallery{},
+		//文章
+		model.Article{},
 	)
 	if err != nil {
 		//os.Exit(0)
@@ -134,13 +136,15 @@ func InsertInto(db *gorm.DB) error {
 		{ParentID: 1, Path: "/admin/node", Name: "adminNode", Component: "/admin/node/index.vue", Meta: model.Meta{Title: "节点管理", Icon: "iconfont icon-shuxingtu"}},             //id==6
 		{ParentID: 1, Path: "/admin/shop", Name: "adminShop", Component: "/admin/shop/index.vue", Meta: model.Meta{Title: "商品管理", Icon: "iconfont icon-zhongduancanshuchaxun"}}, //id==7
 		{ParentID: 1, Path: "/admin/system", Name: "system", Component: "/admin/system/index.vue", Meta: model.Meta{Title: "系统设置", Icon: "iconfont icon-xitongshezhi"}},         //id==8
-		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "iconfont icon-shouye"}},                                   //id==9
-		{ParentID: 0, Path: "/shop", Name: "shop", Component: "/shop/index.vue", Meta: model.Meta{Title: "商店", Icon: "iconfont icon-zidingyibuju"}},
-		{ParentID: 0, Path: "/myOrder", Name: "myOrder", Component: "/myOrder/index.vue", Meta: model.Meta{Title: "我的订单", Icon: "iconfont icon--chaifenhang"}},
-		{ParentID: 0, Path: "/personal", Name: "personal", Component: "/personal/index.vue", Meta: model.Meta{Title: "个人信息", Icon: "iconfont icon-gerenzhongxin"}},
-		{ParentID: 0, Path: "/serverStatus", Name: "serverStatus", Component: "/serverStatus/index.vue", Meta: model.Meta{Title: "节点状态", Icon: "iconfont icon-putong"}},
-		{ParentID: 0, Path: "/gallery", Name: "gallery", Component: "/gallery/index.vue", Meta: model.Meta{Title: "无限图库", Icon: "iconfont icon-step"}},
-		{ParentID: 0, Path: "/income", Name: "income", Component: "/income/index.vue", Meta: model.Meta{Title: "营收概览", Icon: "iconfont icon-xingqiu"}},
+		{ParentID: 1, Path: "/admin/article", Name: "article", Component: "/admin/article/index.vue", Meta: model.Meta{Title: "文章设置", Icon: "iconfont icon-huanjingxingqiu"}},   //id==9
+
+		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "iconfont icon-shouye"}},                           //10
+		{ParentID: 0, Path: "/shop", Name: "shop", Component: "/shop/index.vue", Meta: model.Meta{Title: "商店", Icon: "iconfont icon-zidingyibuju"}},                     //11
+		{ParentID: 0, Path: "/myOrder", Name: "myOrder", Component: "/myOrder/index.vue", Meta: model.Meta{Title: "我的订单", Icon: "iconfont icon--chaifenhang"}},          //12
+		{ParentID: 0, Path: "/personal", Name: "personal", Component: "/personal/index.vue", Meta: model.Meta{Title: "个人信息", Icon: "iconfont icon-gerenzhongxin"}},      //13
+		{ParentID: 0, Path: "/serverStatus", Name: "serverStatus", Component: "/serverStatus/index.vue", Meta: model.Meta{Title: "节点状态", Icon: "iconfont icon-putong"}}, //14
+		{ParentID: 0, Path: "/gallery", Name: "gallery", Component: "/gallery/index.vue", Meta: model.Meta{Title: "无限图库", Icon: "iconfont icon-step"}},                  //15
+		{ParentID: 0, Path: "/income", Name: "income", Component: "/income/index.vue", Meta: model.Meta{Title: "营收概览", Icon: "iconfont icon-xingqiu"}},                  //16
 	}
 	if err := db.Create(&DynamicRouteData).Error; err != nil {
 		return errors.New("sys_dynamic-router_data表数据初始化失败!")
@@ -179,6 +183,7 @@ func InsertInto(db *gorm.DB) error {
 		{RoleID: 1, DynamicRouteID: 13},
 		{RoleID: 1, DynamicRouteID: 14},
 		{RoleID: 1, DynamicRouteID: 15},
+		{RoleID: 1, DynamicRouteID: 16},
 
 		{RoleID: 2, DynamicRouteID: 9},
 		{RoleID: 2, DynamicRouteID: 10},
@@ -290,6 +295,16 @@ func InsertInto(db *gorm.DB) error {
 
 		{Ptype: "p", V0: "1", V1: "/websocket/msg", V2: "GET"},
 
+		{Ptype: "p", V0: "1", V1: "/article/newArticle", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/article/deleteArticle", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/article/updaterticle", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/article/getArticle", V2: "POST"},
+
+		{Ptype: "p", V0: "1", V1: "/report/getDB", V2: "GET"},
+		{Ptype: "p", V0: "1", V1: "/report/getTables", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/report/getColumn", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/report/reportSubmit", V2: "POST"},
+
 		//普通用户
 		{Ptype: "p", V0: "2", V1: "/user/login", V2: "POST"},
 		{Ptype: "p", V0: "2", V1: "/user/getSub", V2: "GET"},
@@ -313,6 +328,8 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "2", V1: "/websocket/msg", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/upload/newPictureUrl", V2: "GET"},
 		{Ptype: "p", V0: "2", V1: "/upload/getPictureList", V2: "POST"},
+
+		{Ptype: "p", V0: "2", V1: "/article/getArticle", V2: "POST"},
 	}
 	if err := global.DB.Create(&casbinRuleData).Error; err != nil {
 		return errors.New("casbin_rule表数据初始化失败!")

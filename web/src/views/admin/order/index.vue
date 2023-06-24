@@ -10,7 +10,7 @@
           </el-icon>
           查询
         </el-button>
-        <el-button size="default" type="primary" class="ml10" @click="onShowCollapse">
+        <el-button size="default" type="success" class="ml10" @click="onShowCollapse">
           <el-icon>
             <ele-Search/>
           </el-icon>
@@ -26,8 +26,8 @@
       </div>
       <el-table :data="orderManageData.allOrders.order_list" fit style="width: 100%;flex: 1;">
         <el-table-column type="index" label="序号" fixed width="60px"/>
-        <el-table-column prop="out_trade_no" label="订单号" fixed width="200"/>
-        <el-table-column prop="id" label="订单ID" fixed width="60px"/>
+        <el-table-column prop="out_trade_no" label="订单号" width="200"/>
+        <el-table-column prop="id" label="订单ID" width="60px"/>
         <el-table-column prop="created_at" label="下单日期" width="150">
           <template #default="scope">
             <el-tag type="success">{{ DateStrtoTime(scope.row.created_at) }}</el-tag>
@@ -49,7 +49,7 @@
             <el-tag type="danger" v-else>未知状态</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column label="操作" width="100">
           <template #default="scope">
             <el-button v-if="scope.row.trade_status === 'WAIT_BUYER_PAY' || scope.row.trade_status ==='created'"
                        size="small" text type="primary"
@@ -78,6 +78,7 @@ import {ElMessage} from 'element-plus';
 import {defineAsyncComponent, onMounted, reactive, ref} from "vue";
 import {useOrderStore} from "/@/stores/orderStore";
 import {storeToRefs} from "pinia";
+
 const orderStore = useOrderStore()
 const {orderManageData} = storeToRefs(orderStore)
 
@@ -105,7 +106,7 @@ const state = reactive({
   fieldConditionList: {},
 })
 //
-const onSearch = (params?:object) => {
+const onSearch = (params?: object) => {
   orderStore.getAllOrder(params)
 }
 onMounted(() => {
@@ -139,7 +140,7 @@ const onShowCollapse = () => {
   state.isShowCollapse = !state.isShowCollapse
   //防止子组件渲染太慢，导致undefined问题
   setTimeout(() => {
-    if ( state.isShowCollapse) {
+    if (state.isShowCollapse) {
       reportRef.value.openReportComponent("orders")
     }
   }, 500)
@@ -153,7 +154,7 @@ const getReportDataHandler = (data: any) => {
   reportApi.submitReportApi(data).then((res) => {
     if (res.code === 0) {
       orderManageData.value.allOrders.order_list = res.data.table_data
-      orderManageData.value.allOrders.total= res.data.total
+      orderManageData.value.allOrders.total = res.data.total
     }
   })
 }

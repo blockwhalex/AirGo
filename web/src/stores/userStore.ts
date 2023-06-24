@@ -165,7 +165,7 @@ export const useUserStore = defineStore('userInfo', {
         async getUserInfo() {
             const res = await userApi.getUserInfoApi()
             if (res.code === 0) {
-                ElMessage.success(res.msg)
+                // ElMessage.success(res.msg)
                 this.userInfos = res.data
                 Session.set("userInfos", res.data)
             }

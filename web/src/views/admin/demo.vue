@@ -35,6 +35,51 @@ function test(row:any) {
       .catch(() => {
       });
 }
+// 定义子组件向父组件传值/事件
+const emit = defineEmits(['refresh']);
+//定义参数
+import {reactive} from "vue";
+
+const state = reactive({
+  type: "",
+  title: "",
+  isShowDialog: false,
+  article:{} as Article,
+})
+
+// 打开弹窗
+const openDialog = (type: string, row?: any) => {
+  if (type == 'add') {
+    state.type = type
+    state.title = "新建文章"
+    state.isShowDialog = true
+  } else {
+    state.type = type
+    state.title = "修改文章"
+    state.isShowDialog = true
+  }
+}
+// 关闭弹窗
+const closeDialog = () => {
+  state.isShowDialog = false
+};
+//确认提交
+function onSubmit() {
+  if (state.type === 'add') {
+    setTimeout(() => {
+      emit('refresh');
+    }, 1000);       //延时。防止没新建完成就重新请求
+  } else {
+    setTimeout(() => {
+      emit('refresh');
+    }, 1000);
+  }
+  closeDialog()
+}
+// 暴露变量
+defineExpose({
+  openDialog,   // 打开弹窗
+});
 
 
 </script>

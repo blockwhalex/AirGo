@@ -69,13 +69,17 @@
 
 <script setup lang="ts" name="loginMobile">
 import {reactive} from 'vue';
+import {ElMessage} from 'element-plus';
 //user store
 import {useUserStore} from "/@/stores/userStore";
 import {storeToRefs} from 'pinia';
-import {ElMessage} from 'element-plus';
 
 const userStore = useUserStore()
 const {registerData, email_suffix} = storeToRefs(userStore)
+// router
+import {useRoute, useRouter} from 'vue-router';
+
+const router = useRouter();
 //theme store
 import {useThemeConfig} from '/@/stores/themeConfig';
 

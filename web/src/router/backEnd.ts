@@ -38,16 +38,16 @@ export async function initBackEndControlRoutes() {
     // 无 token 停止执行下一步
     // if (!Session.get('token')) return false;
     if (!Local.get('token')) return false;
-    //获取路由菜单数据
-    const res = await getBackEndControlRoutes();
+    //获取路由菜单数据，请求后端路由
+    const res = await getBackEndControlRoutes();  //1
     // 无登录权限时，添加判断
     if (res.data.length <= 0) return Promise.resolve(true);
     // 处理路由（component），替换 dynamicRoutes（/@/router/route）第一个顶级 children 的路由
-    dynamicRoutes[0].children = await backEndComponent(res.data);
+    dynamicRoutes[0].children = await backEndComponent(res.data);  // 2
     // 添加动态路由
-    await setAddRoute();
+    await setAddRoute(); //4
     /// 设置路由到 pinia routesList 中（已处理成多级嵌套路由）及缓存多级嵌套数组处理后的一维数组
-    await setFilterMenuAndCacheTagsViewRoutes();
+    await setFilterMenuAndCacheTagsViewRoutes(); //7
 }
 
 /**
@@ -75,7 +75,7 @@ export function setCacheTagsViewRoutes() {
  * @description 替换 dynamicRoutes（/@/router/route）第一个顶级 children 的路由
  * @returns 返回替换后的路由数组
  */
-export function setFilterRouteEnd() {
+export function setFilterRouteEnd() {   //6
     let filterRouteEnd: any = formatTwoStageRoutes(formatFlatteningRoutes(dynamicRoutes));
     // notFoundAndNoPower 防止 404、401 不在 layout 布局中，不设置的话，404、401 界面将全屏显示
     // 关联问题 No match found for location with path 'xxx'
@@ -89,11 +89,11 @@ export function setFilterRouteEnd() {
  * @description 此处循环为 dynamicRoutes（/@/router/route）第一个顶级 children 的路由一维数组，非多级嵌套
  * @link 参考：https://next.router.vuejs.org/zh/api/#addroute
  */
-export async function setAddRoute() {
+export async function setAddRoute() {    //5
     await setFilterRouteEnd().forEach((route: RouteRecordRaw) => {
         router.addRoute(route);
     });
-    //console.log("添加动态路由",router.getRoutes());
+    // console.log("添加动态路由",router.getRoutes());
 }
 
 /**
@@ -120,7 +120,7 @@ export async function setBackEndControlRefreshRoutes() {
  * @param routes 后端返回的路由表数组
  * @returns 返回处理成函数后的 component
  */
-export function backEndComponent(routes: any) {
+export function backEndComponent(routes: any) {   //3
     if (!routes) return;
     return routes.map((item: any) => {
         if (item.component) item.component = dynamicImport(dynamicViewsModules, item.component as string);

@@ -11,8 +11,8 @@
       </div>
       <el-table :data="goodsList" height="100%" style="width: 100%;flex: 1;">
         <el-table-column type="index" label="序号" width="60" fixed/>
-        <el-table-column prop="subject" label="套餐名称" show-overflow-tooltip width="180" fixed></el-table-column>
-        <el-table-column prop="id" label="套餐ID" show-overflow-tooltip width="60" fixed></el-table-column>
+        <el-table-column prop="subject" label="套餐名称" show-overflow-tooltip width="180"></el-table-column>
+        <el-table-column prop="id" label="套餐ID" show-overflow-tooltip width="60"></el-table-column>
         <el-table-column prop="total_amount" label="套餐价格(元)" show-overflow-tooltip width="100"></el-table-column>
         <el-table-column prop="total_bandwidth" label="总流量(GB)" show-overflow-tooltip width="100"></el-table-column>
         <el-table-column prop="expiration_date" label="有效期(天)" show-overflow-tooltip></el-table-column>
@@ -22,7 +22,7 @@
             <el-tag class="ml-2" v-if="!scope.row.status" type="danger">禁用</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" fixed="right">
+        <el-table-column label="操作" width="100">
           <template #default="scope">
             <el-button size="small" text type="primary"
                        @click="onOpenEditGoods(scope.row)">修改

@@ -101,6 +101,7 @@ import {useUserStore} from "/@/stores/userStore";
 
 const userStore = useUserStore()
 const {loginData} = storeToRefs(userStore)
+
 //theme store
 import {useThemeConfig} from '/@/stores/themeConfig';
 
@@ -209,7 +210,6 @@ const oneWord=()=>{
   service({
     url:'https://api.xygeng.cn/one/get/',
   }).then((res:any)=>{
-    console.log(`one word:${res}`)
     const r:string = res
     state.oneWord=r.slice(15,r.length-1)
   })

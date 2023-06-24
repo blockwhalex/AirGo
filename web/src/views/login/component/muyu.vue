@@ -2,24 +2,26 @@
   <div>
     <div class="w-f-container">
       <div :class="state.muyuTextClass">叼毛 -1</div>
-      <img @click="clickMuyu" :class="state.muyuImgClass" src="/src/assets/icon/wooden_fish.png"/>
+      <img @click="clickMuyu" :class="state.muyuImgClass" :src="muyuImg"/>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {reactive} from "vue";
-
+//mp3
+import muyuMp3 from "/@/assets/music/muyu.mp3"
+//muyuImg
+import muyuImg from "/@/assets/icon/wooden_fish.png"
 const state = reactive({
   muyuImgClass: 'w-f-c-img',
   muyuTextClass: 'w-f-c-text'
 })
 
 //点击播放
-
 function clickMuyu() {
   let audio = new Audio()
-  audio.src = "/@/assets/music/muyu.mp3"
+  audio.src = muyuMp3
   audio.play();
   state.muyuImgClass = 'w-f-c-img w-f-c-i-size'
   state.muyuTextClass = 'w-f-c-text w-f-c-t-size'

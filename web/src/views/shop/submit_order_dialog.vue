@@ -1,18 +1,35 @@
 <template>
   <div>
     <el-dialog v-model="state.isShowSubmitOrderDialog" title="订单详情" width="30%">
-      <div>
-        <el-button type="success" plain>套餐：</el-button>
-        {{ shopData.currentOrder.subject }}
+      <div class="home-card-item">
+        <el-card>
+          <div >
+            <el-text class="card-header-left">{{ shopData.currentGoods.subject }}</el-text>
+          </div>
+          <div class="card-text">
+            <el-tag class="card-text-left">套餐流量</el-tag>
+            <span class="card-text-right">{{ shopData.currentGoods.total_bandwidth }}GB</span>
+          </div>
+          <div class="card-text">
+            <el-tag class="card-text-left" type="warning">有效期</el-tag>
+            <span class="card-text-right">{{ shopData.currentGoods.expiration_date }}天</span>
+          </div>
+          <div v-html="shopData.currentGoods.des"></div>
+        </el-card>
       </div>
-      <div>
-        <el-button type="success" plain>金额：</el-button>
-        {{ shopData.currentOrder.total_amount }}元
+      <div class="home-card-item">
+        <el-card>
+          <div style="display: flex;align-items: center">
+            <el-button type="primary" plain>金额：</el-button>
+
+            <el-text style="font-size: 40px">{{ shopData.currentOrder.total_amount }}</el-text>
+          </div>
+        </el-card>
       </div>
       <template #footer>
             <span class="dialog-footer">
                 <el-button @click="state.isShowSubmitOrderDialog = false">取消</el-button>
-                <el-button type="primary" @click="onSubmitOrder">
+                <el-button type="primary" @click="onSubmitOrder" color="#FC3D08">
                     提交订单
                 </el-button>
             </span>
@@ -46,10 +63,10 @@ const state = reactive({
 
 })
 //打开弹窗
-const openDialog = (id: number) => {
+const openDialog = () => {
   state.isShowSubmitOrderDialog = true
   //获取订单详情（计算价格等）
-  orderStore.getOrderInfo(id).then((res) => {
+  orderStore.getOrderInfo(shopData.value.currentGoods.id).then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
       shopData.value.currentOrder = res.data
@@ -82,5 +99,27 @@ defineExpose({
 </script>
 
 <style scoped>
-
+.el-card{
+  background-image: url("../../assets/bgc/bg-3.svg");
+  background-repeat:no-repeat;
+  background-position: 100%,100%;
+}
+.card-text{
+  display: flex;
+  justify-content: space-between;
+  height: 35px
+}
+.card-text-left{
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.card-text-right{
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 20px;
+}
+.card-header-left{
+  font-size: 30px;
+  color: #FC3D08;
+}
 </style>

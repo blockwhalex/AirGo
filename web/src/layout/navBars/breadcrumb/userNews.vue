@@ -2,46 +2,94 @@
   <div class="layout-navbars-breadcrumb-user-news">
     <div class="head-box">
       <div class="head-box-title">通知</div>
-      <div class="head-box-btn" v-if="state.newsList.length > 0" @click="onAllReadClick">全部已读</div>
+<!--      <div class="head-box-btn"  @click="onAllReadClick">全部已读</div>-->
     </div>
     <div class="content-box">
-      <template v-if="state.newsList.length > 0">
-        <div class="content-box-item" v-for="(v, k) in state.newsList" :key="k">
-          <div>{{ v.label }}</div>
+        <div class="content-box-item" @click="toDetails(v)" v-for="(v,k) in state.articleDate.article_list" :key="k">
+          <div>{{ v.title }}</div>
           <div class="content-box-msg">
-            {{ v.value }}
+            {{ v.introduction }}
           </div>
-          <div class="content-box-time">{{ v.time }}</div>
+          <div class="head-box">
+            <span class="content-box-time">{{ DateStrtoTime(v.created_at) }}</span> <el-text type="primary">详情>>></el-text>
+          </div>
+
         </div>
-      </template>
-      <el-empty description="暂无通知" v-else></el-empty>
     </div>
-    <div class="foot-box" @click="onGoToGiteeClick" v-if="state.newsList.length > 0">加入我们</div>
+<!--    <div class="foot-box" @click="onGoToMore">更多>>></div>-->
+    <el-dialog v-model="state.isShowDialog"  width="768px" destroy-on-close align-center>
+      <div style="font-size: 40px">
+        {{state.currentArticle.title}}
+      </div>
+      <div>
+        {{state.currentArticle.introduction}}
+      </div>
+      <el-divider content-position="left"></el-divider>
+      <div>
+        <v-md-preview :text="state.currentArticle.content"></v-md-preview>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts" name="layoutBreadcrumbUserNews">
-import {reactive} from 'vue';
-
+import {onMounted, reactive} from 'vue';
+//时间格式化
+import {DateStrtoTime} from "../../../utils/formatTime";
+//api
+import {useArticleApi}from "/@/api/article/index"
+const articleApi=useArticleApi()
+// router
+import {useRoute, useRouter} from 'vue-router';
+const router = useRouter();
 // 定义变量内容
 const state = reactive({
-  newsList: [
-    {
-      label: '欢迎使用',
-      value: '禁止一切违法行为，所有违法行为与作者和群友无关。',
-      time: '2023-06-06',
-    },
-  ],
+  isShowDialog: false,
+  params: {
+    search: '',
+    page_num: 1,
+    page_size: 3,
+  },
+  articleDate:{
+    total:0,
+    article_list:[] as Article[],
+  },
+  currentArticle:{} as Article,
 });
+//获取article列表
+const getArticleList=(params:object)=>{
+  articleApi.getArticleApi(params).then((res)=>{
+    if (res.code===0){
+      state.articleDate=res.data
+      // console.log(state.articleDate)
+    }
+  })
+}
+//打开详情弹窗
+const onOpenDialog=()=>{
+  state.isShowDialog=true
 
+}
 // 全部已读点击
 const onAllReadClick = () => {
-  state.newsList = [];
+
 };
-// 前往通知中心点击
-const onGoToGiteeClick = () => {
-  window.open('http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=qVqTTvfkP2FACYzeKKQ1yS8m9DugxnCA&authKey=CGvwGFUdQvr9fWxmWbCqAyZDpLR0oIyOhAPzAgxqbsBKUigTkgbrpOCyTpULmQrT&noverify=0&group_code=144545032');
+// 前往更多
+const onGoToMore = () => {
+  // window.open('');
 };
+// 前往详情
+const toDetails=(params:Article)=>{
+  // router.push({path:'notices',query:{id:1}})
+  console.log("k:",params)
+  // JSON.parse(JSON.stringify(row))
+  state.currentArticle=JSON.parse(JSON.stringify(params))
+  state.isShowDialog=true
+}
+//
+onMounted(()=>{
+  getArticleList(state.params)
+});
 </script>
 
 <style scoped lang="scss">
@@ -71,6 +119,7 @@ const onGoToGiteeClick = () => {
     font-size: 13px;
 
     .content-box-item {
+      border-top: 1px solid var(--el-border-color-lighter);
       padding-top: 12px;
 
       &:last-of-type {
@@ -98,7 +147,7 @@ const onGoToGiteeClick = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top: 1px solid var(--el-border-color-lighter);
+    border-top: 3px solid var(--el-border-color-lighter);
 
     &:hover {
       opacity: 1;

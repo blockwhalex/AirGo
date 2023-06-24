@@ -114,6 +114,8 @@ const onResetSub = () => {
   userApi.resetSubApi().then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
+      // window.location.reload()
+      userStore.getUserInfo()
     }
   })
 }

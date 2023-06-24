@@ -48,6 +48,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
         },
         children: [],
     },
+
 ];
 
 /**
