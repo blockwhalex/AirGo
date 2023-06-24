@@ -52,6 +52,7 @@ export const useReportStore = defineStore("reportStore", {
                 switch (this.dbInfo.db_type) {
                     case "mysql":
                         this.mysqlColumn = res.data
+                        this.mysqlColumnTypeMapHandler()
                         break
                     case "sqlite":
                         this.sqliteColumn = res.data
