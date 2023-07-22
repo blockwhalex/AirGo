@@ -45,7 +45,7 @@ type OrdersWithTotal struct {
 
 // 订单收入统计
 type OrderStatistics struct {
-	Total       int64   `json:"total"`
+	Total       int64 `json:"total"`
 	TotalAmount float64 `json:"total_amount"`
 }
 
