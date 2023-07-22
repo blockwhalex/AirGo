@@ -76,7 +76,7 @@ export const useReportStore = defineStore("reportStore", {
                 colMap.set(value.column_name, value.data_type)
                 colChineseNameMap.set(value.column_name, value.column_comment)
             })
-            this.sqliteColumnTypeMap = colMap
+            this.mysqlColumnTypeMap = colMap
             this.mysqlColumnChineseNameMap = colChineseNameMap
         }
     }

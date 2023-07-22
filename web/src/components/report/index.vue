@@ -20,7 +20,7 @@
                 v-for="(v,k) in mysqlColumn"
                 :key="k"
                 :label="v.column_name"
-                :value="v.data_type"
+                :value="v.column_name"
             />
           </el-select>
         </template>
@@ -142,13 +142,14 @@ const onSubmit = (params?: object) => {
 watch(
     () => state.reportTable,
     () => {
-      state.reportTable.field_params_list.forEach((item) => {
+      console.log("state.reportTable.field_params_list:",state.reportTable.field_params_list)
+      state.reportTable.field_params_list.forEach((value,index,array) => {
         if (dbInfo.value.db_type === 'mysql') {
-          item.field_type = mysqlColumnTypeMap.value.get(item.field)
-          item.field_chinese_name = mysqlColumnChineseNameMap.value.get(item.field)
+          value.field_type = mysqlColumnTypeMap.value.get(value.field)
+          value.field_chinese_name = mysqlColumnChineseNameMap.value.get(value.field)
         } else {
-          item.field_type = sqliteColumnTypeMap.value.get(item.field)
-          item.field_chinese_name = sqliteColumnTypeMap.value.get(item.field)
+          value.field_type = sqliteColumnTypeMap.value.get(value.field)
+          value.field_chinese_name = sqliteColumnTypeMap.value.get(value.field)
         }
       })
     },

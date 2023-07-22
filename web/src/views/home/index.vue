@@ -146,6 +146,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+
 .card-header {
   display: flex;
   justify-content: space-between;

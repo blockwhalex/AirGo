@@ -1,17 +1,16 @@
 mysql:
-  path:
+  path: mysql.sqlpub.com
   port: "3306"
   config: charset=utf8mb4&parseTime=True&loc=Local
-  db-name:
-  username: gin
-  password: 817
-  engine: Innodb
+  db-name: upadmin
+  username: upadmin
+  password: 
   max-idle-conns: 10
   max-open-conns: 100
 system:
   admin-email: admin@oicq.com
   admin-password: admin
   port: 8899
-  db-type: sqlite
+  db-type: mysql
 sqlite:
   path: ./test.db

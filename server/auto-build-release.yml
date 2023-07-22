@@ -20,6 +20,7 @@ jobs:
     steps:
       - name: dependence
         run: |
+          #CC="clang"
           sudo apt update -y
           go env -w CGO_ENABLED=1
           go env -w GOOS=${{matrix.goos}} 

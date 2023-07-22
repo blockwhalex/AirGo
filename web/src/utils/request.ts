@@ -21,8 +21,6 @@ const service: AxiosInstance = axios.create({
 service.interceptors.request.use(
     (config) => {
         //console.log("请求拦截器 config:", config)
-        // 在发送请求之前做些什么 token
-        // if (Session.get('token')) {
         if (Local.get('token')) {
             config.headers!['Authorization'] = `${Local.get('token')}`;
         }

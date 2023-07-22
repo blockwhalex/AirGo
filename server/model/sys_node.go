@@ -38,12 +38,12 @@ type Node struct {
 	V            string `json:"v"        gorm:"default:2"`                //
 	Aid          string `json:"aid"      gorm:"default:0"`                //额外ID
 	Scy          string `json:"scy"      gorm:"default:auto"`             //加密方式 （auto none chacha20-poly1305 aes-128-gcm zero）    vless字段：encryption
-	Net          string `json:"net"      gorm:"default:ws"`               //传输协议 （ws tcp kcp quic grpc）    vless字段：type
-	Disguisetype string `json:"type"     gorm:"default:none"`             //伪装类型 （none http）    vless字段：headerType
-	Host         string `json:"host"     gorm:"default:tms.dingtalk.com"` //伪装域名              vless字段：host
-	Path         string `json:"path"     gorm:"default:/"`                //path                 vless字段：path
-	Tls          string `json:"tls"`                                      //传输层安全 （为空 tls） vless字段：security
-	Sni          string `json:"sni"`                                      //默认为空                vless字段：sni
+	Net          string `json:"net"      gorm:"default:ws"`               //传输协议 （ws tcp kcp quic grpc）                            vless字段：type
+	Disguisetype string `json:"type"     gorm:"default:none"`             //伪装类型 （none http）                                       vless字段：headerType
+	Host         string `json:"host"     gorm:"default:tms.dingtalk.com"` //伪装域名                                                     vless字段：host
+	Path         string `json:"path"     gorm:"default:/"`                //path                                                       vless字段：path
+	Tls          string `json:"tls"`                                      //传输层安全 （为空 tls）                                        vless字段：security
+	Sni          string `json:"sni"`                                      //默认为空                                                     vless字段：sni
 	Alpn         string `json:"alpn"`
 	Fp           string `json:"fp"`
 	//其他参数

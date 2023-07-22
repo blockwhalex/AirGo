@@ -6,13 +6,7 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
-// 秒级操作
-// cron.WithSeconds()
-// 函数没执行完就跳过本次函数
-// cron.WithChain(cron.SkipIfStillRunning(cron.DefaultLogger))
-// 打印任务日志
-// cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags)))
-
+// 秒级操作,函数没执行完就跳过本次函数,打印任务日志
 // c := cron.New(cron.WithSeconds(), cron.WithChain(cron.SkipIfStillRunning(cron.DefaultLogger)), cron.WithLogger(
 // 	cron.VerbosePrintfLogger(log.New(os.Stdout, "cron: ", log.LstdFlags))))
 
@@ -20,16 +14,11 @@ import (
 //_, err := c.AddFunc("*/5 * * * * *", func() {
 // 	fmt.Println("开始定时任务")
 // })
-
-// 开始执行（每个任务会在自己的 goroutine 中执行）
 //c.Start()
-
 // 允许往正在执行的 cron 中添加任务
 //c.AddFunc("@daily", func() { fmt.Println("Every day") })
-
 // 检查上一个和下一个任务执行的时间
 //inspect(c.Entries())
-
 //c.Stop()  // 停止调度，但正在运行的作业不会被停止
 
 func InitCrontab() {
