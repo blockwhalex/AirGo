@@ -3,22 +3,23 @@ package service
 import (
 	"AirGo/global"
 	"AirGo/model"
+	"gorm.io/gorm/clause"
 )
 
 // 查询全部已启用商品
 func GetAllEnabledGoods() (*[]model.Goods, error) {
 	var goodsArr []model.Goods
-	err := global.DB.Where(&model.Goods{Status: true}).Find(&goodsArr).Error
+	err := global.DB.Where(&model.Goods{Status: true}).Order("goods_order").Find(&goodsArr).Error
 	return &goodsArr, err
 }
 
 // 查询全部商品
 func GetAllGoods() (*[]model.Goods, error) {
 	var goodsArr []model.Goods
-	err := global.DB.Model(&model.Goods{}).Preload("Nodes").Find(&goodsArr).Error
+	err := global.DB.Model(&model.Goods{}).Preload("Nodes").Order("goods_order").Find(&goodsArr).Error
 	if len(goodsArr) == 0 {
 		return &goodsArr, err
-	} else {
+	} else { //处理商品关联的节点
 		for k1, _ := range goodsArr {
 			for _, v2 := range goodsArr[k1].Nodes {
 				goodsArr[k1].CheckedNodes = append(goodsArr[k1].CheckedNodes, v2.ID)
@@ -86,4 +87,12 @@ func UpdateGoods(goods *model.Goods) error {
 	// 更新商品
 	err := global.DB.Model(&model.Goods{ID: goods.ID}).Save(&goods).Error
 	return err
+}
+
+// 排序
+func GoodsSort(arr *[]model.Goods) error {
+	return global.DB.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		DoUpdates: clause.AssignmentColumns([]string{"goods_order"}),
+	}).Create(&arr).Error
 }

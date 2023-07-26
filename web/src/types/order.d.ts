@@ -11,7 +11,11 @@ declare interface Order {
     subject: string;
     price: string;
     pay_type: string;
-    // status:string;
+    coupon: number;
+    coupon_name: string;
+    coupon_amount: string;
+    deduction_amount: string;
+    remain_amount: string;
 
     qr_code: string;
     trade_no: string;

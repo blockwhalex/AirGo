@@ -1,14 +1,13 @@
 import {defineStore} from 'pinia';
 //import Cookies from 'js-cookie';
-import {Session, Local} from '/@/utils/storage';
+import {Local, Session} from '/@/utils/storage';
 //导入api
 import {useUserApi} from "../api/user/index";
-
-const userApi = useUserApi()
-
 //bcrypt
 import bcrypt from 'bcryptjs'
 import {ElMessage} from "element-plus";
+
+const userApi = useUserApi()
 
 export const useUserStore = defineStore('userInfo', {
     state: () => ({
@@ -25,12 +24,14 @@ export const useUserStore = defineStore('userInfo', {
             password: '',
             re_password: '',
             email_code: '',
+            referrer_code: '',
         },
         registerData: {
             user_name: '',
             password: '',
             re_password: '',
             email_code: '',
+            referrer_code: '',
         },
         //全局用户信息
         userInfos: {
@@ -90,6 +91,7 @@ export const useUserStore = defineStore('userInfo', {
             state.registerReq.re_password = state.registerData.re_password
             state.registerReq.email_code = state.registerData.email_code
             state.registerReq.user_name = state.registerData.user_name + '@' + state.email_suffix
+            state.registerReq.referrer_code = state.registerData.referrer_code
             return state.registerReq
         },
         used: (state): number => {
@@ -138,6 +140,7 @@ export const useUserStore = defineStore('userInfo', {
     actions: {
         //注册
         async register(form?: object) {
+            this.registerData.referrer_code = Local.get('invitation')
             const res = await userApi.registerApi(this.userFormReq)
             return res
         },

@@ -13,7 +13,7 @@ type SSNodeInfo struct {
 	Server         string `json:"server"`          //
 	SSType         string `json:"type"`            //显示与隐藏
 }
-type Node struct {
+type NodeOld struct {
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"-"            gorm:"index"`

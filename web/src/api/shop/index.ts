@@ -63,6 +63,14 @@ export function useShopApi() {
                 method: "post",
                 data
             })
-        }
+        },
+        //商品排序
+        goodsSortApi: (data?: object) => {
+            return request({
+                url: "/shop/goodsSort",
+                method: "post",
+                data
+            })
+        },
     }
 }

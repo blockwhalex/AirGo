@@ -5,10 +5,10 @@
       width="550px" destroy-on-close
       align-center
   >
-    <el-table class="nodeSort" :data="state.node_list" row-key="id" height="100%" style="width: 100%;flex: 1;">
+    <el-table class="sort" :data="state.list" row-key="id" height="100%" style="width: 100%;flex: 1;">
       <el-table-column type="index" label="序号" show-overflow-tooltip width="60" fixed></el-table-column>
-      <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="300" fixed></el-table-column>
-      <el-table-column prop="id" label="节点ID" show-overflow-tooltip width="60" fixed></el-table-column>
+      <el-table-column prop="subject" label="名称" show-overflow-tooltip width="300" fixed></el-table-column>
+      <el-table-column prop="id" label="ID" show-overflow-tooltip width="60" fixed></el-table-column>
       <el-table-column label="操作" show-overflow-tooltip fixed>
         <el-icon class="move">
           <Rank/>
@@ -30,43 +30,41 @@
 <script lang="ts" setup>
 import {nextTick, reactive} from "vue";
 import Sortable from "sortablejs";
-//store
-import {storeToRefs} from "pinia";
-import {useNodeStore} from "/@/stores/node";
-const nodeStore = useNodeStore()
 //api
-import {useNodeApi} from "/@/api/node/index";
+import {useShopApi} from "/@/api/shop/index";
 import {ElMessage} from "element-plus";
+import {useShopStore} from "/@/stores/shopStore";
 
-const nodeApi = useNodeApi()
+const shopStore = useShopStore()
+const shopApi = useShopApi()
 
 //定义参数
 const state = reactive({
   type: "",
-  title: "节点排序",
+  title: "排序",
   isShowDialog: false,
-  node_list: [] as NodeInfo[],
+  list: [] as Goods[],
 })
 // 打开弹窗
 const openDialog = () => {
   state.isShowDialog = true
-  nodeApi.getAllNodeApi().then((res) => {
+  shopApi.getAllGoodsApi().then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
-      state.node_list = res.data
+      state.list = res.data
     }
   })
   nextTick(() => {
-    initSortable("nodeSort")
+    initSortable("sort")
   })
 }
 //处理排序后的节点
 const nodeSortHandler = (data: Array<any>) => {
   let arr: any = []
   data.forEach((item: any, index: number) => {
-    let it = {id: 0, node_order: 0}
+    let it = {id: 0, goods_order: 0}
     it.id = item.id
-    it.node_order = index + 1
+    it.goods_order = index + 1
     arr.push(it)
   })
   return arr
@@ -74,10 +72,10 @@ const nodeSortHandler = (data: Array<any>) => {
 //确认提交
 const onSubmit = () => {
   state.isShowDialog = false
-  nodeApi.nodeSortApi(nodeSortHandler(state.node_list)).then((res) => {
+  shopApi.goodsSortApi(nodeSortHandler(state.list)).then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
-      nodeStore.getAllNode()
+      shopStore.getAllGoods() //获取全部商品
     }
   })
 }
@@ -103,8 +101,8 @@ function initSortable(className: string) {
     // 结束拖动事件
     onEnd: (evt: any) => {
       // console.log("结束拖动", `拖动前索引${evt.oldIndex}---拖动后索引${evt.newIndex}`);
-      const currRow = state.node_list.splice(evt.oldIndex, 1)[0];
-      state.node_list.splice(evt.newIndex, 0, currRow);
+      const currRow = state.list.splice(evt.oldIndex, 1)[0];
+      state.list.splice(evt.newIndex, 0, currRow);
       // console.log("结束拖动", state.node_list);
     },
   });

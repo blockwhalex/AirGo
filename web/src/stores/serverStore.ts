@@ -51,7 +51,9 @@ export const useServerStore = defineStore("serverStore", {
                 visit_param: 0,
             },
         } as Server,
-        other: 0,
+        publicServerConfig: {
+            rebate_rate:0,
+        },
 
     }),
     actions: {
@@ -61,6 +63,13 @@ export const useServerStore = defineStore("serverStore", {
             if (res.code === 0) {
                 this.serverConfig = res.data
                 ElMessage.success(res.msg)
+            }
+        },
+        //获取系统设置
+        async getPublicServerConfig() {
+            const res = await systemApi.getPublicServerConfig()
+            if (res.code === 0) {
+                this.publicServerConfig = res.data
             }
         },
         //修改系统设置

@@ -62,15 +62,33 @@ func GetMonthOrderStatistics(orderParams *model.QueryParamsWithDate) (*model.Ord
 	return &orderStatistic, err
 }
 
-// 获取用户订单by user id,,默认显示最近10条
-func GetOrderByUserID(userID int) (*[]model.Orders, error) {
+// 获取用户订单by user id,限制条数
+func GetOrderByUserID(userID int, orderParams *model.PaginationParams) (*[]model.Orders, error) {
 	var orderArr []model.Orders
-	return &orderArr, global.DB.Where("user_id = ?", userID).Limit(10).Order("id desc").Find(&orderArr).Error
+	if orderParams.PageSize < 0 { //<0则获取全部
+		return &orderArr, global.DB.Where("user_id = ?", userID).Order("id desc").Find(&orderArr).Error
+	} else {
+		return &orderArr, global.DB.Where("user_id = ?", userID).Limit(orderParams.PageSize).Order("id desc").Find(&orderArr).Error
+	}
 }
 
-// 获取用户订单
+// 获取用户订单，最新一条
+func GetOrderByUserIDLast(userID int) (*model.Orders, error) {
+	var order model.Orders
+	err := global.DB.Where("user_id = ?", userID).Last(&order).Error
+	return &order, err
+}
+
+// 获取订单by order id
 func GetOrderByOrderID(order *model.Orders) (*model.Orders, error) {
 	var queryOrder model.Orders
 	err := global.DB.Where(&model.Orders{OutTradeNo: order.OutTradeNo, UserID: order.UserID}).First(&queryOrder).Error
 	return &queryOrder, err
+}
+
+// 获取用户订单by coupon id
+func GetOrderByCouponID(userID, couponID int) ([]model.Orders, error) {
+	var orderArr []model.Orders
+	err := global.DB.Where(&model.Orders{UserID: userID, Coupon: couponID}).Find(&orderArr).Error
+	return orderArr, err
 }

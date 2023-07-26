@@ -18,6 +18,7 @@ import other from '/@/utils/other';
 import {Local, Session} from '/@/utils/storage';
 import mittBus from '/@/utils/mitt';
 import setIntroduction from '/@/utils/setIconfont';
+import router from "/@/router";
 
 // 引入组件
 
@@ -32,6 +33,7 @@ const stores = useTagsViewRoutes();
 const storesThemeConfig = useThemeConfig();
 const {themeConfig} = storeToRefs(storesThemeConfig);
 
+
 // 设置锁屏时组件显示隐藏
 const setLockScreen = computed(() => {
   // 防止锁屏后，刷新出现不相关界面
@@ -42,8 +44,16 @@ const setLockScreen = computed(() => {
 const getGlobalComponentSize = computed(() => {
   return other.globalComponentSize();
 });
+//
+
 //设置初始化，防止刷新时恢复默认
 onBeforeMount(() => {
+  let url1=window.location.pathname
+  if (url1.length>2){
+    Local.set('invitation',url1.slice(1))
+    window.location.href='http://localhost:8080/'
+    return
+  }
   // 设置批量第三方 icon 图标
   setIntroduction.cssCdn();
   // 设置批量第三方 js

@@ -25,6 +25,10 @@ declare interface System {
     sub_name: string;
     muKey: string;
     default_goods: string;
+    enabled_rebate: boolean;    //是否开启返利
+    rebate_rate: number;        //返利率
+    enabled_deduction: boolean; //是否开启旧套餐抵扣
+    deduction_threshold: number;//旧套餐抵扣阈值,大于该值则抵扣
 }
 
 declare interface Captcha {

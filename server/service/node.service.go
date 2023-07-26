@@ -3,16 +3,15 @@ package service
 import (
 	"AirGo/global"
 	"AirGo/model"
-	"fmt"
 	"gorm.io/gorm/clause"
 	"strconv"
 	"time"
 )
 
 // 根据node name 模糊查询节点
-func GetNodeByName(name string) ([]model.Node, error) {
+func GetNodeByName(remarks string) ([]model.Node, error) {
 	var nodes []model.Node
-	err := global.DB.Where("name like ?", ("%" + name + "%")).Order("node_order").Find(&nodes).Error
+	err := global.DB.Where("remarks like ?", ("%" + remarks + "%")).Order("node_order").Find(&nodes).Error
 	return nodes, err
 }
 
@@ -51,8 +50,7 @@ func UpdateNode(node *model.Node) error {
 
 // 查询节点流量
 func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
-	//var nodeArr []model.Node
-	var nodeArr model.NodesWithTotal
+	var nodesWithTotal model.NodesWithTotal
 	var startTime, endTime time.Time
 	//时间格式转换
 	if len(params.Date) == 2 {
@@ -64,39 +62,39 @@ func GetNodeTraffic(params model.QueryParamsWithDate) model.NodesWithTotal {
 		startTime = endTime.AddDate(0, 0, -30)
 	}
 	if params.Search != "" {
-		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Where("name LIKE ?", "%"+params.Search+"%").Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Order("node_order").Find(&nodeArr.NodeList).Error
+		err := global.DB.Model(&model.Node{}).Count(&nodesWithTotal.Total).Where("remarks LIKE ?", "%"+params.Search+"%").Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Order("node_order").Find(&nodesWithTotal.NodeList).Error
 		if err != nil {
 			global.Logrus.Error("查询节点流量error:", err.Error())
 			return model.NodesWithTotal{}
 		}
 	} else {
-		err := global.DB.Model(&model.Node{}).Count(&nodeArr.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Order("node_order").Find(&nodeArr.NodeList).Error
+		err := global.DB.Model(&model.Node{}).Count(&nodesWithTotal.Total).Limit(params.PageSize).Offset((params.PageNum-1)*params.PageSize).Preload("TrafficLogs", global.DB.Where("created_at > ? and created_at < ?", startTime, endTime)).Order("node_order").Find(&nodesWithTotal.NodeList).Error
 		if err != nil {
 			global.Logrus.Error("查询节点流量error:", err.Error())
 			return model.NodesWithTotal{}
 		}
 	}
-	for i1, _ := range nodeArr.NodeList {
-		for _, v := range nodeArr.NodeList[i1].TrafficLogs {
-			nodeArr.NodeList[i1].TotalUp = nodeArr.NodeList[i1].TotalUp + v.U
-			nodeArr.NodeList[i1].TotalDown = nodeArr.NodeList[i1].TotalDown + v.D
+	for i1, _ := range nodesWithTotal.NodeList {
+		for _, v := range nodesWithTotal.NodeList[i1].TrafficLogs {
+			nodesWithTotal.NodeList[i1].TotalUp = nodesWithTotal.NodeList[i1].TotalUp + v.U
+			nodesWithTotal.NodeList[i1].TotalDown = nodesWithTotal.NodeList[i1].TotalDown + v.D
 		}
 		//nodeArr[i1].TrafficLogs=[]model.TrafficLog{} //清空traffic
 	}
-	return nodeArr
+	return nodesWithTotal
 }
 
-// 获取 node status
+// 获取 node status，用于探针
 func GetNodesStatus() *[]model.NodeStatus {
 	var nodesIds []model.Node
-	global.DB.Model(&model.Node{}).Select("id", "name", "traffic_rate").Order("node_order").Find(&nodesIds)
+	global.DB.Model(&model.Node{}).Select("id", "remarks", "traffic_rate").Order("node_order").Find(&nodesIds)
 	var nodestatusArr []model.NodeStatus
 	for _, v := range nodesIds {
 		var nodeStatus = model.NodeStatus{}
 		vStatus, ok := global.LocalCache.Get(strconv.Itoa(v.ID) + "status")
 		if !ok { //cache过期，离线了
 			nodeStatus.ID = v.ID
-			nodeStatus.Name = v.Name
+			nodeStatus.Name = v.Remarks
 			nodeStatus.TrafficRate = v.TrafficRate
 			nodeStatus.Status = false
 			nodeStatus.D = 0
@@ -104,7 +102,7 @@ func GetNodesStatus() *[]model.NodeStatus {
 			nodestatusArr = append(nodestatusArr, nodeStatus)
 		} else {
 			nodeStatus = vStatus.(model.NodeStatus)
-			nodeStatus.Name = v.Name
+			nodeStatus.Name = v.Remarks
 			nodeStatus.TrafficRate = v.TrafficRate
 			nodestatusArr = append(nodestatusArr, nodeStatus)
 		}
@@ -126,7 +124,6 @@ func CleanDBTraffic() error {
 
 // 节点排序
 func NodeSort(nodeArr *[]model.Node) error {
-	fmt.Println("节点排序:", nodeArr)
 	return global.DB.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}},
 		DoUpdates: clause.AssignmentColumns([]string{"node_order"}),

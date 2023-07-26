@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog v-model="state.isShowSubmitOrderDialog" title="订单详情" width="30%">
+    <el-dialog v-model="state.isShowSubmitOrderDialog" title="订单详情" width="50%">
       <div class="home-card-item">
         <el-card>
           <div>
@@ -20,8 +20,28 @@
       <div class="home-card-item">
         <el-card>
           <div class="card-text">
+            <el-input v-model="shopData.currentOrder.coupon_name" placeholder="输入折扣码"></el-input>
+            <el-button class="card-text-right" color="blue" size="default" @click="varifyCoupon">验证</el-button>
+          </div>
+          <div class="card-text">
             <el-button class="card-text-left" type="primary" plain>金额：</el-button>
-            <el-text class="card-text-right">{{ shopData.currentOrder.total_amount }}</el-text>
+            <el-text class="card-text-right">{{ shopData.currentOrder.price }}</el-text>
+          </div>
+          <div class="card-text">
+            <el-button class="card-text-left" type="primary" plain>优惠码折扣：</el-button>
+            <el-text class="card-text-right">-{{ shopData.currentOrder.coupon_amount }}</el-text>
+          </div>
+          <div class="card-text">
+            <el-button class="card-text-left" type="primary" plain>旧套餐抵扣：</el-button>
+            <el-text class="card-text-right">-{{ shopData.currentOrder.deduction_amount }}</el-text>
+          </div>
+          <div class="card-text">
+            <el-button class="card-text-left" type="primary" plain>余额抵扣：</el-button>
+            <el-text class="card-text-right">-{{ shopData.currentOrder.remain_amount }}</el-text>
+          </div>
+          <div class="card-text">
+            <el-text class="card-text-left" style="font-size: 25px;">应付：</el-text>
+            <el-text class="card-text-right" style="font-size: 25px;">{{ shopData.currentOrder.total_amount }}</el-text>
           </div>
         </el-card>
       </div>
@@ -61,22 +81,32 @@ const state = reactive({
   isShowSubmitOrderDialog: false,
 
 })
-//打开弹窗
-const openDialog = () => {
-  state.isShowSubmitOrderDialog = true
-  //获取订单详情（计算价格等）
-  orderStore.getOrderInfo(shopData.value.currentGoods.id).then((res) => {
+//获取订单详情
+const getOrderInfo=(params:object)=>{
+  orderStore.getOrderInfo(params).then((res) => {
     if (res.code === 0) {
       ElMessage.success(res.msg)
+      shopData.value.currentOrder={} as Order
       shopData.value.currentOrder = res.data
     }
   }).catch()
 }
+//打开弹窗
+const openDialog = () => {
+  state.isShowSubmitOrderDialog = true
+  //获取订单详情（计算价格等）
+  getOrderInfo({goods_id:shopData.value.currentGoods.id})
+}
+//验证折扣码
+const varifyCoupon=()=>{
+
+  getOrderInfo({goods_id:shopData.value.currentOrder.goods_id,coupon_name:shopData.value.currentOrder.coupon_name})
+}
 
 //提交订单按钮
 const onSubmitOrder = () => {
-  //传goods_id
-  shopApi.preCreatePayApi({goods_id: shopData.value.currentOrder.goods_id}).then((res) => {
+  shopData.value.currentOrder.id=0
+  shopApi.preCreatePayApi(shopData.value.currentOrder).then((res) => {
     if (res.code === 0) {
       //保存订单信息到pinia
       shopData.value.currentOrder = res.data

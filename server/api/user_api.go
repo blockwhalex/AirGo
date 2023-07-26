@@ -18,7 +18,6 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// 注册
 func Register(c *gin.Context) {
 	if !global.Server.System.EnableRegister {
 		response.Fail("已关闭注册", nil, c)
@@ -31,6 +30,7 @@ func Register(c *gin.Context) {
 		response.Fail("注册参数错误"+err.Error(), nil, c)
 		return
 	}
+	//fmt.Println("注册", u)
 	//校验邮箱验证码
 	if global.Server.System.EnableEmailCode {
 		cacheEmail, ok := global.LocalCache.Get(u.UserName + "emailcode")
@@ -47,8 +47,9 @@ func Register(c *gin.Context) {
 		}
 	}
 	err = service.Register(&model.User{
-		UserName: u.UserName,
-		Password: u.Password,
+		UserName:     u.UserName,
+		Password:     u.Password,
+		ReferrerCode: u.ReferrerCode,
 	})
 	if err != nil {
 		global.Logrus.Error("注册错误:", err.Error())

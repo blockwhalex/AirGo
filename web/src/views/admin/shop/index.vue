@@ -8,6 +8,12 @@
           </el-icon>
           新增套餐
         </el-button>
+        <el-button size="default" type="warning" class="ml10" @click="onOpenSortDialog">
+          <el-icon>
+            <DCaret/>
+          </el-icon>
+          排序
+        </el-button>
       </div>
       <el-table :data="goodsList" height="100%" style="width: 100%;flex: 1;">
         <el-table-column type="index" label="序号" width="60" fixed/>
@@ -36,6 +42,7 @@
     </el-card>
     <!-- 引入弹窗组件 -->
     <ShopDialog ref="shopDialogRef" @refresh="shopStore.getAllGoods()"></ShopDialog>
+    <SortDialog ref="sortDialogRef"></SortDialog>
   </div>
 </template>
 
@@ -57,7 +64,9 @@ const nodeStore = useNodeStore()
 
 //引入弹窗组件
 const ShopDialog = defineAsyncComponent(() => import('/@/views/admin/shop/dialog.vue'))
+const SortDialog = defineAsyncComponent(() => import('/@/views/admin/shop/dialog_sort.vue'))
 const shopDialogRef = ref()
+const sortDialogRef = ref()
 
 
 //修改套餐弹窗
@@ -85,6 +94,10 @@ const onRowDel = (row: Goods) => {
       })
       .catch(() => {
       });
+}
+//排序弹窗
+function onOpenSortDialog() {
+  sortDialogRef.value.openDialog()
 }
 
 //加载时

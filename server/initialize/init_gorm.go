@@ -96,6 +96,8 @@ func RegisterTables() {
 		model.Gallery{},
 		//文章
 		model.Article{},
+		//折扣
+		model.Coupon{},
 	)
 	if err != nil {
 		//os.Exit(0)
@@ -111,16 +113,18 @@ func InsertInto(db *gorm.DB) error {
 	uuid2 := uuid.NewV4()
 	sysUserData := []model.User{
 		{
-			UUID:     uuid1,
-			UserName: global.Config.SystemParams.AdminEmail,
-			Password: utils.BcryptEncode(global.Config.SystemParams.AdminPassword),
-			NickName: "admin",
+			UUID:           uuid1,
+			UserName:       global.Config.SystemParams.AdminEmail,
+			Password:       utils.BcryptEncode(global.Config.SystemParams.AdminPassword),
+			NickName:       "admin",
+			InvitationCode: utils.RandomString(8),
 		},
 		{
-			UUID:     uuid2,
-			UserName: "测试1@oicq.com",
-			Password: utils.BcryptEncode("123456"),
-			NickName: "测试1",
+			UUID:           uuid2,
+			UserName:       "测试1@oicq.com",
+			Password:       utils.BcryptEncode("123456"),
+			NickName:       "测试1",
+			InvitationCode: utils.RandomString(8),
 		},
 	}
 	if err := db.Create(&sysUserData).Error; err != nil {
@@ -137,14 +141,15 @@ func InsertInto(db *gorm.DB) error {
 		{ParentID: 1, Path: "/admin/shop", Name: "adminShop", Component: "/admin/shop/index.vue", Meta: model.Meta{Title: "商品管理", Icon: "iconfont icon-zhongduancanshuchaxun"}}, //id==7
 		{ParentID: 1, Path: "/admin/system", Name: "system", Component: "/admin/system/index.vue", Meta: model.Meta{Title: "系统设置", Icon: "iconfont icon-xitongshezhi"}},         //id==8
 		{ParentID: 1, Path: "/admin/article", Name: "article", Component: "/admin/article/index.vue", Meta: model.Meta{Title: "文章设置", Icon: "iconfont icon-huanjingxingqiu"}},   //id==9
+		{ParentID: 1, Path: "/admin/coupon", Name: "coupon", Component: "/admin/coupon/index.vue", Meta: model.Meta{Title: "折扣码管理", Icon: "ele-ShoppingBag"}},                   //id==10
 
-		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "iconfont icon-shouye"}},                           //10
-		{ParentID: 0, Path: "/shop", Name: "shop", Component: "/shop/index.vue", Meta: model.Meta{Title: "商店", Icon: "iconfont icon-zidingyibuju"}},                     //11
-		{ParentID: 0, Path: "/myOrder", Name: "myOrder", Component: "/myOrder/index.vue", Meta: model.Meta{Title: "我的订单", Icon: "iconfont icon--chaifenhang"}},          //12
-		{ParentID: 0, Path: "/personal", Name: "personal", Component: "/personal/index.vue", Meta: model.Meta{Title: "个人信息", Icon: "iconfont icon-gerenzhongxin"}},      //13
-		{ParentID: 0, Path: "/serverStatus", Name: "serverStatus", Component: "/serverStatus/index.vue", Meta: model.Meta{Title: "节点状态", Icon: "iconfont icon-putong"}}, //14
-		{ParentID: 0, Path: "/gallery", Name: "gallery", Component: "/gallery/index.vue", Meta: model.Meta{Title: "无限图库", Icon: "iconfont icon-step"}},                  //15
-		{ParentID: 0, Path: "/income", Name: "income", Component: "/income/index.vue", Meta: model.Meta{Title: "营收概览", Icon: "iconfont icon-xingqiu"}},                  //16
+		{ParentID: 0, Path: "/home", Name: "home", Component: "/home/index.vue", Meta: model.Meta{Title: "首页", Icon: "iconfont icon-shouye"}},                           //11
+		{ParentID: 0, Path: "/shop", Name: "shop", Component: "/shop/index.vue", Meta: model.Meta{Title: "商店", Icon: "iconfont icon-zidingyibuju"}},                     //12
+		{ParentID: 0, Path: "/myOrder", Name: "myOrder", Component: "/myOrder/index.vue", Meta: model.Meta{Title: "我的订单", Icon: "iconfont icon--chaifenhang"}},          //13
+		{ParentID: 0, Path: "/personal", Name: "personal", Component: "/personal/index.vue", Meta: model.Meta{Title: "个人信息", Icon: "iconfont icon-gerenzhongxin"}},      //14
+		{ParentID: 0, Path: "/serverStatus", Name: "serverStatus", Component: "/serverStatus/index.vue", Meta: model.Meta{Title: "节点状态", Icon: "iconfont icon-putong"}}, //15
+		{ParentID: 0, Path: "/gallery", Name: "gallery", Component: "/gallery/index.vue", Meta: model.Meta{Title: "无限图库", Icon: "iconfont icon-step"}},                  //16
+		{ParentID: 0, Path: "/income", Name: "income", Component: "/income/index.vue", Meta: model.Meta{Title: "营收概览", Icon: "iconfont icon-xingqiu"}},                  //17
 	}
 	if err := db.Create(&DynamicRouteData).Error; err != nil {
 		return errors.New("sys_dynamic-router_data表数据初始化失败!")
@@ -205,8 +210,8 @@ func InsertInto(db *gorm.DB) error {
 	}
 	//插入node
 	nodeData := []model.Node{
-		{Name: "测试节点1", Address: "www.10010.com", Path: "/path", Port: "5566"},
-		{Name: "测试节点2", Address: "www.10086.com", Path: "/path", Port: "5566"},
+		{Remarks: "测试节点1", Address: "www.10010.com", Path: "/path", Port: 5566},
+		{Remarks: "测试节点2", Address: "www.10086.com", Path: "/path", Port: 5566},
 	}
 	if err := global.DB.Create(&nodeData).Error; err != nil {
 		return errors.New("node表数据初始化失败!")
@@ -262,6 +267,7 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/shop/deleteGoods", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/updateGoods", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/shop/alipayNotify", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/shop/goodsSort", V2: "POST"},
 
 		{Ptype: "p", V0: "1", V1: "/node/getAllNode", V2: "GET"},
 		{Ptype: "p", V0: "1", V1: "/node/newNode", V2: "POST"},
@@ -304,6 +310,11 @@ func InsertInto(db *gorm.DB) error {
 		{Ptype: "p", V0: "1", V1: "/report/getTables", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/report/getColumn", V2: "POST"},
 		{Ptype: "p", V0: "1", V1: "/report/reportSubmit", V2: "POST"},
+
+		{Ptype: "p", V0: "1", V1: "/coupon/newCoupon", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/coupon/deleteCoupon", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/coupon/updateCoupon", V2: "POST"},
+		{Ptype: "p", V0: "1", V1: "/coupon/getCoupon", V2: "POST"},
 
 		//普通用户
 		{Ptype: "p", V0: "2", V1: "/user/login", V2: "POST"},

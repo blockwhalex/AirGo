@@ -34,15 +34,17 @@ export const useShopStore = defineStore("shopStore", {
                 id: 0, //不能覆盖
                 created_at: "",
                 updated_at: "",
-                subject: "",
+                good_order:0,
+                status: false,
                 des: '',
+                subject: "",
                 total_amount: "",
                 product_code: "",
                 total_bandwidth: 0,
                 expiration_date: 0,
                 checked_nodes: [0],
                 nodes: [],
-                status: false,
+
             } as Goods,
             //当前商品订单
             currentOrder: {
@@ -52,11 +54,16 @@ export const useShopStore = defineStore("shopStore", {
                 subject: '',
                 price: '',
                 pay_type: 'alipay',
+
+                coupon:0,
+                coupon_name:'',
+                coupon_amount:'0',
+                deduction_amount:'0',
+
                 trade_no: '',
                 buyer_logon_id: '',
                 trade_status: '',
                 total_amount: '',
-                // status:'',
                 qr_code: '',
             } as Order,
         }

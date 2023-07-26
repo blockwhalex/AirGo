@@ -71,6 +71,32 @@
                 />
               </el-select>
             </el-form-item>
+
+            <el-form-item label="邀请返利">
+              <el-switch v-model="serverConfig.system.enabled_rebate" inline-prompt active-text="开启"
+                         inactive-text="关闭"
+                         style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"></el-switch>
+            </el-form-item>
+            <el-form-item label="返利率">
+              <el-col :span="4">
+                <el-input v-model.number="serverConfig.system.rebate_rate" type="number"></el-input>
+              </el-col>
+              <el-col :span="2" style="text-align: center">-</el-col>
+              <el-col :span="18">(范围0~1)</el-col>
+            </el-form-item>
+            <el-form-item label="旧套餐抵扣">
+              <el-switch v-model="serverConfig.system.enabled_deduction" inline-prompt active-text="开启"
+                         inactive-text="关闭"
+                         style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"></el-switch>
+            </el-form-item>
+            <el-form-item label="旧套餐抵扣阈值">
+              <el-col :span="4">
+                <el-input v-model.number="serverConfig.system.deduction_threshold" type="number"></el-input>
+              </el-col>
+              <el-col :span="2" style="text-align: center">-</el-col>
+              <el-col :span="18">  (范围0~1)</el-col>
+            </el-form-item>
+
             <el-divider></el-divider>
             <el-form-item>
               <el-button @click="onSubmit" type="primary">保存</el-button>

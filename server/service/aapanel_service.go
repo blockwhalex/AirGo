@@ -30,25 +30,25 @@ func SSNodeInfo(nodeID int) (model.SSNodeInfo, error) {
 	nodeInfo.Sort = node.Sort
 	switch node.Sort {
 	case 11: //vmess
-		if node.Disguisetype == "http" && node.Net == "tcp" {
-			nodeInfo.Server = node.Address + ";" + node.Port + ";" + node.Aid + ";" + node.Net + ";" + node.Tls + ";path=" + node.Path + "|host=" + node.Host + ";headertype=http"
-		} else if node.Net == "grpc" && node.Tls != "" {
-			nodeInfo.Server = node.Address + ";" + node.Port + ";" + node.Aid + ";" + node.Net + ";" + node.Tls + ";path=" + node.Path + "|host=" + node.Host + "|servicename=mygrpc"
+		if node.Type == "http" && node.Network == "tcp" {
+			nodeInfo.Server = node.Address + ";" + strconv.Itoa(node.Port) + ";" + strconv.Itoa(node.Aid) + ";" + node.Network + ";" + node.Security + ";path=" + node.Path + "|host=" + node.Host + ";headertype=http"
+		} else if node.Network == "grpc" && node.Security != "" {
+			nodeInfo.Server = node.Address + ";" + strconv.Itoa(node.Port) + ";" + strconv.Itoa(node.Aid) + ";" + node.Network + ";" + node.Security + ";path=" + node.Path + "|host=" + node.Host + "|servicename=mygrpc"
 		}
-		nodeInfo.Server = node.Address + ";" + node.Port + ";" + node.Aid + ";" + node.Net + ";" + node.Tls + ";path=" + node.Path + "|host=" + node.Host
+		nodeInfo.Server = node.Address + ";" + strconv.Itoa(node.Port) + ";" + strconv.Itoa(node.Aid) + ";" + node.Network + ";" + node.Security + ";path=" + node.Path + "|host=" + node.Host
 	case 15: //vless
-		if node.Disguisetype == "http" && node.Net == "tcp" {
-			nodeInfo.Server = node.Address + ";" + node.Port + ";" + node.Aid + ";" + node.Net + ";" + node.Tls + ";path=" + node.Path + "|host=" + node.Host + ";headertype=http" + "|enable_vless=true"
-		} else if node.Net == "grpc" && node.Tls != "" {
-			nodeInfo.Server = node.Address + ";" + node.Port + ";" + node.Aid + ";" + node.Net + ";" + node.Tls + ";path=" + node.Path + "|host=" + node.Host + "|servicename=mygrpc" + "|enable_vless=true"
+		if node.Type == "http" && node.Network == "tcp" {
+			nodeInfo.Server = node.Address + ";" + strconv.Itoa(node.Port) + ";" + strconv.Itoa(node.Aid) + ";" + node.Network + ";" + node.Server + ";path=" + node.Path + "|host=" + node.Host + ";headertype=http" + "|enable_vless=true"
+		} else if node.Network == "grpc" && node.Security != "" {
+			nodeInfo.Server = node.Address + ";" + strconv.Itoa(node.Port) + ";" + strconv.Itoa(node.Aid) + ";" + node.Network + ";" + node.Security + ";path=" + node.Path + "|host=" + node.Host + "|servicename=mygrpc" + "|enable_vless=true"
 		}
-		nodeInfo.Server = node.Address + ";" + node.Port + ";" + node.Aid + ";" + node.Net + ";" + node.Tls + ";path=" + node.Path + "|host=" + node.Host + "|enable_vless=true"
+		nodeInfo.Server = node.Address + ";" + strconv.Itoa(node.Port) + ";" + strconv.Itoa(node.Aid) + ";" + node.Network + ";" + node.Security + ";path=" + node.Path + "|host=" + node.Host + "|enable_vless=true"
 
 	case 14: //trojan
-		if node.Net == "grpc" {
-			nodeInfo.Server = node.Address + ":" + node.Port + "|host=" + node.Host + "|grpc=1|servicename=mygrpc"
+		if node.Network == "grpc" {
+			nodeInfo.Server = node.Address + ":" + strconv.Itoa(node.Port) + "|host=" + node.Host + "|grpc=1|servicename=mygrpc"
 		}
-		nodeInfo.Server = node.Address + ":" + node.Port + "|host=" + node.Host
+		nodeInfo.Server = node.Address + ":" + strconv.Itoa(node.Port) + "|host=" + node.Host
 	}
 	return nodeInfo, nil
 
@@ -71,12 +71,12 @@ func GetUserSub(url string, subType string) string {
 	expiredBd2 := strconv.FormatFloat(expiredBd1, 'f', 2, 64)
 	name := "到期时间:" + expiredTime + "  |  剩余流量:" + expiredBd2 + "GB"
 	var firstSubNode = model.Node{
-		Name:    name,
+		Remarks: name,
 		Address: global.Server.System.SubName,
-		Port:    "6666",
-		Aid:     "0",
-		Net:     "ws",
-		Status:  true,
+		Port:    6666,
+		Aid:     0,
+		Network: "ws",
+		Enabled: true,
 		Sort:    11,
 	}
 	//插入计算剩余天数，流量
@@ -106,7 +106,7 @@ func V2rayNGSubscribe(nodes *[]model.Node, uuid, host string) string {
 
 	for _, v := range *nodes {
 		//剔除禁用节点
-		if !v.Status {
+		if !v.Enabled {
 			continue
 		}
 		if host == "" {
@@ -140,14 +140,14 @@ func ClashSubscribe(nodes *[]model.Node, uuid, host string) string {
 	var nameArr []string
 	for _, v := range *nodes {
 		//剔除禁用节点
-		if !v.Status {
+		if !v.Enabled {
 			continue
 		}
 		if host == "" {
 			host = v.Host
 		}
 		//
-		nameArr = append(nameArr, v.Name)
+		nameArr = append(nameArr, v.Remarks)
 
 		switch v.Sort {
 		case 11:
@@ -195,7 +195,7 @@ func ShadowRocketSubscribe(nodes *[]model.Node, uuid, host, name string) string 
 
 	for k, v := range *nodes {
 		//剔除禁用节点
-		if k == 0 || !v.Status {
+		if k == 0 || !v.Enabled {
 			continue
 		}
 		if host == "" {
@@ -220,7 +220,7 @@ func QxSubscribe(nodes *[]model.Node, uuid, host string) string {
 	var nodeArr []string
 	for _, v := range *nodes {
 		//剔除禁用节点
-		if !v.Status {
+		if !v.Enabled {
 			continue
 		}
 		if host == "" {
@@ -231,7 +231,7 @@ func QxSubscribe(nodes *[]model.Node, uuid, host string) string {
 		case 11:
 			protocolType = "vmess="
 		}
-		str := protocolType + v.Address + ":" + v.Port + ", method=" + ", password=" + uuid + ", obfs=" + v.Net + ", obfs-uri=" + v.Path + ", obfs-host" + v.Host + ", tag=" + v.Name
+		str := protocolType + v.Address + ":" + strconv.Itoa(v.Port) + ", method=" + ", password=" + uuid + ", obfs=" + v.Network + ", obfs-uri=" + v.Path + ", obfs-host" + v.Host + ", tag=" + v.Remarks
 		nodeArr = append(nodeArr, str)
 	}
 	return strings.Join(nodeArr, "\r\n")
@@ -242,21 +242,21 @@ func QxSubscribe(nodes *[]model.Node, uuid, host string) string {
 func V2rayNGVmess(node model.Node, uuid, host string) string {
 	var vmess model.Vmess
 	vmess.V = node.V
-	vmess.Name = node.Name
+	vmess.Name = node.Remarks
 	if node.EnableTransfer {
 		vmess.Address = node.TransferAddress
-		vmess.Port = node.TransferPort
+		vmess.Port = strconv.Itoa(node.TransferPort)
 	} else {
 		vmess.Address = node.Address
-		vmess.Port = node.Port
+		vmess.Port = strconv.Itoa(node.Port)
 	}
 	vmess.Uuid = uuid
-	vmess.Aid = node.Aid
-	vmess.Net = node.Net
-	vmess.Disguisetype = node.Disguisetype
+	vmess.Aid = strconv.Itoa(node.Aid)
+	vmess.Net = node.Network
+	vmess.Disguisetype = node.Type
 	vmess.Host = host
 	vmess.Path = node.Path
-	vmess.Tls = node.Tls
+	vmess.Tls = node.Security
 	vmessMarshal, err := json.Marshal(vmess)
 	if err != nil {
 		return ""
@@ -268,17 +268,17 @@ func V2rayNGVmess(node model.Node, uuid, host string) string {
 // generate  v2rayng vless
 func V2rayNGVless(node model.Node, uuid, host string) string {
 	path := url.QueryEscape(node.Path)
-	name := url.QueryEscape(node.Name)
+	name := url.QueryEscape(node.Remarks)
 	var address, port string
 	if node.EnableTransfer {
 		address = node.TransferAddress
-		port = node.TransferPort
+		port = strconv.Itoa(node.TransferPort)
 	} else {
 		address = node.Address
-		port = node.Port
+		port = strconv.Itoa(node.Port)
 	}
-	str := "vless://" + uuid + "@" + address + ":" + port + "?encryption=" + node.Scy + "&type=" + node.Net + "&security=" + node.Tls + "&host=" + host + "&path=" + path
-	if node.Tls == "tls" || node.Tls == "reality" {
+	str := "vless://" + uuid + "@" + address + ":" + port + "?encryption=" + node.Scy + "&type=" + node.Network + "&security=" + node.Security + "&host=" + host + "&path=" + path
+	if node.Security == "tls" || node.Security == "reality" {
 		return str + "&sni=" + node.Sni + "#" + name
 	}
 	return str + "#" + name
@@ -288,17 +288,17 @@ func V2rayNGVless(node model.Node, uuid, host string) string {
 func V2rayNGTrojan(node model.Node, uuid, host string) string {
 	//trojan://59405054-d6d2-47e1-8f99-b7296be5e7a1@114.114.114.114:80?allowInsecure=0#%E6%B5%8B%E8%AF%952
 	path := url.QueryEscape(node.Path)
-	name := url.QueryEscape(node.Name)
+	name := url.QueryEscape(node.Remarks)
 	var address, port string
 	if node.EnableTransfer {
 		address = node.TransferAddress
-		port = node.TransferPort
+		port = strconv.Itoa(node.TransferPort)
 	} else {
 		address = node.Address
-		port = node.Port
+		port = strconv.Itoa(node.Port)
 	}
-	str := "trojan://" + uuid + "@" + address + ":" + port + "?security=" + node.Tls + "&headerType=" + node.Disguisetype + "&type=" + node.Net + "&path=" + path + "&host=" + host
-	if node.Tls == "tls" || node.Tls == "reality" {
+	str := "trojan://" + uuid + "@" + address + ":" + port + "?security=" + node.Security + "&headerType=" + node.Type + "&type=" + node.Network + "&path=" + path + "&host=" + host
+	if node.Security == "tls" || node.Security == "reality" {
 		return str + "&sni=" + node.Sni + "#" + name
 	}
 	return str + "#" + name
@@ -315,23 +315,23 @@ func ClashVmess(v model.Node, uuid, host string) model.ClashProxy {
 	}
 	if v.EnableTransfer {
 		proxy.Server = v.TransferAddress
-		proxy.Port = v.TransferPort
+		proxy.Port = strconv.Itoa(v.TransferPort)
 	} else {
 		proxy.Server = v.Address
-		proxy.Port = v.Port
+		proxy.Port = strconv.Itoa(v.Port)
 	}
-	proxy.Name = v.Name
+	proxy.Name = v.Remarks
 	proxy.Uuid = uuid
-	proxy.Alterid = v.Aid
+	proxy.Alterid = strconv.Itoa(v.Aid)
 	proxy.Cipher = "auto"
 	proxy.Udp = true
-	proxy.Network = v.Net
+	proxy.Network = v.Network
 	proxy.WsPath = v.Path
 	proxy.WsHeaders.Host = host
 	proxy.WsOpts.Path = v.Path
 	proxy.WsOpts.Headers = make(map[string]string, 1)
 	proxy.WsOpts.Headers["Host"] = host
-	if v.Tls != "" {
+	if v.Security != "" {
 		proxy.Tls = true
 		proxy.Sni = v.Sni
 	}
@@ -343,25 +343,25 @@ func ClashTrojan(v model.Node, uuid, host string) model.ClashProxy {
 	var proxy model.ClashProxy
 	if v.EnableTransfer {
 		proxy.Server = v.TransferAddress
-		proxy.Port = v.TransferPort
+		proxy.Port = strconv.Itoa(v.TransferPort)
 	} else {
 		proxy.Server = v.Address
-		proxy.Port = v.Port
+		proxy.Port = strconv.Itoa(v.Port)
 	}
 	proxy.Type = "trojan"
 	proxy.Password = uuid
-	proxy.Name = v.Name
+	proxy.Name = v.Remarks
 	proxy.Uuid = uuid
-	proxy.Alterid = v.Aid
+	proxy.Alterid = strconv.Itoa(v.Aid)
 	proxy.Cipher = "auto"
 	proxy.Udp = true
-	proxy.Network = v.Net
+	proxy.Network = v.Network
 	proxy.WsPath = v.Path
 	proxy.WsHeaders.Host = host
 	proxy.WsOpts.Path = v.Path
 	proxy.WsOpts.Headers = make(map[string]string, 1)
 	proxy.WsOpts.Headers["Host"] = host
-	if v.Tls != "" {
+	if v.Security != "" {
 		proxy.Tls = true
 		proxy.Sni = v.Sni
 	}
@@ -374,19 +374,19 @@ func ShadowRocketVmess(node model.Node, uuid, host string) string {
 	var address, port string
 	if node.EnableTransfer {
 		address = node.TransferAddress
-		port = node.TransferPort
+		port = strconv.Itoa(node.TransferPort)
 	} else {
 		address = node.Address
-		port = node.Port
+		port = strconv.Itoa(node.Port)
 	}
 	name := node.Scy + ":" + uuid + "@" + address + ":" + port
 	nameStr := base64.StdEncoding.EncodeToString([]byte(name))
 	netType := "websocket"
-	switch node.Net {
+	switch node.Network {
 	case "ws":
 		netType = "websocket"
 	}
-	remarksStr := "?remarks=" + url.QueryEscape(node.Name) + "&obfsParam=" + host + "&path=" + node.Path + "&obfs=" + netType + "&alterId=" + node.Aid
+	remarksStr := "?remarks=" + url.QueryEscape(node.Remarks) + "&obfsParam=" + host + "&path=" + node.Path + "&obfs=" + netType + "&alterId=" + strconv.Itoa(node.Aid)
 	return "vmess://" + nameStr + remarksStr
 
 }

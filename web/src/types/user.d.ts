@@ -10,6 +10,9 @@ declare interface SysUser {
     phone: string;
     email: string;
     enable: boolean;
+    invitation_code: string;
+    referrer_code: string;
+    remain: number;
     role_group: RowRoleType[];	//角色组
     orders: [];      //订单
     subscribe_info: { //附加订阅信息

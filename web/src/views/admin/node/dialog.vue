@@ -10,13 +10,13 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="Name">
-        <el-input v-model="dialogData.nodeInfo.name" placeholder="这是一个节点"/>
+        <el-input v-model="dialogData.nodeInfo.remarks" placeholder="这是一个节点"/>
       </el-form-item>
       <el-form-item label="Address">
         <el-input v-model="dialogData.nodeInfo.address" placeholder="110.110.110.110"/>
       </el-form-item>
       <el-form-item label="Port">
-        <el-input v-model="dialogData.nodeInfo.port" placeholder="80"/>
+        <el-input v-model.number="dialogData.nodeInfo.port" placeholder="80"/>
       </el-form-item>
       <el-form-item label="Host">
         <el-input v-model="dialogData.nodeInfo.host" placeholder="www.189.cn"/>
@@ -35,7 +35,7 @@
       </el-form-item>
       <el-form-item label="Network">
         <!--              <el-input v-model="dialogData.nodeInfo.net"  placeholder="ws"/>-->
-        <el-radio-group v-model="dialogData.nodeInfo.net">
+        <el-radio-group v-model="dialogData.nodeInfo.network">
           <el-radio :label="'ws'">ws</el-radio>
           <el-radio :label="'tcp'">tcp</el-radio>
           <el-radio :label="'grpc'">grpc</el-radio>
@@ -44,13 +44,13 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="Tls">
-        <el-radio-group v-model="dialogData.nodeInfo.tls">
+        <el-radio-group v-model="dialogData.nodeInfo.security">
           <el-radio :label="''">none</el-radio>
           <el-radio :label="'tls'">tls</el-radio>
           <el-radio :label="'reality'">reality</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="Sni" v-if="dialogData.nodeInfo.tls !== ''">
+      <el-form-item label="Sni" v-if="dialogData.nodeInfo.security !== ''">
         <el-input v-model="dialogData.nodeInfo.sni" placeholder=""/>
       </el-form-item>
     </el-form>
@@ -59,12 +59,12 @@
       <el-form-item label="是否启用">
         <el-switch
             size="small"
-            v-model="dialogData.nodeInfo.status"
+            v-model="dialogData.nodeInfo.enabled"
             style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
         />
       </el-form-item>
       <el-form-item label="节点限速">
-        <el-input type="number" v-model="dialogData.nodeInfo.nodespeed_limit" placeholder="0"/>
+        <el-input type="number" v-model="dialogData.nodeInfo.node_speedlimit" placeholder="0"/>
       </el-form-item>
       <el-form-item label="节点倍率">
         <el-input type="number" v-model="dialogData.nodeInfo.traffic_rate" placeholder="1"/>

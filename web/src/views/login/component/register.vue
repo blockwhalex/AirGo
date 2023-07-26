@@ -86,9 +86,10 @@ import {useThemeConfig} from '/@/stores/themeConfig';
 const storesThemeConfig = useThemeConfig();
 const {themeConfig} = storeToRefs(storesThemeConfig);
 //api
-import {usePublicApi} from '/@/api/public/index'
+import {useSystemApi} from '/@/api/system/index'
+import {Local} from "/@/utils/storage";
 
-const publicApi = usePublicApi()
+const systemApi = useSystemApi()
 //定义参数
 const state = reactive({
   isShowPassword: false,
@@ -104,10 +105,11 @@ const onRegister = () => {
   userStore.register().then((res) => {
     if (res.code === 0) {
       ElMessage.success('注册成功，前往登录...')
+      Local.clear()
       setTimeout(() => {
         window.location.href = '/'; // 去登录页
         //router.push('/'); // 去登录页
-      }, 1000)
+      }, 500)
     }
   })
 }
@@ -116,7 +118,7 @@ const onGetEmailCode = () => {
     return
   }
   //console.log("userStore.userFormReq:",userStore.userFormReq)
-  publicApi.getEmailCodeApi(userStore.userFormReq).then((res) => {
+  systemApi.getEmailCodeApi(userStore.userFormReq).then((res) => {
     if (res.code === 0) {
       state.isCountDown = true
       ElMessage.success(res.msg)

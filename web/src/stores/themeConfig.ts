@@ -1,13 +1,10 @@
 import {defineStore} from 'pinia';
 import {Local} from "/@/utils/storage";
-//themeApi
+//systemApi
 import {useSystemApi} from "/@/api/system/index";
 
-const themeApi = useSystemApi()
-//publicApi
-import {usePublicApi} from "/@/api/public/index";
+const systemApi = useSystemApi()
 
-const publicApi = usePublicApi()
 //ElMessage
 import {ElMessage} from 'element-plus';
 
@@ -172,7 +169,7 @@ export const useThemeConfig = defineStore('themeStore', {
         //从服务器获取主题配置
         async getThemeConfig(params?: object) {
             //this.themeConfig = data.themeConfig;
-            const res = await publicApi.getThemeConfigApi()
+            const res = await systemApi.getThemeConfigApi()
             if (res.code !== 0) {
                 ElMessage.error("当前ip已被限流，请60s后重试")
                 return
@@ -182,7 +179,7 @@ export const useThemeConfig = defineStore('themeStore', {
         },
         //设置主题
         async updateThemeConfig(params?: object) {
-            const res = await themeApi.updateThemeConfigApi(params)
+            const res = await systemApi.updateThemeConfigApi(params)
             //更新主题到pinia
             //设置缓存
         },

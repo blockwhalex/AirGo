@@ -23,8 +23,8 @@ export const useOrderStore = defineStore("orderStore", {
     }),
     actions: {
         //获取订单详情(下单时）
-        async getOrderInfo(id?: number) {
-            const res = await orderApi.getOrderInfoApi({goods_id: id})
+        async getOrderInfo(params: object) {
+            const res = await orderApi.getOrderInfoApi(params)
             return res
         },
         //获取全部订单

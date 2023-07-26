@@ -25,6 +25,14 @@ func GetSetting() (*model.Server, error) {
 	return &setting, err
 }
 
+// 获取公共系统设置
+func GetPublicSetting() (*model.PublicSystem, error) {
+
+	var setting model.PublicSystem
+	err := global.DB.Model(&model.Server{}).First(&setting).Error
+	return &setting, err
+}
+
 // 修改系统配置
 func UpdateSetting(setting *model.Server) error {
 	//修改theme中的字段

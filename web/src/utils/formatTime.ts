@@ -10,6 +10,7 @@ export function DateStrtoTime(strTime: string) {
         strTime = strTime.slice(0, strTime.indexOf("+"))
     }
     strTime = strTime.replace(/T/g, ' ');
+    strTime = strTime.replace(/Z/g, '');
     return strTime;
 }
 

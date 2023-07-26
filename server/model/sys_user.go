@@ -26,7 +26,10 @@ type User struct {
 	Avatar   string    `json:"avatar"       gorm:"default:https://telegraph-image.pages.dev/file/28f40afe1021a81434bfa.jpg;comment:用户头像"` // 用户头像
 	Phone    string    `json:"phone"        gorm:"comment:用户手机号"`                                                                         // 用户手机号
 	//Email  string `json:"email"       gorm:"comment:用户邮箱"`                                                                                             // 用户邮箱
-	Enable bool `json:"enable"      gorm:"default:true;comment:用户是否被冻结 true正常 false冻结"` //用户是否被冻结 1正常 2冻结
+	Enable         bool    `json:"enable"      gorm:"default:true;comment:用户是否被冻结 true正常 false冻结"` //用户是否被冻结
+	InvitationCode string  `json:"invitation_code" gorm:"comment:我的邀请码"`
+	ReferrerCode   string  `json:"referrer_code"   gorm:"comment:推荐人码"`
+	Remain         float64 `json:"remain"          gorm:"comment:余额"`
 	//角色组
 	RoleGroup []Role `json:"role_group" gorm:"many2many:user_and_role;"` //多对多
 	//订单
@@ -43,9 +46,9 @@ type SubscribeInfo struct {
 	SubscribeUrl   string     `json:"subscribe_url"     gorm:"comment:订阅链接"`                   //订阅链接
 	GoodsID        int        `json:"goods_id"          gorm:"comment:商品ID"`                   //商品ID
 	ExpiredAt      *time.Time `json:"expired_at"        gorm:"comment:过期时间"`                   //过期时间
-	T              int        `json:"t"                 gorm:"comment:总流量（Byte）"`              //总流量（Byte）
-	U              int        `json:"u"                 gorm:"comment:上行流量"`                   //上行流量（Byte）
-	D              int        `json:"d"                 gorm:"comment:下行流量"`                   //下行流量（Byte）
+	T              int        `json:"t"                 gorm:"default:0;comment:总流量（Byte）"`    //总流量（Byte）
+	U              int        `json:"u"                 gorm:"default:0;comment:上行流量"`         //上行流量（Byte）
+	D              int        `json:"d"                 gorm:"default:0;comment:下行流量"`         //下行流量（Byte）
 	ResetDay       int        `json:"reset_day"         gorm:"comment:流量重置日"`                  //流量重置日
 	NodeSpeedLimit int        `json:"node_speedlimit"   gorm:"default:0;comment:限速Mbps（Mbps）"` //限速Mbps（Mbps）
 	NodeConnector  int        `json:"node_connector"    gorm:"default:3;comment:连接客户端数"`       //连接客户端数
@@ -72,10 +75,11 @@ type UserLogin struct {
 
 // 用户注册 请求
 type UserRegister struct {
-	UserName   string `json:"user_name" binding:"required,email,max=40,min=8"`              // 用户名
-	Password   string `json:"password" binding:"required,max=20,min=4"`                     // 密码
-	RePassword string `json:"re_password" binding:"required,eqfield=Password,max=20,min=4"` // 密码
-	EmailCode  string `json:"email_code"`                                                   //邮箱验证码
+	UserName     string `json:"user_name" binding:"required,email,max=40,min=8"`              // 用户名
+	Password     string `json:"password" binding:"required,max=20,min=4"`                     // 密码
+	RePassword   string `json:"re_password" binding:"required,eqfield=Password,max=20,min=4"` // 密码
+	EmailCode    string `json:"email_code"`                                                   //邮箱验证码
+	ReferrerCode string `json:"referrer_code"`
 }
 
 // 新建用户/修改用户请求

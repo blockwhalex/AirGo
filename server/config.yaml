@@ -4,13 +4,13 @@ mysql:
   config: charset=utf8mb4&parseTime=True&loc=Local
   db-name: upadmin
   username: upadmin
-  password: 
+  password:
   max-idle-conns: 10
   max-open-conns: 100
 system:
   admin-email: admin@oicq.com
   admin-password: admin
   port: 8899
-  db-type: mysql
+  db-type: sqlite
 sqlite:
   path: ./test.db

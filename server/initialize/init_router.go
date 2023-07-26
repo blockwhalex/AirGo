@@ -21,12 +21,10 @@ func InitRouter() {
 	Router := gin.Default()
 	Router.Use(middleware.Cors(), middleware.Recovery()) //不开启跨域验证码出错
 	RouterGroup := Router.Group("/")
-	//公共路由
-	publicRouter := RouterGroup.Group("public").Use(middleware.RateLimitIP())
+	//email
+	emailRouter := RouterGroup.Group("email").Use(middleware.RateLimitIP())
 	{
-		publicRouter.GET("ping", func(c *gin.Context) { c.JSON(200, "success") })
-		publicRouter.POST("getEmailCode", api.GetMailCode)     //获取验证码
-		publicRouter.GET("getThemeConfig", api.GetThemeConfig) //获取主题配置
+		emailRouter.POST("getEmailCode", api.GetMailCode) //获取验证码
 	}
 
 	//user
@@ -84,6 +82,11 @@ func InitRouter() {
 		systemAdminRouter.GET("getSetting", api.GetSetting)                //获取系统设置
 		systemAdminRouter.POST("updateSetting", api.UpdateSetting)         //修改系统设置
 	}
+	systemRouter := RouterGroup.Group("system").Use(middleware.RateLimitIP())
+	{
+		systemRouter.GET("getThemeConfig", api.GetThemeConfig)     //获取主题配置
+		systemRouter.GET("getPublicSetting", api.GetPublicSetting) //获取公共系统设置
+	}
 
 	//节点
 	nodeAdminRouter := RouterGroup.Group("node").Use(middleware.ParseJwt(), middleware.Casbin())
@@ -108,8 +111,8 @@ func InitRouter() {
 	//商店
 	shopRouter := RouterGroup.Group("shop").Use(middleware.RateLimitIP(), middleware.ParseJwt(), middleware.Casbin(), middleware.RateLimitVisit())
 	{
-		shopRouter.POST("preCreatePay", api.PreCreatePay) //alipay,统一收单线下交易预创建
-		shopRouter.POST("purchase", api.Purchase)         //支付
+		shopRouter.POST("preCreatePay", api.PreCreateOrder) //alipay,统一收单线下交易预创建
+		shopRouter.POST("purchase", api.Purchase)           //支付
 	}
 	shopAdminRouter := RouterGroup.Group("shop").Use(middleware.ParseJwt(), middleware.Casbin())
 	{
@@ -118,6 +121,7 @@ func InitRouter() {
 		shopAdminRouter.POST("newGoods", api.NewGoods)                    //新建商品
 		shopAdminRouter.POST("deleteGoods", api.DeleteGoods)              //删除商品
 		shopAdminRouter.POST("updateGoods", api.UpdateGoods)              //更新商品
+		shopAdminRouter.POST("goodsSort", api.GoodsSort)                  //排序
 	}
 	shopRouterNoVerify := RouterGroup.Group("/shop")
 	{
@@ -171,6 +175,14 @@ func InitRouter() {
 		articleRouter.POST("deleteArticle", api.DeleteArticle)
 		articleRouter.POST("updaterticle", api.UpdateArticle)
 		articleRouter.POST("getArticle", api.GetArticle)
+	}
+	//折扣
+	couponRouter := RouterGroup.Group("coupon").Use(middleware.RateLimitIP(), middleware.ParseJwt(), middleware.Casbin(), middleware.RateLimitVisit())
+	{
+		couponRouter.POST("newCoupon", api.NewCoupon)
+		couponRouter.POST("deleteCoupon", api.DeleteCoupon)
+		couponRouter.POST("updateCoupon", api.UpdateCoupon)
+		couponRouter.POST("getCoupon", api.GetCoupon)
 	}
 	//Router.Run(":" + strconv.Itoa(global.CONFIG.System.Port))
 

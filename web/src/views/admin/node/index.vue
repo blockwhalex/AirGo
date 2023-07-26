@@ -37,11 +37,9 @@
         </el-col>
         <el-col :span="3">
           <el-button size="default" type="warning" class="ml10" @click="onOpenNodeSortDialog">
-            <el-icon>
               <el-icon>
                 <DCaret/>
               </el-icon>
-            </el-icon>
             排序
           </el-button>
         </el-col>
@@ -190,7 +188,7 @@ function onGetNode(params?: object) {
 
 //删除节点
 function onRowDel(row: NodeInfo) {
-  ElMessageBox.confirm(`此操作将永久删除节点：${row.name}，是否继续?`, '提示', {
+  ElMessageBox.confirm(`此操作将永久删除节点：${row.remarks}，是否继续?`, '提示', {
     confirmButtonText: '删除',
     cancelButtonText: '取消',
     type: 'warning',

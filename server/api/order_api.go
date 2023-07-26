@@ -34,7 +34,7 @@ func GetMonthOrderStatistics(ctx *gin.Context) {
 	response.OK("获取订单统计成功", res, ctx)
 }
 
-// 获取用户订单by user id
+// 获取用户订单by user id，显示用户最近10条订单
 func GetOrderByUserID(ctx *gin.Context) {
 	uID, ok := ctx.Get("uID")
 	if !ok {
@@ -42,9 +42,9 @@ func GetOrderByUserID(ctx *gin.Context) {
 		return
 	}
 	uIDInt := uID.(int)
-	//var params model.PaginationParams
+	var params = model.PaginationParams{PageSize: 10} //显示用户最近10条订单
 	//err := ctx.ShouldBind(&params)
-	res, err := service.GetOrderByUserID(uIDInt)
+	res, err := service.GetOrderByUserID(uIDInt, &params)
 	if err != nil {
 		global.Logrus.Error("获取订单 error:", err)
 		response.Fail("订单获取错误"+err.Error(), nil, ctx)

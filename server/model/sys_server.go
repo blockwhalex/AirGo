@@ -43,13 +43,17 @@ type JWT struct {
 	Issuer      string `json:"issuer"       gorm:"default:AirGo"` // 签发者
 }
 type System struct {
-	EnableRegister       bool   `json:"enable_register"         gorm:"default:true"`  // 是否开启注册
-	EnableEmailCode      bool   `json:"enable_email_code"       gorm:"default:false"` // 是否开启注册email 验证码
-	EnableLoginEmailCode bool   `json:"enable_login_email_code" gorm:"default:false"` // 是否开启登录email 验证码
-	IsMultipoint         bool   `json:"is_multipoint"     gorm:"default:true"`        // 是否多点登录
-	SubName              string `json:"sub_name"          gorm:"default:AirGo"`       // 订阅名称
-	MuKey                string `json:"muKey"`                                        // 前后端通信密钥
-	DefaultGoods         string `json:"default_goods"`                                //新用户默认套餐
+	EnableRegister       bool    `json:"enable_register"         gorm:"default:true"`  // 是否开启注册
+	EnableEmailCode      bool    `json:"enable_email_code"       gorm:"default:false"` // 是否开启注册email 验证码
+	EnableLoginEmailCode bool    `json:"enable_login_email_code" gorm:"default:false"` // 是否开启登录email 验证码
+	IsMultipoint         bool    `json:"is_multipoint"     gorm:"default:true"`        // 是否多点登录
+	SubName              string  `json:"sub_name"          gorm:"default:AirGo"`       // 订阅名称
+	MuKey                string  `json:"muKey"             gorm:"comment:前后端通信密钥"`     // 前后端通信密钥
+	DefaultGoods         string  `json:"default_goods"     gorm:"comment:新用户默认套餐"`
+	EnabledRebate        bool    `json:"enabled_rebate"    gorm:"default:false;comment:是否开启返利"`
+	RebateRate           float64 `json:"rebate_rate"       gorm:"default:0.1;comment:返利率"`
+	EnabledDeduction     bool    `json:"enabled_deduction" gorm:"default:false;comment:是否开启旧套餐抵扣"`
+	DeductionThreshold   float64 `json:"deduction_threshold" gorm:"default:0.8;comment:旧套餐抵扣阈值,大于该值则抵扣"`
 }
 
 // Pay 支付相关配置
@@ -65,4 +69,9 @@ type Pay struct {
 type RateLimitParams struct {
 	IPRoleParam int `json:"ip_role_param" gorm:"default:600"`
 	VisitParam  int `json:"visit_param"   gorm:"default:60"`
+}
+
+// 公共配置参数
+type PublicSystem struct {
+	RebateRate float64 `json:"rebate_rate"`
 }

@@ -57,6 +57,7 @@ import {NextLoading} from '/@/utils/loading';
 import loginMain from '/@/assets/login-main.svg';
 import loginBg from '/@/assets/login-bg.svg';
 import {useRoute} from "vue-router";
+import {Local} from "/@/utils/storage";
 
 // 引入组件
 const Account = defineAsyncComponent(() => import('/@/views/login/component/account.vue'));
@@ -71,7 +72,6 @@ const state = reactive({
   tabsActiveName: 'account',
   isScan: false,
 });
-
 
 // 获取布局配置信息
 const getThemeConfig = computed(() => {

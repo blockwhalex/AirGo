@@ -108,10 +108,10 @@ import {useThemeConfig} from '/@/stores/themeConfig';
 const storesThemeConfig = useThemeConfig();
 const {themeConfig} = storeToRefs(storesThemeConfig);
 //api
-import {usePublicApi} from '/@/api/public/index'
+import {useSystemApi} from '/@/api/system/index'
 import service from "/@/utils/request";
 
-const publicApi = usePublicApi()
+const systemApi = useSystemApi()
 //定义参数
 const state = reactive({
   enableResetPassword: false,
@@ -184,7 +184,7 @@ const onGetEmailCode = () => {
     return
   }
   state.isCountDown = true
-  publicApi.getEmailCodeApi(loginData.value).then((res) => {
+  systemApi.getEmailCodeApi(loginData.value).then((res) => {
     if (res.code === 0) {
       state.isCountDown = true
       ElMessage.success(res.msg)

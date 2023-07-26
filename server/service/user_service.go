@@ -4,6 +4,7 @@ import (
 	"AirGo/global"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"strconv"
 	"time"
 
 	"AirGo/model"
@@ -21,11 +22,13 @@ func Register(u *model.User) error {
 		return errors.New("用户已存在")
 	} else if err == gorm.ErrRecordNotFound {
 		var newUser = model.User{
-			UUID:      uuid.NewV4(),
-			UserName:  u.UserName,
-			NickName:  u.UserName,
-			Password:  encode_plugin.BcryptEncode(u.Password),
-			RoleGroup: []model.Role{{ID: 2}}, //默认角色
+			UUID:           uuid.NewV4(),
+			UserName:       u.UserName,
+			NickName:       u.UserName,
+			Password:       encode_plugin.BcryptEncode(u.Password),
+			RoleGroup:      []model.Role{{ID: 2}}, //默认角色
+			InvitationCode: encode_plugin.RandomString(8),
+			ReferrerCode:   u.ReferrerCode,
 		}
 		return CreateUser(NewUserSubscribe(&newUser))
 	} else {
@@ -202,4 +205,29 @@ func DeleteUser(u *model.User) error {
 // 重置用户密码
 func ResetUserPassword(u *model.User) error {
 	return global.DB.Model(&model.User{}).Where("user_name = ?", u.UserName).Updates(&u).Error
+}
+
+// 处理推荐人返利
+func ReferrerRebate(uID int, receiptAmount string) {
+	u, err := FindUserByID(uID)
+	if err != nil || u.ReferrerCode == "" { //error或者推荐人为空
+		return
+	}
+	//
+	var uu model.User
+	global.DB.Where(&model.User{InvitationCode: u.ReferrerCode}).First(&uu)
+	a, _ := strconv.ParseFloat(receiptAmount, 64)
+	uu.Remain = (uu.Remain + a) * global.Server.System.RebateRate
+	global.DB.Save(&uu)
+}
+
+// 处理用户余额
+func RemainHandle(uid int, remain string) {
+	remainFloat64, _ := strconv.ParseFloat(remain, 64)
+	if remainFloat64 == 0 {
+		return
+	}
+	user, _ := FindUserByID(uid)
+	user.Remain = user.Remain - remainFloat64
+	SaveUser(user)
 }

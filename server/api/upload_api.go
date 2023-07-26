@@ -5,7 +5,6 @@ import (
 	"AirGo/model"
 	"AirGo/service"
 	"AirGo/utils/response"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -14,7 +13,7 @@ import (
 func NewPictureUrl(ctx *gin.Context) {
 	picUrl := ctx.Query("picUrl")
 	subject := ctx.Query("subject")
-	fmt.Println("url sub:", picUrl, subject)
+	//fmt.Println("url sub:", picUrl, subject)
 
 	if picUrl == "" {
 		response.Fail("上传图片链接参数错误", nil, ctx)
@@ -40,7 +39,7 @@ func GetPictureList(ctx *gin.Context) {
 		response.Fail("获取图片列表错误："+err.Error(), nil, ctx)
 		return
 	}
-	fmt.Println("params:", params)
+	//fmt.Println("params:", params)
 	picList, err := service.GetPictureList(&params)
 	if err != nil {
 		global.Logrus.Error("获取图片列表错误：", err.Error())
