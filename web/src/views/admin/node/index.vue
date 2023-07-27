@@ -47,7 +47,7 @@
 
       <el-table :data="nodeManageData.nodes.node_list" height="100%" stripe style="width: 100%;flex: 1;">
         <el-table-column fixed type="index" label="序号" width="60"/>
-        <el-table-column prop="name" label="节点名称" show-overflow-tooltip width="200"></el-table-column>
+        <el-table-column prop="remarks" label="节点名称" show-overflow-tooltip width="200"></el-table-column>
         <el-table-column prop="id" label="节点ID" show-overflow-tooltip width="60"></el-table-column>
         <el-table-column prop="address" label="节点地址" show-overflow-tooltip width="150"></el-table-column>
         <el-table-column prop="port" label="节点端口" show-overflow-tooltip></el-table-column>
@@ -74,13 +74,13 @@
             <el-tag type="success" v-else>直连</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="节点状态" show-overflow-tooltip>
+        <el-table-column prop="enabled" label="节点状态" show-overflow-tooltip>
           <template #default="scope">
-            <el-tag type="success" v-if="scope.row.status">启用</el-tag>
+            <el-tag type="success" v-if="scope.row.enabled">启用</el-tag>
             <el-tag type="danger" v-else>禁用</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="nodespeed_limit" label="限速" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="node_speedlimit" label="限速" show-overflow-tooltip></el-table-column>
         <el-table-column prop="traffic_rate" label="倍率" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" width="100">
           <template #default="scope">

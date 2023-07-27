@@ -82,8 +82,11 @@ const route = useRoute();
 const isFooter = computed(() => {
   return themeConfig.value.isFooter && !route.meta.isIframe;
 });
+
 // 页面加载时
 onMounted(() => {
+  // console.log("route.query",  route.query.i)
+  Local.set('invitation',route.query.i)
   NextLoading.done();
 });
 </script>

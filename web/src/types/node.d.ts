@@ -3,10 +3,12 @@ declare interface NodeInfoOld {
     updated_at: string;
     id: number;
     //基础参数
-    name: string;
+    remarks: string;
     address: string;
     port: string;
     node_order: number;        //节点排序
+    enabled: boolean;
+
     sort: number;             //类型sort==11  V2Ray vmess
     nodespeed_limit: number;  //限速
     traffic_rate: number;     //倍率

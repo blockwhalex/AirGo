@@ -32,5 +32,11 @@ func main() {
 	initialize.InitWebsocket()    //websocket
 	initialize.InitRatelimit()    //限流
 	initialize.InitRouter()       //初始总路由
+	//var userArr []model.User
+	//global.DB.Find(&userArr)
+	//for k, _ := range userArr {
+	//	userArr[k].InvitationCode = encode_plugin.RandomString(8)
+	//	service.SaveUser(&userArr[k])
+	//}
 
 }

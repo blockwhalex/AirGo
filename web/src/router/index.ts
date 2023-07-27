@@ -102,23 +102,15 @@ router.beforeEach(async (to, from, next) => {
     NProgress.configure({showSpinner: false});
     if (to.meta.title) NProgress.start();
     // const token = Session.get('token');
-    if (to.path === '/:id'){
-        console.log("hhhhhhhh",to.params)
-    }
-    //http://localhost:8080/1111111
-    // console.log("hhhhhhhh",to.path)
-    // console.log("hhhhhhhh",to.query)
-
-    // console.log("hhhhhhhh",to.params)
-    // console.log("hhhhhhhh",to.query)
     const token = Local.get('token');
     if (to.path === '/login' && !token) {
         next();
         NProgress.done();
     } else {
         if (!token) {
-            //next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`);
-            next(`/login`);
+            // next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`);
+            next(`/login?i=${JSON.stringify(to.query ? to.query : to.params)}`);
+            // next(`/login`);
             Session.clear();
             Local.clear();
             NProgress.done();

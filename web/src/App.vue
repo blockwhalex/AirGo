@@ -48,12 +48,6 @@ const getGlobalComponentSize = computed(() => {
 
 //设置初始化，防止刷新时恢复默认
 onBeforeMount(() => {
-  let url1=window.location.pathname
-  if (url1.length>2){
-    Local.set('invitation',url1.slice(1))
-    window.location.href='http://localhost:8080/'
-    return
-  }
   // 设置批量第三方 icon 图标
   setIntroduction.cssCdn();
   // 设置批量第三方 js

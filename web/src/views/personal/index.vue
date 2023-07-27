@@ -63,7 +63,7 @@
             <div class="personal-edit-safe-item">
               <div class="personal-edit-safe-item-left">
                 <div class="personal-edit-safe-item-left-label">专属邀请链接</div>
-                <div class="personal-edit-safe-item-left-value">{{state.url}}/{{userInfos.invitation_code}}</div>
+                <div class="personal-edit-safe-item-left-value">{{state.url}}/#/login?i={{userInfos.invitation_code}}</div>
               </div>
 <!--              <div class="personal-edit-safe-item-right">-->
 <!--                <el-button text type="primary" @click="onOpenPWDialog">复制</el-button>-->
