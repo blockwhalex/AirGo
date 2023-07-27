@@ -5,20 +5,49 @@ import (
 	"AirGo/global"
 	"AirGo/middleware"
 	"context"
+	"embed"
+	"io/fs"
 	"net/http"
 	"os"
 	"os/signal"
+	"path"
+	"path/filepath"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
+type Resource struct {
+	fs   embed.FS
+	path string
+}
+
+func NewResource() *Resource {
+	return &Resource{
+		fs:   f,
+		path: "web",
+	}
+}
+
+func (r *Resource) Open(name string) (fs.File, error) {
+	//if filepath.Separator != '/' && strings.ContainsRune(name, filepath.Separator) {
+	//	return nil, errors.New("http: invalid character in file path")
+	//}
+	fullName := filepath.Join(r.path, filepath.FromSlash(path.Clean("/"+name)))
+	file, err := r.fs.Open(fullName)
+	return file, err
+}
+
+//go:embed all:web/*
+var f embed.FS
+
 // 初始化总路由
 func InitRouter() {
 	// 正式发布模式
 	gin.SetMode(gin.ReleaseMode) //ReleaseMode TestMode DebugMode
 	Router := gin.Default()
+	Router.StaticFS("/web", http.FS(NewResource()))
 	Router.Use(middleware.Cors(), middleware.Recovery()) //不开启跨域验证码出错
 	RouterGroup := Router.Group("/")
 	//email

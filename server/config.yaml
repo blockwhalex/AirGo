@@ -1,9 +1,9 @@
 mysql:
-  path: mysql.sqlpub.com
-  port: "3306"
+  path:
+  port: 6033
   config: charset=utf8mb4&parseTime=True&loc=Local
-  db-name: upadmin
-  username: upadmin
+  db-name: airgo
+  username: airgo
   password:
   max-idle-conns: 10
   max-open-conns: 100

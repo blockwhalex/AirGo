@@ -47,9 +47,9 @@
             <el-tag type="danger" v-else>禁用</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="enable" label="订阅状态" show-overflow-tooltip width="80">
+        <el-table-column prop="subscribe_info.sub_status" label="订阅状态" show-overflow-tooltip width="80">
           <template #default="scope">
-            <el-tag type="success" v-if="scope.row.enable">启用</el-tag>
+            <el-tag type="success" v-if="scope.row.subscribe_info.sub_status">启用</el-tag>
             <el-tag type="danger" v-else>禁用</el-tag>
           </template>
         </el-table-column>

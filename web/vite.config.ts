@@ -38,7 +38,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 			}
 		},
 		build: {
-			outDir: 'dist',
+			outDir: 'web',
 			chunkSizeWarningLimit: 1500,
 			rollupOptions: {
 				output: {
