@@ -8,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goos: [linux]
+        goos: [linux, darwin]
         goarch: [amd64, arm64, arm]
-#         exclude: #
-#           - goarch: arm64
-#             goos: darwin
-#           - goarch: arm
-#             goos: darwin
+        exclude: #
+          - goarch: arm64
+            goos: darwin
+          - goarch: arm
+            goos: darwin
         node-version: [18.16.0]
     steps:
       - uses: actions/checkout@v3
