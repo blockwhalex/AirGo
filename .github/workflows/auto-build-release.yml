@@ -64,7 +64,6 @@ jobs:
 #           file: server/AirGo-${{ matrix.goos }}-${{ matrix.goarch }}-${{ steps.get_version.outputs.VERSION }}.zip
 #           tag: ${{ github.ref }}
 #           file_glob: true
-      - uses: actions/checkout@v3
       - uses: wangyoucao577/go-release-action@v1.38
         with:
           github_token: ${{ secrets.Action_Token }}
