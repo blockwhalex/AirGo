@@ -76,10 +76,18 @@
             <el-tag type="info">{{ scope.row.subscribe_info.t / 1024 / 1024 / 1024 }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="已用流量(GB)" show-overflow-tooltip>
+        <el-table-column label="已用流量(GB)" show-overflow-tooltip width="100px">
           <template #default="scope">
             <el-tag type="info">
               {{ (scope.row.subscribe_info.d + scope.row.subscribe_info.u) / 1024 / 1024 / 1024 }}
+            </el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="余额" show-overflow-tooltip>
+          <template #default="scope">
+            <el-tag type="info">
+              {{ scope.row.remain }}
             </el-tag>
           </template>
         </el-table-column>

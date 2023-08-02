@@ -30,7 +30,6 @@
             </el-form-item>
           </el-col>
 
-
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="订阅状态">
               <el-switch v-model="userManageData.dialog.user.subscribe_info.sub_status" inline-prompt active-text="开启"
@@ -107,6 +106,24 @@
               </el-row>
             </el-form-item>
           </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="我的邀请人">
+              <el-input v-model="userManageData.dialog.user.referrer_code"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="我的邀请码">
+              <el-input v-model="userManageData.dialog.user.invitation_code"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="我的余额">
+              <el-input v-model.number="userManageData.dialog.user.remain" type="number"></el-input>
+            </el-form-item>
+          </el-col>
+
+
+
         </el-row>
       </el-form>
       <template #footer>

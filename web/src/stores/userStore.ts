@@ -47,6 +47,9 @@ export const useUserStore = defineStore('userInfo', {
             phone: '',
             email: '',
             enable: true,
+            invitation_code:'',
+            referrer_code:'',
+            remain:0,
             role_group: [] as RowRoleType[],	//角色组
             orders: [],      //订单
             subscribe_info: { //附加订阅信息

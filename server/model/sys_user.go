@@ -26,7 +26,7 @@ type User struct {
 	Avatar   string    `json:"avatar"       gorm:"default:https://telegraph-image.pages.dev/file/28f40afe1021a81434bfa.jpg;comment:用户头像"` // 用户头像
 	Phone    string    `json:"phone"        gorm:"comment:用户手机号"`                                                                         // 用户手机号
 	//Email  string `json:"email"       gorm:"comment:用户邮箱"`                                                                                             // 用户邮箱
-	Enable         bool    `json:"enable"      gorm:"default:true;comment:用户是否被冻结 true正常 false冻结"` //用户是否被冻结
+	Enable         bool    `json:"enable"      gorm:"default:true;comment:用户是否被启用 true正常 false冻结"`
 	InvitationCode string  `json:"invitation_code" gorm:"comment:我的邀请码"`
 	ReferrerCode   string  `json:"referrer_code"   gorm:"comment:推荐人码"`
 	Remain         float64 `json:"remain"          gorm:"comment:余额"`
