@@ -48,6 +48,7 @@ type System struct {
 	EnableLoginEmailCode bool    `json:"enable_login_email_code" gorm:"default:false"` // 是否开启登录email 验证码
 	IsMultipoint         bool    `json:"is_multipoint"     gorm:"default:true"`        // 是否多点登录
 	SubName              string  `json:"sub_name"          gorm:"default:AirGo"`       // 订阅名称
+	SubUrlRre            string  `json:"sub_url_pre"`                                  //订阅前缀
 	MuKey                string  `json:"muKey"             gorm:"comment:前后端通信密钥"`     // 前后端通信密钥
 	DefaultGoods         string  `json:"default_goods"     gorm:"comment:新用户默认套餐"`
 	EnabledRebate        bool    `json:"enabled_rebate"    gorm:"default:false;comment:是否开启返利"`
@@ -73,5 +74,7 @@ type RateLimitParams struct {
 
 // 公共配置参数
 type PublicSystem struct {
-	RebateRate float64 `json:"rebate_rate"`
+	RebateRate float64 `json:"rebate_rate"` //佣金率
+	SubUrlRre  string  `json:"sub_url_pre"` //订阅前缀
+
 }

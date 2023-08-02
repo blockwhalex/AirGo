@@ -6,8 +6,9 @@ import {useUserApi} from "../api/user/index";
 //bcrypt
 import bcrypt from 'bcryptjs'
 import {ElMessage} from "element-plus";
-
 const userApi = useUserApi()
+//server store
+import {useServerStore} from "/@/stores/serverStore";
 
 export const useUserStore = defineStore('userInfo', {
     state: () => ({
@@ -106,33 +107,25 @@ export const useUserStore = defineStore('userInfo', {
         },
         //v2rayNG订阅
         subV2rayNG: (state): string => {
-            if (state.userInfos.subscribe_info.goods_id == 0 || state.userInfos.subscribe_info.subscribe_url == '') {
-                return ''
-            }
-            return import.meta.env.VITE_API_URL + "user/getSub?link=" + state.userInfos.subscribe_info.subscribe_url + "&type=1"
+            const serverStore= useServerStore()
+            return serverStore.publicServerConfig.sub_url_pre + "user/getSub?link=" + state.userInfos.subscribe_info.subscribe_url + "&type=1"
         },
         //ShadowRocket订阅
         subShadowRocket: (state) => {
-            if (state.userInfos.subscribe_info.goods_id == 0 || state.userInfos.subscribe_info.subscribe_url == '') {
-                return ''
-            }
-            return import.meta.env.VITE_API_URL + "user/getSub?link=" + state.userInfos.subscribe_info.subscribe_url + "&type=3"
+            const serverStore= useServerStore()
+            return serverStore.publicServerConfig.sub_url_pre + "user/getSub?link=" + state.userInfos.subscribe_info.subscribe_url + "&type=3"
 
         },
         //Clash订阅
         subClash: (state) => {
-            if (state.userInfos.subscribe_info.goods_id == 0 || state.userInfos.subscribe_info.subscribe_url == '') {
-                return ''
-            }
-            return import.meta.env.VITE_API_URL + "user/getSub?link=" + state.userInfos.subscribe_info.subscribe_url + "&type=2"
+            const serverStore= useServerStore()
+            return serverStore.publicServerConfig.sub_url_pre + "user/getSub?link=" + state.userInfos.subscribe_info.subscribe_url + "&type=2"
 
         },
         //Qx订阅
         subQx: (state) => {
-            if (state.userInfos.subscribe_info.goods_id == 0 || state.userInfos.subscribe_info.subscribe_url == '') {
-                return ''
-            }
-            return import.meta.env.VITE_API_URL + "user/getSub?link=" + state.userInfos.subscribe_info.subscribe_url + "&type=4"
+            const serverStore= useServerStore()
+            return serverStore.publicServerConfig.sub_url_pre + "user/getSub?link=" + state.userInfos.subscribe_info.subscribe_url + "&type=4"
         },
         //
 

@@ -59,8 +59,13 @@
               <el-col :span="12">
                 <el-input v-model="serverConfig.system.sub_name"/>
               </el-col>
-
             </el-form-item>
+            <el-form-item label="订阅url前缀">
+              <el-col :span="12">
+                <el-input v-model="serverConfig.system.sub_url_pre"/>
+              </el-col>
+            </el-form-item>
+
             <el-form-item label="新注册分配套餐">
               <el-select v-model="serverConfig.system.default_goods" class="m-2" placeholder="选择套餐">
                 <el-option

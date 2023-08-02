@@ -23,6 +23,7 @@ declare interface System {
     enable_login_email_code: boolean;
     is_multipoint: boolean;
     sub_name: string;
+    sub_url_pre: string;
     muKey: string;
     default_goods: string;
     enabled_rebate: boolean;    //是否开启返利

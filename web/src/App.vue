@@ -32,7 +32,9 @@ const route = useRoute();
 const stores = useTagsViewRoutes();
 const storesThemeConfig = useThemeConfig();
 const {themeConfig} = storeToRefs(storesThemeConfig);
-
+//server store
+import {useServerStore} from "/@/stores/serverStore";
+const serverStore=useServerStore()
 
 // 设置锁屏时组件显示隐藏
 const setLockScreen = computed(() => {
@@ -54,9 +56,10 @@ onBeforeMount(() => {
   setIntroduction.jsCdn();
 });
 
-//组件被挂载之前,获取布局配置
+//组件被挂载之前,获取布局配置,公共配置
 onBeforeMount(() => {
   storesThemeConfig.getThemeConfig()
+  serverStore.getPublicServerConfig();//获取public config
 })
 // 页面加载时
 onMounted(() => {

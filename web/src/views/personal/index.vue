@@ -143,7 +143,7 @@ const currentTime = computed(() => {
 
 onMounted(()=>{
   getUrl(); //获取专属邀请url
-  serverStore.getPublicServerConfig();//获取public config
+  // serverStore.getPublicServerConfig();//获取public config
 });
 </script>
 

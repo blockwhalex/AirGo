@@ -5,6 +5,7 @@ import (
 	"AirGo/model"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"gorm.io/gorm"
 	"net/url"
 	"strconv"
@@ -66,6 +67,7 @@ func GetUserSub(url string, subType string) string {
 	var goods model.Goods
 	err = global.DB.Where("id = ?", u.SubscribeInfo.GoodsID).Preload("Nodes", func(db *gorm.DB) *gorm.DB { return db.Order("node_order") }).Find(&goods).Error
 	// 计算剩余天数，流量
+	fmt.Println("根据goodsID 查找具体的节点", goods)
 	expiredTime := u.SubscribeInfo.ExpiredAt.Format("2006-01-02")
 	expiredBd1 := (float64(u.SubscribeInfo.T - u.SubscribeInfo.U - u.SubscribeInfo.D)) / 1024 / 1024 / 1024
 	expiredBd2 := strconv.FormatFloat(expiredBd1, 'f', 2, 64)

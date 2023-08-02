@@ -210,8 +210,8 @@ func InsertInto(db *gorm.DB) error {
 	}
 	//插入node
 	nodeData := []model.Node{
-		{Remarks: "测试节点1", Address: "www.10010.com", Path: "/path", Port: 5566},
-		{Remarks: "测试节点2", Address: "www.10086.com", Path: "/path", Port: 5566},
+		{Remarks: "测试节点1", Address: "www.10010.com", Path: "/path", Port: 5566, Sort: 15},
+		{Remarks: "测试节点2", Address: "www.10086.com", Path: "/path", Port: 5566, Sort: 15},
 	}
 	if err := global.DB.Create(&nodeData).Error; err != nil {
 		return errors.New("node表数据初始化失败!")

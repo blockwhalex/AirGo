@@ -52,7 +52,9 @@ export const useServerStore = defineStore("serverStore", {
             },
         } as Server,
         publicServerConfig: {
-            rebate_rate:0,
+            rebate_rate:0,//佣金率
+            sub_url_pre:'',//订阅前缀
+
         },
 
     }),

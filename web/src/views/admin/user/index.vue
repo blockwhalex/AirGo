@@ -60,6 +60,15 @@
             </el-tag>
           </template>
         </el-table-column>
+
+        <el-table-column prop="subscribe_info.subscribe_url" label="通用订阅url" show-overflow-tooltip width="400">
+          <template #default="scope">
+            <el-tag type="info">
+              {{serverStore.publicServerConfig.sub_url_pre}}user/getSub?link={{ scope.row.subscribe_info.subscribe_url }}&type=1
+            </el-tag>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="subscribe_info.goods_id" label="商品ID" show-overflow-tooltip
                          width="60"></el-table-column>
         <el-table-column prop="subscribe_info.t" label="总流量(GB)" show-overflow-tooltip>
@@ -110,7 +119,9 @@ import {ElMessageBox, ElMessage} from 'element-plus';
 //store
 import {storeToRefs} from 'pinia';
 import {useUserStore} from '/@/stores/userStore'
-
+//server store
+import {useServerStore} from "/@/stores/serverStore";
+const serverStore= useServerStore()
 const userStore = useUserStore()
 const {userManageData} = storeToRefs(userStore)
 //时间格式化
