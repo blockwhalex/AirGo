@@ -18,7 +18,7 @@ import (
 // 节点信息
 func SSNodeInfo(nodeID int) (model.SSNodeInfo, error) {
 	var node model.Node
-	err := global.DB.Where("id = ? and status = true", nodeID).First(&node).Error //节点号 是否启用
+	err := global.DB.Where("id = ? and enabled = true", nodeID).First(&node).Error //节点号 是否启用
 	if err != nil {
 		return model.SSNodeInfo{}, err
 	}
