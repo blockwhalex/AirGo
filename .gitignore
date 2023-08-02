@@ -8,3 +8,4 @@ server/test-az.db
 server/logs
 server/main
 server/install.sh
+server/initialize

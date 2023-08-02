@@ -47,7 +47,8 @@ func InitRouter() {
 	// 正式发布模式
 	gin.SetMode(gin.ReleaseMode) //ReleaseMode TestMode DebugMode
 	Router := gin.Default()
-	Router.StaticFS("/web", http.FS(NewResource()))
+	//Router.RunTLS(":"+strconv.Itoa(global.Config.SystemParams.Port), "./air.crt", "./air.key") //ssl
+	Router.StaticFS("/web", http.FS(NewResource()))      //静态资源
 	Router.Use(middleware.Cors(), middleware.Recovery()) //不开启跨域验证码出错
 	RouterGroup := Router.Group("/")
 	//email
@@ -219,11 +220,21 @@ func InitRouter() {
 		Addr:    ":" + strconv.Itoa(global.Config.SystemParams.Port),
 		Handler: Router,
 	}
+	srvTls := &http.Server{
+		Addr:    ":" + strconv.Itoa(1+global.Config.SystemParams.Port),
+		Handler: Router,
+	}
 
 	go func() {
 		// 服务连接
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			global.Logrus.Fatalf("listen: %s\n", err)
+		}
+	}()
+	go func() {
+		// 服务连接
+		if err := srvTls.ListenAndServeTLS("./air.crt", "./air.key"); err != nil && err != http.ErrServerClosed {
+			global.Logrus.Fatalf("tls listen: %s\n", err)
 		}
 	}()
 
@@ -236,6 +247,9 @@ func InitRouter() {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
+		global.Logrus.Fatalf("Server Shutdown:", err)
+	}
+	if err := srvTls.Shutdown(ctx); err != nil {
 		global.Logrus.Fatalf("Server Shutdown:", err)
 	}
 	global.Logrus.Info("Server exiting")
