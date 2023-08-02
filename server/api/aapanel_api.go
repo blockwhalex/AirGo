@@ -113,7 +113,7 @@ func SSUsersTraffic(ctx *gin.Context) {
 		trafficLog.U = trafficLog.D + v.D
 	}
 	// 统计status
-	go func(id, u, d, userAmount int) {
+	go func(id, userAmount int, u, d int64) {
 		var nodeStatus = model.NodeStatus{
 			ID:         id,
 			UserAmount: userAmount,
@@ -132,7 +132,7 @@ func SSUsersTraffic(ctx *gin.Context) {
 		nodeStatus.U, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", nodeStatus.U/1024/1024/duration*8), 64)
 		global.LocalCache.Set(strconv.Itoa(id)+"status", nodeStatus, 2*time.Minute)
 
-	}(node_id, trafficLog.U, trafficLog.D, len(userIds))
+	}(node_id, len(userIds), trafficLog.U, trafficLog.D)
 	//插入流量统计统计
 	err = service.NewTrafficLog(&trafficLog)
 	if err != nil {

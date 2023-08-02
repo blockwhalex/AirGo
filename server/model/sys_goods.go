@@ -19,9 +19,9 @@ type Goods struct {
 	Nodes        []Node `json:"nodes"         gorm:"many2many:goods_and_nodes"`
 	Status       bool   `json:"status"        gorm:"default:true;comment:是否显示"`
 	//订阅参数
-	TotalBandwidth int `json:"total_bandwidth"` //总流量
-	ExpirationDate int `json:"expiration_date"` //有效期
-	NodeConnector  int `json:"node_connector"`  //可连接客户端数量
+	TotalBandwidth int64 `json:"total_bandwidth"` //总流量
+	ExpirationDate int   `json:"expiration_date"` //有效期
+	NodeConnector  int   `json:"node_connector"`  //可连接客户端数量
 }
 
 // 商品和节点 多对多 表

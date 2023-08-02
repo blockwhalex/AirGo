@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goos: [linux, darwin]
+        goos: [linux]
         goarch: [amd64, arm64, arm]
         exclude: #
           - goarch: arm64
@@ -28,7 +28,7 @@ jobs:
           npm install
           npm run build
           mv web ../server/initialize/
-      - name: Go dependence
+      - name: Go build
         run: |
           cd server
           sudo apt update -y
@@ -45,32 +45,19 @@ jobs:
             go env -w CC=arm-linux-gnueabihf-gcc
             ;;
           esac
-      #       - name: Go build
-      #         run: |
-      #           cd server
-      #           go build -o airgo -ldflags='-s -w --extldflags "-static -fpic"' main.go
-      #       - name: Get version
-      #         id: get_version
-      #         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-      #       - name: Package
-      #         run: |
-      #           cd server
-      #           zip  AirGo-${{ matrix.goos }}-${{ matrix.goarch }}-${{ steps.get_version.outputs.VERSION }}.zip airgo
-      #       - name: Upload to release
-      #         uses: svenstaro/upload-release-action@v2
-      #         if: github.event_name == 'release'
-      #         with:
-      #           repo_token: ${{ secrets.Action_Token }}
-      #           file: server/AirGo-${{ matrix.goos }}-${{ matrix.goarch }}-${{ steps.get_version.outputs.VERSION }}.zip
-      #           tag: ${{ github.ref }}
-      #           file_glob: true
-      - uses: wangyoucao577/go-release-action@v1.38
+          go build -o airgo -ldflags='-s -w --extldflags "-static -fpic"' main.go
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Package
+        run: |
+          cd server
+          zip  AirGo-${{ matrix.goos }}-${{ matrix.goarch }}-${{ steps.get_version.outputs.VERSION }}.zip airgo
+      - name: Upload to release
+        uses: svenstaro/upload-release-action@v2
+        if: github.event_name == 'release'
         with:
-          github_token: ${{ secrets.Action_Token }}
-          goos: ${{ matrix.goos }}
-          goarch: ${{ matrix.goarch }}
-          goversion: 1.19
-          binary_name: "AirGo"
-          extra_files: ./server/config.yaml
-          project_path: "./server"
-          ldflags: -s -w --extldflags "-static -fpic"
+          repo_token: ${{ secrets.Action_Token }}
+          file: server/AirGo-${{ matrix.goos }}-${{ matrix.goarch }}-${{ steps.get_version.outputs.VERSION }}.zip
+          tag: ${{ github.ref }}
+          file_glob: true

@@ -32,8 +32,8 @@ type Node struct {
 	TransferAddress string `json:"transfer_address"`                     //中转ip
 	TransferPort    int    `json:"transfer_port"`                        //中转port
 	//上行/下行
-	TotalUp   int `json:"total_up"        gorm:"-"` //
-	TotalDown int `json:"total_down"      gorm:"-"` //
+	TotalUp   int64 `json:"total_up"        gorm:"-"` //
+	TotalDown int64 `json:"total_down"      gorm:"-"` //
 	//关联参数
 	Goods       []Goods      `json:"goods"         gorm:"many2many:goods_and_nodes"` //多对多,关联商品
 	TrafficLogs []TrafficLog `json:"-"   gorm:"foreignKey:NodeID;references:ID"`     //has many

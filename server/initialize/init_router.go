@@ -234,7 +234,7 @@ func InitRouter() {
 	go func() {
 		// 服务连接
 		if err := srvTls.ListenAndServeTLS("./air.crt", "./air.key"); err != nil && err != http.ErrServerClosed {
-			global.Logrus.Fatalf("tls listen: %s\n", err)
+			global.Logrus.Error("tls listen: %s\n", err)
 		}
 	}()
 
