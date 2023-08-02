@@ -8,8 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        #         goos: [ linux ]
-        #         goarch: [ amd64 ]
         goos: [linux, darwin]
         goarch: [amd64, arm64, arm]
         exclude: #
@@ -17,9 +15,22 @@ jobs:
             goos: darwin
           - goarch: arm
             goos: darwin
+        node-version: [18.16.0]
     steps:
-      - name: dependence
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Build web
         run: |
+          cd web
+          npm install
+          npm run build
+          mv web ../server/initialize/
+      - name: Go dependence
+        run: |
+          cd server
           sudo apt update -y
           go env -w CGO_ENABLED=1
           go env -w GOOS=${{matrix.goos}} 
@@ -34,7 +45,25 @@ jobs:
             go env -w CC=arm-linux-gnueabihf-gcc
             ;;
           esac
-      - uses: actions/checkout@v3
+#       - name: Go build
+#         run: |
+#           cd server
+#           go build -o airgo -ldflags='-s -w --extldflags "-static -fpic"' main.go
+#       - name: Get version
+#         id: get_version
+#         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+#       - name: Package
+#         run: |
+#           cd server
+#           zip  AirGo-${{ matrix.goos }}-${{ matrix.goarch }}-${{ steps.get_version.outputs.VERSION }}.zip airgo
+#       - name: Upload to release
+#         uses: svenstaro/upload-release-action@v2
+#         if: github.event_name == 'release'
+#         with:
+#           repo_token: ${{ secrets.Action_Token }}
+#           file: server/AirGo-${{ matrix.goos }}-${{ matrix.goarch }}-${{ steps.get_version.outputs.VERSION }}.zip
+#           tag: ${{ github.ref }}
+#           file_glob: true
       - uses: wangyoucao577/go-release-action@v1.38
         with:
           github_token: ${{ secrets.Action_Token }}
@@ -45,38 +74,3 @@ jobs:
           extra_files: ./server/config.yaml
           project_path: "./server"
           ldflags: -s -w --extldflags "-static -fpic"
-
-  build-web:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.16.0]
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Build
-        run: |
-          cd web
-          npm install
-          npm run build
-      - name: package
-        run: |
-          cd web
-          zip -r web.zip dist
-      - name: upload web to release
-        uses: svenstaro/upload-release-action@v2
-        if: github.event_name == 'release'
-        with:
-          repo_token: ${{ secrets.Action_Token }}
-          file: web/web.zip
-          tag: ${{ github.ref }}
-          file_glob: true
-
-
