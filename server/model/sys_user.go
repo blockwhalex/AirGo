@@ -133,8 +133,8 @@ type UsersWithTotal struct {
 type SSUsers struct {
 	ID             int    `json:"id"`
 	UUID           string `json:"uuid"`
-	U              int    `json:"u"`
-	D              int    `json:"d"`
+	U              int64  `json:"u"`
+	D              int64  `json:"d"`
 	NodeSpeedLimit int    `json:"node_speedlimit"`
 	NodeConnector  int    `json:"node_connector"`
 	// IsMultiUser    int    `json:"is_multi_user"` //用不到

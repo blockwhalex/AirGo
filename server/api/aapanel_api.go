@@ -49,6 +49,7 @@ func SSNodeInfo(ctx *gin.Context) {
 	}(nodeID)
 	nodeInfo, err := service.SSNodeInfo(nodeIDInt)
 	if err != nil {
+		global.Logrus.Error("当前节点设置,error:", err.Error())
 		response.SSUsersFail(ctx)
 		return
 	}
@@ -72,6 +73,7 @@ func SSUsers(ctx *gin.Context) {
 	//goods属于哪些用户
 	users, err := service.FindUsersByGoods(&goods)
 	if err != nil {
+		global.Logrus.Error("可连接的用户,error:", err.Error())
 		response.SSUsersFail(ctx)
 		return
 	}
