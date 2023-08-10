@@ -5,8 +5,12 @@
 
 ## 面板概览
 
-![image](https://github.com/ppoonk/AirGo/blob/main/img/1.png)
-![image](https://github.com/ppoonk/AirGo/blob/main/img/2.png)
-![image](https://github.com/ppoonk/AirGo/blob/main/img/3.png)
+![image](https://github.com/ppoonk/AirGo/blob/main/img/web/1.png)
+![image](https://github.com/ppoonk/AirGo/blob/main/img/sys/1.png)
+![image](https://github.com/ppoonk/AirGo/blob/main/img/sys/2.png)
+![image](https://github.com/ppoonk/AirGo/blob/main/img/sys/3.png)
+![image](https://github.com/ppoonk/AirGo/blob/main/img/sys/4.png)
+![image](https://github.com/ppoonk/AirGo/blob/main/img/sys/5.png)
+![image](https://github.com/ppoonk/AirGo/blob/main/img/sys/6.png)
 
 ### 开始使用
